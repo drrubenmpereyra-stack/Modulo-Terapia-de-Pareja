@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tareas Asignadas - Clínica de la Convergencia</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --border-focus: #3b82f6;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 800px) {
+            .form-grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-control {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-control label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-control textarea, .form-control select, .form-control input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background-color: #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        .form-control textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-control textarea:focus, .form-control select:focus, .form-control input:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .btn-guardar {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: #ffffff;
+        }
+
+        .btn-editar {
+            background-color: #0284c7;
+            color: #ffffff;
+            display: none;
+        }
+
+        .btn-eliminar {
+            background-color: #dc2626;
+            color: #ffffff;
+            display: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-elevated);
+            filter: brightness(1.1);
+        }
+
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        table.data-table th, table.data-table td {
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.85rem;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        table.data-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        table.data-table tr {
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        table.data-table tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .semaforo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+        }
+        .semaforo-verde { background-color: #dcfce7; color: #166534; }
+        .semaforo-amarillo { background-color: #fef9c3; color: #854d0e; }
+        .semaforo-rojo { background-color: #fee2e2; color: #991b1b; }
+
+        .pdf-link {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .pdf-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Formulario de Registro de Tareas -->
+        <div class="card">
+            <h2>Asignación y Valoración de Tareas Clínicas</h2>
+            
+            <form id="tarea-form">
+                <input type="hidden" id="tarea-id">
+
+                <div class="form-control" style="max-width: 450px;">
+                    <label>Pareja Consultante</label>
+                    <select id="select-pareja" required>
+                        <option value="">Seleccione una pareja registrada...</option>
+                    </select>
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="form-control">
+                        <label>Consigna / Descripción de la Tarea</label>
+                        <textarea id="tarea-descripcion" required placeholder="Describa la consigna de la tarea asignada..."></textarea>
+                        
+                        <label style="margin-top: 1rem;">Documento PDF Asociado (Nombre de archivo o URL)</label>
+                        <input type="text" id="tarea-pdf" placeholder="Ej: tarea_pareja_1.pdf o enlace web">
+                    </div>
+
+                    <div>
+                        <div class="form-control">
+                            <label>Valoración (Semáforo)</label>
+                            <select id="tarea-estado" required>
+                                <option value="Verde">🟢 Verde (Completada / Lograda)</option>
+                                <option value="Amarillo" selected>🟡 Amarillo (En proceso)</option>
+                                <option value="Rojo">🔴 Rojo (No realizada / Incumplida)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Fecha de Asignación</label>
+                            <input type="date" id="tarea-fecha" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-guardar" id="btn-guardar">Guardar Tarea</button>
+                    <button type="button" class="btn btn-editar" id="btn-editar">Actualizar</button>
+                    <button type="button" class="btn btn-eliminar" id="btn-eliminar">Eliminar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Historial de Tareas Asignadas -->
+        <div class="card">
+            <h2>Historial de Tareas Asignadas y Valoración</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Pareja</th>
+                        <th>Consigna / Tarea</th>
+                        <th>Archivo PDF</th>
+                        <th>Valoración</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-tareas">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Firebase y Lógica del Módulo -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDv1wgWGICsvfrJHZV1s2HVXdsAvIRAOuI",
+            authDomain: "terapia-de-pareja-3bb81.firebaseapp.com",
+            projectId: "terapia-de-pareja-3bb81",
+            storageBucket: "terapia-de-pareja-3bb81.firebasestorage.app",
+            messagingSenderId: "173599055420",
+            appId: "1:173599055420:web:5b36414cc3b4c7a90b6d39"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const fechaInput = document.getElementById('tarea-fecha');
+            if (fechaInput) {
+                fechaInput.valueAsDate = new Date();
+            }
+
+            cargarParejasSelector();
+            cargarTareasFirestore();
+
+            document.getElementById('btn-guardar').addEventListener('click', guardarTarea);
+            document.getElementById('btn-editar').addEventListener('click', actualizarTarea);
+            document.getElementById('btn-eliminar').addEventListener('click', eliminarTarea);
+        });
+
+        async function cargarParejasSelector() {
+            const select = document.getElementById('select-pareja');
+            try {
+                const querySnapshot = await getDocs(collection(db, "parejas_pacientes"));
+                select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const parejaNombre = `${data.p1.nombre} & ${data.p2.nombre}`;
+                    const opt = document.createElement('option');
+                    opt.value = parejaNombre;
+                    opt.textContent = parejaNombre;
+                    select.appendChild(opt);
+                });
+            } catch (e) {
+                console.error("Error al cargar parejas:", e);
+            }
+        }
+
+        async function guardarTarea() {
+            const pareja = document.getElementById('select-pareja').value;
+            const descripcion = document.getElementById('tarea-descripcion').value.trim();
+            const pdf = document.getElementById('tarea-pdf').value.trim();
+            const estado = document.getElementById('tarea-estado').value;
+            const fecha = document.getElementById('tarea-fecha').value;
+
+            if (!pareja || !descripcion || !fecha) {
+                alert("Por favor complete los campos obligatorios.");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "tareas_asignadas"), {
+                    pareja,
+                    descripcion,
+                    pdf: pdf || "Sin archivo",
+                    estado,
+                    fecha,
+                    timestamp: new Date()
+                });
+                alert("Tarea guardada con éxito.");
+                limpiarFormulario();
+                cargarTareasFirestore();
+            } catch (e) {
+                console.error("Error al guardar tarea:", e);
+                alert("Error al conectar con la base de datos.");
+            }
+        }
+
+        async function actualizarTarea() {
+            const id = document.getElementById('tarea-id').value;
+            const pareja = document.getElementById('select-pareja').value;
+            const descripcion = document.getElementById('tarea-descripcion').value.trim();
+            const pdf = document.getElementById('tarea-pdf').value.trim();
+            const estado = document.getElementById('tarea-estado').value;
+            const fecha = document.getElementById('tarea-fecha').value;
+
+            if (!id || !pareja || !descripcion) return;
+
+            try {
+                await updateDoc(doc(db, "tareas_asignadas", id), {
+                    pareja,
+                    descripcion,
+                    pdf: pdf || "Sin archivo",
+                    estado,
+                    fecha
+                });
+                alert("Tarea actualizada correctamente.");
+                limpiarFormulario();
+                cargarTareasFirestore();
+            } catch (e) {
+                console.error("Error al actualizar tarea:", e);
+                alert("Error al actualizar el registro.");
+            }
+        }
+
+        async function eliminarTarea() {
+            const id = document.getElementById('tarea-id').value;
+            if (!id) return;
+
+            if (confirm("¿Está seguro que desea eliminar esta tarea asignada?")) {
+                try {
+                    await deleteDoc(doc(db, "tareas_asignadas", id));
+                    alert("Tarea eliminada.");
+                    limpiarFormulario();
+                    cargarTareasFirestore();
+                } catch (e) {
+                    console.error("Error al eliminar tarea:", e);
+                }
+            }
+        }
+
+        async function cargarTareasFirestore() {
+            const tbody = document.getElementById('lista-tareas');
+            tbody.innerHTML = '';
+            try {
+                const querySnapshot = await getDocs(collection(db, "tareas_asignadas"));
+                if (querySnapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No se registran tareas asignadas.</td></tr>';
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    let semaforoHTML = '';
+                    if (data.estado === 'Verde') {
+                        semaforoHTML = '<span class="semaforo semaforo-verde">🟢 Completada</span>';
+                    } else if (data.estado === 'Amarillo') {
+                        semaforoHTML = '<span class="semaforo semaforo-amarillo">🟡 En proceso</span>';
+                    } else {
+                        semaforoHTML = '<span class="semaforo semaforo-rojo">🔴 No realizada</span>';
+                    }
+
+                    const pdfDisplay = data.pdf !== "Sin archivo" 
+                        ? `<a href="${data.pdf}" target="_blank" class="pdf-link">📄 Ver PDF</a>` 
+                        : '<span style="color: var(--text-muted);">Sin PDF</span>';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = '<td><strong>' + data.pareja + '</strong></td>' +
+                                   '<td>' + data.descripcion + '</td>' +
+                                   '<td>' + pdfDisplay + '</td>' +
+                                   '<td>' + semaforoHTML + '</td>' +
+                                   '<td>' + data.fecha + '</td>';
+                    tr.addEventListener('click', () => seleccionarTarea(docSnap.id, data));
+                    tbody.appendChild(tr);
+                });
+            } catch (e) {
+                console.error("Error al cargar tareas:", e);
+            }
+        }
+
+        function seleccionarTarea(id, data) {
+            document.getElementById('tarea-id').value = id;
+            document.getElementById('select-pareja').value = data.pareja;
+            document.getElementById('tarea-descripcion').value = data.descripcion;
+            document.getElementById('tarea-pdf').value = data.pdf === "Sin archivo" ? "" : data.pdf;
+            document.getElementById('tarea-estado').value = data.estado;
+            document.getElementById('tarea-fecha').value = data.fecha;
+
+            document.getElementById('btn-guardar').style.display = 'none';
+            document.getElementById('btn-editar').style.display = 'inline-block';
+            document.getElementById('btn-eliminar').style.display = 'inline-block';
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('tarea-form').reset();
+            document.getElementById('tarea-id').value = '';
+            document.getElementById('tarea-fecha').valueAsDate = new Date();
+            document.getElementById('btn-guardar').style.display = 'inline-block';
+            document.getElementById('btn-editar').style.display = 'none';
+            document.getElementById('btn-eliminar').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
