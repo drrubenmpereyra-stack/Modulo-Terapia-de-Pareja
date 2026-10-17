@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Primera Entrevista Vincular - Clínica de la Convergencia</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --border-focus: #3b82f6;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            font-size: 1rem;
+            margin: 1.5rem 0 1rem 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 850px) {
+            .form-grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .column-integrante {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1.5px solid var(--border-color);
+        }
+
+        .column-integrante h4 {
+            color: var(--primary-color);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.4rem;
+        }
+
+        .form-control {
+            margin-bottom: 1rem;
+        }
+
+        .form-control label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-control textarea, .form-control select, .form-control input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background-color: #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        .form-control textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-control textarea:focus, .form-control select:focus, .form-control input:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        /* Sección de Síntesis y Conclusiones Analíticas */
+        .synthesis-section {
+            background: #fffbeb;
+            border: 1.5px solid #fcd34d;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+        }
+
+        .synthesis-section h3 {
+            color: #92400e;
+            margin-top: 0;
+        }
+
+        .btn-group {
+            margin-top: 2rem;
+            text-align: right;
+        }
+
+        .btn-registrar {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: #ffffff;
+            padding: 0.85rem 2.5rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.2s ease;
+        }
+
+        .btn-registrar:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-elevated);
+            filter: brightness(1.1);
+        }
+
+        /* Historial */
+        .history-item {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--secondary-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 800px) {
+            .history-grid { grid-template-columns: 1fr; }
+        }
+
+        .history-box {
+            background: #ffffff;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Formulario de Primera Entrevista -->
+        <div class="card">
+            <h2>Primera Entrevista Vincular: Mapa de Demandas y Expectativas</h2>
+            
+            <form id="prim-ent-form">
+                <!-- Selector de Pareja -->
+                <div class="form-control" style="margin-bottom: 1.5rem;">
+                    <label>Pareja Consultante</label>
+                    <select id="select-pareja" required style="max-width: 400px; padding: 0.75rem;">
+                        <option value="">Seleccione una pareja registrada...</option>
+                    </select>
+                </div>
+
+                <div class="form-grid-2">
+                    <!-- Integrante 1 -->
+                    <div class="column-integrante">
+                        <h4 id="label-p1">Integrante 1</h4>
+                        
+                        <div class="form-control">
+                            <label>Expectativas en torno a la terapia</label>
+                            <textarea id="p1-expectativas" required placeholder="¿Qué espera encontrar o vivir en el proceso terapéutico?"></textarea>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Deseos a lograr</label>
+                            <textarea id="p1-deseos" required placeholder="¿Cuáles son sus aspiraciones personales y vinculares?"></textarea>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Demandas hacia el otro</label>
+                            <textarea id="p1-demandas" required placeholder="¿Qué le reclama, exige o demanda a su pareja?"></textarea>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Intención Vincular</label>
+                            <select id="p1-intencion">
+                                <option value="Continuar y mejorar el vínculo">Continuar y mejorar el vínculo</option>
+                                <option value="Dudas / Ambigüedad">Dudas / Ambigüedad</option>
+                                <option value="Desarmar el vínculo y separarse">Desarmar el vínculo y separarse</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Integrante 2 -->
+                    <div class="column-integrante">
+                        <h4 id="label-p2">Integrante 2</h4>
+                        
+                        <div class="form-control">
+                            <label>Expectativas en torno a la terapia</label>
+                            <textarea id="p2-expectativas" required placeholder="¿Qué espera encontrar o vivir en el proceso terapéutico?"></textarea>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Deseos a lograr</label>
+                            <textarea id="p2-deseos" required placeholder="¿Cuáles son sus aspiraciones personales y vinculares?"></textarea>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Demandas hacia el otro</label>
+                            <textarea id="p2-demandas" required placeholder="¿Qué le reclama, exige o demanda a su pareja?"></textarea>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Intención Vincular</label>
+                            <select id="p2-intencion">
+                                <option value="Continuar y mejorar el vínculo">Continuar y mejorar el vínculo</option>
+                                <option value="Dudas / Ambigüedad">Dudas / Ambigüedad</option>
+                                <option value="Desarmar el vínculo y separarse">Desarmar el vínculo y separarse</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Análisis Clínico de Coincidencias y Conflictos -->
+                <div class="synthesis-section">
+                    <h3>Síntesis Analítica: Coincidencias, Divergencias y Nudos de Conflicto</h3>
+                    <div class="form-control">
+                        <label>Evaluación del terapeuta sobre la articulación de demandas y expectativas</label>
+                        <textarea id="analisis-convergencia" required placeholder="Analice aquí las coincidencias de objetivos, los choques de demandas cruzadas, las asimetrías en la intención vincular (ej. uno quiere reparar y el otro separarse) y los vectores iniciales del conflicto..."></textarea>
+                    </div>
+                    <div class="form-control" style="margin-top: 1rem;">
+                        <label>Fecha de la Entrevista</label>
+                        <input type="date" id="entrevista-fecha" required style="max-width: 250px;">
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn-registrar" onclick="guardarPrimeraEntrevista()">Guardar Primera Entrevista</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Historial de Primeras Entrevistas -->
+        <div class="card">
+            <h2>Historial de Primeras Entrevistas Registradas</h2>
+            <div id="historial-entrevistas">
+                <!-- Se cargan dinámicamente desde Firestore -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase y Lógica del Módulo -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDv1wgWGICsvfrJHZV1s2HVXdsAvIRAOuI",
+            authDomain: "terapia-de-pareja-3bb81.firebaseapp.com",
+            projectId: "terapia-de-pareja-3bb81",
+            storageBucket: "terapia-de-pareja-3bb81.firebasestorage.app",
+            messagingSenderId: "173599055420",
+            appId: "1:173599055420:web:5b36414cc3b4c7a90b6d39"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let parejasMap = {};
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('entrevista-fecha').valueAsDate = new Date();
+            cargarParejasSelector();
+            cargarHistorialEntrevistas();
+        });
+
+        // Cargar parejas y guardar referencia de nombres
+        async function cargarParejasSelector() {
+            const select = document.getElementById('select-pareja');
+            try {
+                const querySnapshot = await getDocs(collection(db, "parejas_pacientes"));
+                select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const id = docSnap.id;
+                    parejasMap[id] = data;
+                    const parejaNombre = `${data.p1.nombre} & ${data.p2.nombre}`;
+                    const opt = document.createElement('option');
+                    opt.value = id;
+                    opt.textContent = parejaNombre;
+                    select.appendChild(opt);
+                });
+
+                select.onchange = function() {
+                    const selectedId = this.value;
+                    if (selectedId && parejasMap[selectedId]) {
+                        document.getElementById('label-p1').textContent = `Integrante 1: ${parejasMap[selectedId].p1.nombre}`;
+                        document.getElementById('label-p2').textContent = `Integrante 2: ${parejasMap[selectedId].p2.nombre}`;
+                    } else {
+                        document.getElementById('label-p1').textContent = 'Integrante 1';
+                        document.getElementById('label-p2').textContent = 'Integrante 2';
+                    }
+                };
+            } catch (e) {
+                console.error("Error al cargar parejas:", e);
+            }
+        }
+
+        // Guardar Primera Entrevista en Firestore
+        window.guardarPrimeraEntrevista = async function() {
+            const parejaId = document.getElementById('select-pareja').value;
+            if (!parejaId) {
+                alert("Por favor seleccione una pareja.");
+                return;
+            }
+
+            const dataPareja = parejasMap[parejaId];
+            const nombrePareja = `${dataPareja.p1.nombre} & ${dataPareja.p2.nombre}`;
+
+            const record = {
+                parejaId,
+                nombrePareja,
+                p1: {
+                    nombre: dataPareja.p1.nombre,
+                    expectativas: document.getElementById('p1-expectativas').value,
+                    deseos: document.getElementById('p1-deseos').value,
+                    demandas: document.getElementById('p1-demandas').value,
+                    intencion: document.getElementById('p1-intencion').value
+                },
+                p2: {
+                    nombre: dataPareja.p2.nombre,
+                    expectativas: document.getElementById('p2-expectativas').value,
+                    deseos: document.getElementById('p2-deseos').value,
+                    demandas: document.getElementById('p2-demandas').value,
+                    intencion: document.getElementById('p2-intencion').value
+                },
+                analisisConvergencia: document.getElementById('analisis-convergencia').value,
+                fecha: document.getElementById('entrevista-fecha').value,
+                timestamp: new Date()
+            };
+
+            try {
+                await addDoc(collection(db, "primeras_entrevistas"), record);
+                alert("Primera entrevista registrada con éxito.");
+                document.getElementById('prim-ent-form').reset();
+                document.getElementById('entrevista-fecha').valueAsDate = new Date();
+                cargarHistorialEntrevistas();
+            } catch (e) {
+                console.error("Error al guardar:", e);
+                alert("Error al conectar con la base de datos.");
+            }
+        };
+
+        // Cargar Historial
+        async function cargarHistorialEntrevistas() {
+            const container = document.getElementById('historial-entrevistas');
+            container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">Cargando entrevistas...</p>';
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "primeras_entrevistas"));
+                container.innerHTML = '';
+
+                if (querySnapshot.empty) {
+                    container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">No se registran primeras entrevistas.</p>';
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    container.innerHTML += `
+                        <div class="history-item">
+                            <div class="history-header">
+                                <span>Pareja: ${data.nombrePareja}</span>
+                                <span>Fecha: ${data.fecha}</span>
+                            </div>
+                            <div class="history-grid">
+                                <div class="history-box">
+                                    <strong>${data.p1.nombre}</strong><br>
+                                    <small><strong>Intención:</strong> ${data.p1.intencion}</small><br>
+                                    <p style="margin-top:0.4rem;"><strong>Expectativa:</strong> ${data.p1.expectativas}</p>
+                                    <p><strong>Deseo:</strong> ${data.p1.deseos}</p>
+                                    <p><strong>Demanda al otro:</strong> ${data.p1.demandas}</p>
+                                </div>
+                                <div class="history-box">
+                                    <strong>${data.p2.nombre}</strong><br>
+                                    <small><strong>Intención:</strong> ${data.p2.intencion}</small><br>
+                                    <p style="margin-top:0.4rem;"><strong>Expectativa:</strong> ${data.p2.expectativas}</p>
+                                    <p><strong>Deseo:</strong> ${data.p2.deseos}</p>
+                                    <p><strong>Demanda al otro:</strong> ${data.p2.demandas}</p>
+                                </div>
+                            </div>
+                            <div style="background: #fffbeb; padding: 0.85rem; border-radius: 6px; border: 1px solid #fcd34d; font-size: 0.85rem;">
+                                <strong>Análisis de Convergencia / Nudos de Conflicto:</strong><br>
+                                ${data.analisisConvergencia}
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                console.error("Error al cargar historial:", e);
+                container.innerHTML = '<p style="color: #dc2626; font-size: 0.85rem;">Error al recuperar el historial.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
