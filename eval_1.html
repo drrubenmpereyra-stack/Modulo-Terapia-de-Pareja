@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación y Rúbrica Vincular - Clínica de la Convergencia</title>
+    <!-- Chart.js para el gráfico de radar -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --border-focus: #3b82f6;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            font-size: 1rem;
+            margin: 1.5rem 0 1rem 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .form-control {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-control label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-control select, .form-control input {
+            width: 100%;
+            max-width: 400px;
+            padding: 0.75rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background-color: #ffffff;
+        }
+
+        /* Tabla de Rúbrica */
+        table.rubrica-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        table.rubrica-table th, table.rubrica-table td {
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.85rem;
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        table.rubrica-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            text-align: center;
+        }
+
+        table.rubrica-table td:first-child {
+            font-weight: 600;
+            color: var(--secondary-color);
+            width: 25%;
+        }
+
+        .nivel-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .nivel-cell:hover {
+            background-color: #f8fafc;
+        }
+
+        .nivel-cell input[type="radio"] {
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        .nivel-desc {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        /* Botonera de Acción */
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .btn-puntuar { background-color: #0284c7; color: #ffffff; }
+        .btn-graficar { background-color: #059669; color: #ffffff; }
+        .btn-guardar { background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)); color: #ffffff; }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-elevated);
+            filter: brightness(1.1);
+        }
+
+        /* Resultados y Gráfico */
+        .results-box {
+            background: #fffbeb;
+            border: 1.5px solid #fcd34d;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .results-box h4 {
+            color: #92400e;
+            margin-bottom: 0.75rem;
+            font-size: 1.05rem;
+        }
+
+        .radar-container {
+            width: 100%;
+            max-width: 450px;
+            margin: 1.5rem auto 0 auto;
+            background: #ffffff;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Historial */
+        .history-item {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-color);
+            padding: 1.25rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Formulario de Evaluación Rúbrica -->
+        <div class="card">
+            <h2>Evaluación Inmediata y Rúbrica del Proceso Vincular</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Marco de referencia: <em>Clínica de la Convergencia</em>[cite: 1]. Evalúe cada indicador clínico marcando el nivel correspondiente (1 a 3 puntos)[cite: 1].</p>
+            
+            <form id="eval-form">
+                <div class="form-control">
+                    <label>Pareja Consultante</label>
+                    <select id="select-pareja" required>
+                        <option value="">Seleccione una pareja registrada...</option>
+                    </select>
+                </div>
+
+                <div class="form-control" style="max-width: 250px; margin-top: 1rem;">
+                    <label>Fecha de Evaluación</label>
+                    <input type="date" id="eval-fecha" required>
+                </div>
+
+                <table class="rubrica-table">
+                    <thead>
+                        <tr>
+                            <th>Indicadores de Devolución y Proceso[cite: 1]</th>
+                            <th>Nivel 1 (1 pt)[cite: 1]<br><span style="font-weight:400; font-size:0.7rem;">Bloqueo / Descarga</span></th>
+                            <th>Nivel 2 (2 pts)[cite: 1]<br><span style="font-weight:400; font-size:0.7rem;">Transición / Registro</span></th>
+                            <th>Nivel 3 (3 pts)[cite: 1]<br><span style="font-weight:400; font-size:0.7rem;">Elaboración / Fluidez</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- A -->
+                        <tr>
+                            <td><strong>A. Nominación de Afectos[cite: 1]</strong></td>
+                            <td class="nivel-cell" onclick="seleccionarRadio('indA', 1)">
+                                <input type="radio" name="indA" value="1" required>
+                                <span class="nivel-desc">Predominio de descarga somática; ausencia de palabras[cite: 1].</span>
+                            </td>
+                            <td class="nivel-cell" onclick="seleccionarRadio('indA', 2)">
+                                <input type="radio" name="indA" value="2">
+                                <span class="nivel-desc">Nombrasemociones básicas con guía del terapeuta[cite: 1].</span>
+                            </td>
+                            <td class="nivel-cell" onclick="seleccionarRadio('indA', 3)">
+                                <input type="radio" name="indA" value="3">
+                                <span class="nivel-desc">Capacidad autónoma para discriminar afectos complejos[cite: 1].</span>
+                            </td>
+                        </tr>
+                        <!-- B -->
+                        <tr>
+                            <td><strong>B. Deconstrucción de Proyecciones[cite: 1]</strong></td>
+                            <td class="nivel-cell" onclick="seleccionarRadio('indB', 1)">
+                                <input type="radio" name="indB" value="1" required>
+                                <span class="nivel-desc">Sostenimiento rígido de la culpa en el otro ("él/ella es el problema")[cite: 1].</span>
+                            </td>
+                            <td class="nivel-cell" onclick="seleccionarRadio('indB', 2)">
+                                <input type="radio" name="indB" value="2">
+                                <span class="nivel-desc">Reconoce fragmentos de implicancia defensiva con resistencia[cite: 1].</span>
+                            </td>
+                            <td class="nivel-cell" onclick="seleccionarRadio('indB', 3)">
+                                <input type="radio" name="indB" value="3">
+                                <span class="nivel-desc">Desarma activamente proyecciones y asume implicancia[cite: 1].</span>
+                            </td>
+                        </tr>
+                        <!-- C -->
+                        <tr>
+                            <td><strong>C. Regulación Alostática/Límbica[cite: 1]</strong></td>
+                            <td class="nivel-cell" onclick="seleccionarRadio('indC', 1)">
+                                <input type="radio" name="indC" value="1" required>
+                                <span class="nivel-desc">Desborde constante; sesión vivida como amenaza/pelea[cite: 1].</span>
+                            </td>
+                            <td class="nivel-cell" onclick="seleccionarRadio('indC', 2)">
+                                <input type="radio" name="indC" value="2">
+                                <span class="nivel-desc">Labilidad moderada; tolera contención externa temporal[cite: 1].</span>
+                            </td>
+                            <td class="nivel-cell" onclick="seleccionarRadio('indC', 3)">
+                                <input type="radio" name="indC" value="3">
+                                <span class="nivel-desc">Autoposesión del afecto; espacio de calma y ligadura[cite: 1].</span>
+                            </td>
+                        </tr>
+                        <!-- D -->
+                        <tr>
+                            <td><strong>D. Apertura del Deseo y Alteridad[cite: 1]</strong></td>
+                            <td class="nivel-cell" onclick="seleccionarRadio('indD', 1)">
+                                <input type="radio" name="indD" value="1" required>
+                                <span class="nivel-desc">Demanda de completud simbiótica o ruptura radical[cite: 1].</span>
+                            </td>
+                            <td class="nivel-cell" onclick="seleccionarRadio('indD', 2)">
+                                <input type="radio" name="indD" value="2">
+                                <span class="nivel-desc">Tolera la diferencia de manera intermitente; ceden reclamos[cite: 1].</span>
+                            </td>
+                            <td class="nivel-cell" onclick="seleccionarRadio('indD', 3)">
+                                <input type="radio" name="indD" value="3">
+                                <span class="nivel-desc">Reconoce y respeta la alteridad; reorganización del lazo[cite: 1].</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-puntuar" onclick="calcularPuntaje()">📊 Puntuar y Evaluar</button>
+                    <button type="button" class="btn btn-graficar" onclick="generarGraficoRadar()">📈 Graficar (Radar)</button>
+                    <button type="button" class="btn btn-guardar" onclick="guardarEvaluacion()">💾 Guardar Informe en BD</button>
+                </div>
+            </form>
+
+            <!-- Caja de Resultados e Informe Automático -->
+            <div id="resultado-box" class="results-box">
+                <h4 id="res-titulo">Resultado de la Evaluación</h4>
+                <p id="res-puntaje" style="font-weight: 700; margin-bottom: 0.5rem;"></p>
+                <p id="res-criterio" style="margin-bottom: 0.5rem;"></p>
+                <p id="res-accion" style="font-style: italic; color: #78350f;"></p>
+
+                <!-- Contenedor del Gráfico de Radar -->
+                <div class="radar-container" id="radar-wrapper" style="display:none;">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historial de Evaluaciones -->
+        <div class="card">
+            <h2>Historial de Informes de Evaluación Inmediata</h2>
+            <div id="historial-evaluaciones">
+                <p style="color: var(--text-muted); font-size: 0.85rem;">Cargando historial...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase y Lógica del Módulo -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDv1wgWGICsvfrJHZV1s2HVXdsAvIRAOuI",
+            authDomain: "terapia-de-pareja-3bb81.firebaseapp.com",
+            projectId: "terapia-de-pareja-3bb81",
+            storageBucket: "terapia-de-pareja-3bb81.firebasestorage.app",
+            messagingSenderId: "173599055420",
+            appId: "1:173599055420:web:5b36414cc3b4c7a90b6d39"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let radarChartInstance = null;
+        let datosUltimaEval = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('eval-fecha').valueAsDate = new Date();
+            cargarParejasSelector();
+            cargarHistorialEvaluaciones();
+        });
+
+        window.seleccionarRadio = function(nombreGrupo, valor) {
+            const radio = document.querySelector(`input[name="${nombreGrupo}"][value="${valor}"]`);
+            if (radio) radio.checked = true;
+        };
+
+        async function cargarParejasSelector() {
+            const select = document.getElementById('select-pareja');
+            try {
+                const querySnapshot = await getDocs(collection(db, "parejas_pacientes"));
+                select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const parejaNombre = `${data.p1.nombre} & ${data.p2.nombre}`;
+                    const opt = document.createElement('option');
+                    opt.value = parejaNombre;
+                    opt.textContent = parejaNombre;
+                    select.appendChild(opt);
+                });
+            } catch (e) {
+                console.error("Error al cargar parejas:", e);
+            }
+        }
+
+        function obtenerValoresRúbrica() {
+            const vA = parseInt(document.querySelector('input[name="indA"]:checked')?.value || 0);
+            const vB = parseInt(document.querySelector('input[name="indB"]:checked')?.value || 0);
+            const vC = parseInt(document.querySelector('input[name="indC"]:checked')?.value || 0);
+            const vD = parseInt(document.querySelector('input[name="indD"]:checked')?.value || 0);
+
+            if (!vA || !vB || !vC || !vD) {
+                return null;
+            }
+            return { vA, vB, vC, vD, total: vA + vB + vC + vD };
+        }
+
+        function generarAnalisisInforme(total, vA, vB, vC, vD) {
+            let fase = "";
+            let criterio = "";
+            let accion = "";
+
+            if (total >= 4 && total <= 6) {
+                fase = "Fase Crítica / Estancamiento Defensivo[cite: 1]";
+                criterio = "El proceso se encuentra atrapado en un bucle de repetición sintomática y rigidez vincular[cite: 1].";
+                accion = "Acción Técnica: Las devoluciones del terapeuta deben ser altamente focalizadas, breves y de corte directivo-contenedor. Es necesario priorizar la contención del desborde neurovegetativo[cite: 1].";
+            } else if (total >= 7 && total <= 9) {
+                fase = "Fase de Elaboración Intermedia / Apertura de Puentes[cite: 1]";
+                criterio = "Hay indicios claros de plasticidad psíquica. La pareja tolera la frustración de la diferencia y las intervenciones operan como huellas mnémicas[cite: 1].";
+                accion = "Acción Técnica: Profundizar en las devoluciones técnicas articulando la historia inconsciente individual con la dinámica vincular actual[cite: 1].";
+            } else {
+                fase = "Fase de Consolidación / Autonomía Vincular[cite: 1]";
+                criterio = "Éxito en el proceso de convergencia clínica. Alta capacidad de simbolización y respeto por la alteridad[cite: 1].";
+                accion = "Acción Técnica: Espaciamiento progresivo de las sesiones (high-spacing terapéutico) y evaluación de cierre o consolidación[cite: 1].";
+            }
+
+            return { fase, criterio, accion };
+        }
+
+        window.calcularPuntaje = function() {
+            const vals = obtenerValoresRúbrica();
+            if (!vals) {
+                alert("Por favor complete todos los indicadores de la rúbrica.");
+                return null;
+            }
+
+            const info = generarAnalisisInforme(vals.total, vals.vA, vals.vB, vals.vC, vals.vD);
+            
+            document.getElementById('resultado-box').style.display = 'block';
+            document.getElementById('res-titulo').textContent = `Informe Clínico: ${info.fase}`;
+            document.getElementById('res-puntaje.textContent', `Puntaje Total: ${vals.total} / 12 puntos (A: ${vals.vA}, B: ${vals.vB}, C: ${vals.vC}, D: ${vals.vD})`);
+            // Fix textContent assignment
+            document.getElementById('res-puntaje').textContent = `Puntaje Total: ${vals.total} / 12 puntos (Nominación: ${vals.vA}, Proyecciones: ${vals.vB}, Regulación: ${vals.vC}, Deseo: ${vals.vD})`;
+            document.getElementById('res-criterio').innerHTML = `<strong>Criterio:</strong> ${info.criterio}`;
+            document.getElementById('res-accion').innerHTML = `<strong>Estrategia:</strong> ${info.accion}`;
+
+            datosUltimaEval = { ...vals, ...info };
+            return vals;
+        };
+
+        window.generarGraficoRadar = function() {
+            const vals = calcularPuntaje();
+            if (!vals) return;
+
+            document.getElementById('radar-wrapper').style.display = 'block';
+            const ctx = document.getElementById('radarChart').getContext('2d');
+
+            if (radarChartInstance) {
+                radarChartInstance.destroy();
+            }
+
+            radarChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['A. Nominación', 'B. Deconstrucción', 'C. Regulación', 'D. Deseo y Alteridad'],
+                    datasets: [{
+                        label: 'Nivel Alcanzado (1-3)',
+                        data: [vals.vA, vals.vB, vals.vC, vals.vD],
+                        backgroundColor: 'rgba(30, 58, 138, 0.2)',
+                        borderColor: '#1e3a8a',
+                        pointBackgroundColor: '#d97706',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 3,
+                            ticks: { stepSize: 1 }
+                        }
+                    }
+                }
+            });
+        };
+
+        window.guardarEvaluacion = async function() {
+            const pareja = document.getElementById('select-pareja').value;
+            const fecha = document.getElementById('eval-fecha').value;
+            const vals = calcularPuntaje();
+
+            if (!pareja || !fecha || !vals) {
+                alert("Por favor seleccione la pareja, la fecha y complete todos los indicadores antes de guardar.");
+                return;
+            }
+
+            const informe = generarAnalisisInforme(vals.total, vals.vA, vals.vB, vals.vC, vals.vD);
+
+            const record = {
+                pareja,
+                fecha,
+                puntajeTotal: vals.total,
+                detalle: { a: vals.vA, b: vals.vB, c: vals.vC, d: vals.vD },
+                fase: informe.fase,
+                criterio: informe.criterio,
+                accion: informe.accion,
+                timestamp: new Date()
+            };
+
+            try {
+                await addDoc(collection(db, "evaluaciones_inmediatas"), record);
+                alert("Informe de evaluación guardado con éxito en la base de datos.");
+                document.getElementById('eval-form').reset();
+                document.getElementById('eval-fecha').valueAsDate = new Date();
+                document.getElementById('resultado-box').style.display = 'none';
+                if (radarChartInstance) radarChartInstance.destroy();
+                cargarHistorialEvaluaciones();
+            } catch (e) {
+                console.error("Error al guardar evaluación:", e);
+                alert("Error al conectar con la base de datos.");
+            }
+        };
+
+        async function cargarHistorialEvaluaciones() {
+            const container = document.getElementById('historial-evaluaciones');
+            container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">Cargando historial...</p>';
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "evaluaciones_inmediatas"));
+                container.innerHTML = '';
+
+                if (querySnapshot.empty) {
+                    container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">No se registran evaluaciones anteriores.</p>';
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    container.innerHTML += `
+                        <div class="history-item">
+                            <div class="history-header">
+                                <span>Pareja: ${data.pareja}</span>
+                                <span>Fecha: ${data.fecha} | Puntaje: ${data.puntajeTotal}/12 pts</span>
+                            </div>
+                            <div style="font-size: 0.85rem;">
+                                <p><strong>Fase:</strong> ${data.fase}</p>
+                                <p style="margin-top:0.3rem;"><strong>Criterio:</strong> ${data.criterio}</p>
+                                <p style="margin-top:0.3rem; color: #78350f;"><strong>Estrategia:</strong> ${data.accion}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                console.error("Error al cargar historial:", e);
+                container.innerHTML = '<p style="color: #dc2626; font-size: 0.85rem;">Error al recuperar el historial.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
