@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genograma Dinámico Vincular - Clínica de la Convergencia</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --border-focus: #3b82f6;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            font-size: 1rem;
+            margin: 1.5rem 0 1rem 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 850px) {
+            .form-grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .column-fam {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1.5px solid var(--border-color);
+        }
+
+        .column-fam h4 {
+            color: var(--primary-color);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.4rem;
+        }
+
+        .form-control {
+            margin-bottom: 1rem;
+        }
+
+        .form-control label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-control textarea, .form-control select, .form-control input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background-color: #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        .form-control textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-control textarea:focus, .form-control select:focus, .form-control input:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        /* Sección de Gráfico / Vista Estructural */
+        .genogram-preview {
+            background: #f1f5f9;
+            border: 2px dashed var(--border-color);
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .genogram-canvas-box {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-subtle);
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .btn-grafico {
+            background-color: var(--secondary-color);
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.2s ease;
+        }
+
+        .btn-grafico:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        .btn-group {
+            margin-top: 2rem;
+            text-align: right;
+        }
+
+        .btn-registrar {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: #ffffff;
+            padding: 0.85rem 2.5rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.2s ease;
+        }
+
+        .btn-registrar:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-elevated);
+            filter: brightness(1.1);
+        }
+
+        /* Historial */
+        .history-item {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Formulario de Genograma Vincular -->
+        <div class="card">
+            <h2>Genograma Dinámico Vincular y Transgeneracional</h2>
+            
+            <form id="gen-form">
+                <!-- Selector de Pareja -->
+                <div class="form-control" style="margin-bottom: 1.5rem;">
+                    <label>Pareja Consultante</label>
+                    <select id="select-pareja" required style="max-width: 400px; padding: 0.75rem;">
+                        <option value="">Seleccione una pareja registrada...</option>
+                    </select>
+                </div>
+
+                <div class="form-grid-2">
+                    <!-- Familia de Origen Integrante 1 -->
+                    <div class="column-fam">
+                        <h4 id="label-fam1">Familia de Origen - Integrante 1</h4>
+                        
+                        <div class="form-control">
+                            <label>Antecedentes y Mandatos Familiares</label>
+                            <textarea id="fam1-antecedentes" required placeholder="Hitos transgeneracionales, mandatos, alianzas o rupturas en la familia de origen..."></textarea>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Modalidad de Vínculo Parental</label>
+                            <textarea id="fam1-vinculo" required placeholder="Tipo de apego y relaciones tempranas con los padres..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Familia de Origen Integrante 2 -->
+                    <div class="column-fam">
+                        <h4 id="label-fam2">Familia de Origen - Integrante 2</h4>
+                        
+                        <div class="form-control">
+                            <label>Antecedentes y Mandatos Familiares</label>
+                            <textarea id="fam2-antecedentes" required placeholder="Hitos transgeneracionales, mandatos, alianzas o rupturas en la familia de origen..."></textarea>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Modalidad de Vínculo Parental</label>
+                            <textarea id="fam2-vinculo" required placeholder="Tipo de apego y relaciones tempranas con los padres..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dinámica Actual del Vínculo -->
+                <div class="form-control">
+                    <h3>Dinámica Actual del Vínculo de Pareja</h3>
+                    <label>Alianzas, Conflictos y Puntos de Convergencia Intersubjetiva</label>
+                    <textarea id="gen-dinamica" required placeholder="Describa la interacción actual, modalidades de comunicación, zonas de conflicto y colisión de mandatos transgeneracionales..." style="min-height: 100px;"></textarea>
+                </div>
+
+                <!-- Sección de Generación de Gráfico -->
+                <div class="genogram-preview">
+                    <h3>Estructura Visual del Genograma</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Haga clic en el botón para renderizar la representación gráfica esquemática del sistema vincular actual.</p>
+                    <button type="button" class="btn-grafico" onclick="generarGraficoGenograma()">⚡ Generar Gráfico Estructural</button>
+                    
+                    <div class="genogram-canvas-box" id="canvas-visual">
+                        <span style="color: var(--text-muted); font-size: 0.85rem; font-style: italic;">[ El gráfico estructural se renderizará aquí ]</span>
+                    </div>
+                </div>
+
+                <div class="form-control" style="margin-top: 1.5rem; max-width: 300px;">
+                    <label>Fecha de Registro</label>
+                    <input type="date" id="gen-fecha" required>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn-registrar" onclick="guardarGenograma()">Guardar Genograma en Base de Datos</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Historial de Genogramas -->
+        <div class="card">
+            <h2>Historial de Genogramas Registrados</h2>
+            <div id="historial-genogramas">
+                <!-- Se cargan dinámicamente desde Firestore -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase y Lógica del Módulo -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDv1wgWGICsvfrJHZV1s2HVXdsAvIRAOuI",
+            authDomain: "terapia-de-pareja-3bb81.firebaseapp.com",
+            projectId: "terapia-de-pareja-3bb81",
+            storageBucket: "terapia-de-pareja-3bb81.firebasestorage.app",
+            messagingSenderId: "173599055420",
+            appId: "1:173599055420:web:5b36414cc3b4c7a90b6d39"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let parejasMap = {};
+        let nombresIntegrantes = { p1: "Integrante 1", p2: "Integrante 2" };
+        let graficoGeneradoHTML = "";
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('gen-fecha').valueAsDate = new Date();
+            cargarParejasSelector();
+            cargarHistorialGenogramas();
+        });
+
+        async function cargarParejasSelector() {
+            const select = document.getElementById('select-pareja');
+            try {
+                const querySnapshot = await getDocs(collection(db, "parejas_pacientes"));
+                select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const id = docSnap.id;
+                    parejasMap[id] = data;
+                    const parejaNombre = `${data.p1.nombre} & ${data.p2.nombre}`;
+                    const opt = document.createElement('option');
+                    opt.value = id;
+                    opt.textContent = parejaNombre;
+                    select.appendChild(opt);
+                });
+
+                select.onchange = function() {
+                    const selectedId = this.value;
+                    if (selectedId && parejasMap[selectedId]) {
+                        nombresIntegrantes.p1 = parejasMap[selectedId].p1.nombre;
+                        nombresIntegrantes.p2 = parejasMap[selectedId].p2.nombre;
+                        document.getElementById('label-fam1').textContent = `Familia de Origen - ${nombresIntegrantes.p1}`;
+                        document.getElementById('label-fam2').textContent = `Familia de Origen - ${nombresIntegrantes.p2}`;
+                    } else {
+                        nombresIntegrantes.p1 = "Integrante 1";
+                        nombresIntegrantes.p2 = "Integrante 2";
+                        document.getElementById('label-fam1').textContent = 'Familia de Origen - Integrante 1';
+                        document.getElementById('label-fam2').textContent = 'Familia de Origen - Integrante 2';
+                    }
+                };
+            } catch (e) {
+                console.error("Error al cargar parejas:", e);
+            }
+        }
+
+        // Función para Generar Gráfico Estructural
+        window.generarGraficoGenograma = function() {
+            const p1 = nombresIntegrantes.p1;
+            const p2 = nombresIntegrantes.p2;
+            const dinamica = document.getElementById('gen-dinamica').value.trim() || "Dinámica vincular en evaluación transgeneracional.";
+
+            graficoGeneradoHTML = `
+                <div style="border: 2px solid var(--secondary-color); padding: 1rem; border-radius: 8px; background: #ffffff; width: 100%; max-width: 500px; text-align: center;">
+                    <div style="font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem; font-size: 0.9rem;">CONSTELLATIO VINCULAR</div>
+                    <div style="display: flex; justify-content: space-around; align-items: center; margin: 1rem 0;">
+                        <div style="background: #e0f2fe; border: 1.5px solid #0284c7; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem;">[ ◯ ${p1} ]</div>
+                        <div style="color: var(--accent-color); font-weight: 700; font-size: 1.2rem;">⟷ Vínculo ⟷</div>
+                        <div style="background: #fce7f3; border: 1.5px solid #db2777; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem;">[ □ ${p2} ]</div>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 0.5rem; margin-top: 0.5rem;">
+                        <strong>Eje Transgeneracional Activo:</strong> ${dinamica.substring(0, 90)}...
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('canvas-visual').innerHTML = graficoGeneradoHTML;
+            alert("Gráfico estructural generado con éxito.");
+        };
+
+        // Guardar Genograma en Firestore
+        window.guardarGenograma = async function() {
+            const parejaId = document.getElementById('select-pareja').value;
+            if (!parejaId) {
+                alert("Por favor seleccione una pareja.");
+                return;
+            }
+
+            if (!graficoGeneradoHTML) {
+                alert("Por favor genere el gráfico estructural antes de guardar.");
+                return;
+            }
+
+            const dataPareja = parejasMap[parejaId];
+            const nombrePareja = `${dataPareja.p1.nombre} & ${dataPareja.p2.nombre}`;
+
+            const record = {
+                parejaId,
+                nombrePareja,
+                fam1: {
+                    nombre: dataPareja.p1.nombre,
+                    antecedentes: document.getElementById('fam1-antecedentes').value,
+                    vinculo: document.getElementById('fam1-vinculo').value
+                },
+                fam2: {
+                    nombre: dataPareja.p2.nombre,
+                    antecedentes: document.getElementById('fam2-antecedentes').value,
+                    vinculo: document.getElementById('fam2-vinculo').value
+                },
+                dinamica: document.getElementById('gen-dinamica').value,
+                graficoHTML: graficoGeneradoHTML,
+                fecha: document.getElementById('gen-fecha').value,
+                timestamp: new Date()
+            };
+
+            try {
+                await addDoc(collection(db, "genogramas_vinculares"), record);
+                alert("Genograma vincular guardado con éxito.");
+                document.getElementById('gen-form').reset();
+                document.getElementById('gen-fecha').valueAsDate = new Date();
+                document.getElementById('canvas-visual').innerHTML = '<span style="color: var(--text-muted); font-size: 0.85rem; font-style: italic;">[ El gráfico estructural se renderizará aquí ]</span>';
+                graficoGeneradoHTML = "";
+                cargarHistorialGenogramas();
+            } catch (e) {
+                console.error("Error al guardar:", e);
+                alert("Error al conectar con la base de datos.");
+            }
+        };
+
+        // Cargar Historial
+        async function cargarHistorialGenogramas() {
+            const container = document.getElementById('historial-genogramas');
+            container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">Cargando genogramas...</p>';
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "genogramas_vinculares"));
+                container.innerHTML = '';
+
+                if (querySnapshot.empty) {
+                    container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">No se registran genogramas.</p>';
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    container.innerHTML += `
+                        <div class="history-item">
+                            <div class="history-header">
+                                <span>Pareja: ${data.nombrePareja}</span>
+                                <span>Fecha: ${data.fecha}</span>
+                            </div>
+                            <div style="font-size: 0.85rem; margin-bottom: 1rem;">
+                                <p><strong>Dinámica Vincular:</strong> ${data.dinamica}</p>
+                            </div>
+                            <div style="margin-top: 1rem; display: flex; justify-content: center;">
+                                ${data.graficoHTML}
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                console.error("Error al cargar historial:", e);
+                container.innerHTML = '<p style="color: #dc2626; font-size: 0.85rem;">Error al recuperar el historial.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
