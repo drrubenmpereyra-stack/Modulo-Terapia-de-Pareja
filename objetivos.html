@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Objetivos Terapéuticos - Clínica de la Convergencia</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --border-focus: #3b82f6;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 800px) {
+            .form-grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-control {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-control label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-control textarea, .form-control select, .form-control input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background-color: #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        .form-control textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .form-control textarea:focus, .form-control select:focus, .form-control input:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .btn-guardar {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: #ffffff;
+        }
+
+        .btn-editar {
+            background-color: #0284c7;
+            color: #ffffff;
+            display: none;
+        }
+
+        .btn-eliminar {
+            background-color: #dc2626;
+            color: #ffffff;
+            display: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-elevated);
+            filter: brightness(1.1);
+        }
+
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        table.data-table th, table.data-table td {
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.85rem;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        table.data-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        table.data-table tr {
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        table.data-table tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .semaforo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+        }
+        .semaforo-verde { background-color: #dcfce7; color: #166534; }
+        .semaforo-amarillo { background-color: #fef9c3; color: #854d0e; }
+        .semaforo-rojo { background-color: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <h2>Formulación y Seguimiento de Objetivos Terapéuticos</h2>
+            
+            <form id="objetivo-form">
+                <input type="hidden" id="objetivo-id">
+
+                <div class="form-control" style="max-width: 450px;">
+                    <label>Pareja Consultante</label>
+                    <select id="select-pareja" required>
+                        <option value="">Seleccione una pareja registrada...</option>
+                    </select>
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="form-control">
+                        <label>Definición del Objetivo Vincular (en relación al foco)</label>
+                        <textarea id="obj-descripcion" required placeholder="Describa el objetivo terapéutico acordado conjuntamente por la pareja..."></textarea>
+                    </div>
+
+                    <div>
+                        <div class="form-control">
+                            <label>Semáforo de Estado</label>
+                            <select id="obj-estado" required>
+                                <option value="Verde">🟢 Verde (Logrado)</option>
+                                <option value="Amarillo" selected>🟡 Amarillo (En proceso)</option>
+                                <option value="Rojo">🔴 Rojo (No logrado)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Fecha de Acuerdo / Revisión</label>
+                            <input type="date" id="obj-fecha" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-guardar" id="btn-guardar">Guardar Objetivo</button>
+                    <button type="button" class="btn btn-editar" id="btn-editar">Actualizar</button>
+                    <button type="button" class="btn btn-eliminar" id="btn-eliminar">Eliminar</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Historial de Objetivos y Seguimiento del Proceso</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Pareja</th>
+                        <th>Objetivo Terapéutico</th>
+                        <th>Estado (Semáforo)</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-objetivos">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDv1wgWGICsvfrJHZV1s2HVXdsAvIRAOuI",
+            authDomain: "terapia-de-pareja-3bb81.firebaseapp.com",
+            projectId: "terapia-de-pareja-3bb81",
+            storageBucket: "terapia-de-pareja-3bb81.firebasestorage.app",
+            messagingSenderId: "173599055420",
+            appId: "1:173599055420:web:5b36414cc3b4c7a90b6d39"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const fechaInput = document.getElementById('obj-fecha');
+            if (fechaInput) {
+                fechaInput.valueAsDate = new Date();
+            }
+
+            cargarParejasSelector();
+            cargarObjetivosFirestore();
+
+            document.getElementById('btn-guardar').addEventListener('click', guardarObjetivo);
+            document.getElementById('btn-editar').addEventListener('click', actualizarObjetivo);
+            document.getElementById('btn-eliminar').addEventListener('click', eliminarObjetivo);
+        });
+
+        async function cargarParejasSelector() {
+            const select = document.getElementById('select-pareja');
+            try {
+                const querySnapshot = await getDocs(collection(db, "parejas_pacientes"));
+                select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const parejaNombre = `${data.p1.nombre} & ${data.p2.nombre}`;
+                    const opt = document.createElement('option');
+                    opt.value = parejaNombre;
+                    opt.textContent = parejaNombre;
+                    select.appendChild(opt);
+                });
+            } catch (e) {
+                console.error("Error al cargar parejas:", e);
+            }
+        }
+
+        async function guardarObjetivo() {
+            const pareja = document.getElementById('select-pareja').value;
+            const descripcion = document.getElementById('obj-descripcion').value.trim();
+            const estado = document.getElementById('obj-estado').value;
+            const fecha = document.getElementById('obj-fecha').value;
+
+            if (!pareja || !descripcion || !fecha) {
+                alert("Por favor complete todos los campos requeridos.");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "objetivos_terapeuticos"), {
+                    pareja,
+                    descripcion,
+                    estado,
+                    fecha,
+                    timestamp: new Date()
+                });
+                alert("Objetivo guardado con éxito.");
+                limpiarFormulario();
+                cargarObjetivosFirestore();
+            } catch (e) {
+                console.error("Error al guardar:", e);
+                alert("Error al conectar con la base de datos.");
+            }
+        }
+
+        async function actualizarObjetivo() {
+            const id = document.getElementById('objetivo-id').value;
+            const pareja = document.getElementById('select-pareja').value;
+            const descripcion = document.getElementById('obj-descripcion').value.trim();
+            const estado = document.getElementById('obj-estado').value;
+            const fecha = document.getElementById('obj-fecha').value;
+
+            if (!id || !pareja || !descripcion) return;
+
+            try {
+                await updateDoc(doc(db, "objetivos_terapeuticos", id), {
+                    pareja,
+                    descripcion,
+                    estado,
+                    fecha
+                });
+                alert("Objetivo actualizado correctamente.");
+                limpiarFormulario();
+                cargarObjetivosFirestore();
+            } catch (e) {
+                console.error("Error al actualizar:", e);
+                alert("Error al actualizar el registro.");
+            }
+        }
+
+        async function eliminarObjetivo() {
+            const id = document.getElementById('objetivo-id').value;
+            if (!id) return;
+
+            if (confirm("¿Está seguro que desea eliminar este objetivo terapéutico?")) {
+                try {
+                    await deleteDoc(doc(db, "objetivos_terapeuticos", id));
+                    alert("Objetivo eliminado.");
+                    limpiarFormulario();
+                    cargarObjetivosFirestore();
+                } catch (e) {
+                    console.error("Error al eliminar:", e);
+                }
+            }
+        }
+
+        async function cargarObjetivosFirestore() {
+            const tbody = document.getElementById('lista-objetivos');
+            tbody.innerHTML = '';
+            try {
+                const querySnapshot = await getDocs(collection(db, "objetivos_terapeuticos"));
+                if (querySnapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No se registran objetivos terapéuticos.</td></tr>';
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    let semaforoHTML = '';
+                    if (data.estado === 'Verde') {
+                        semaforoHTML = '<span class="semaforo semaforo-verde">🟢 Logrado</span>';
+                    } else if (data.estado === 'Amarillo') {
+                        semaforoHTML = '<span class="semaforo semaforo-amarillo">🟡 En proceso</span>';
+                    } else {
+                        semaforoHTML = '<span class="semaforo semaforo-rojo">🔴 No logrado</span>';
+                    }
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = '<td><strong>' + data.pareja + '</strong></td>' +
+                                   '<td>' + data.descripcion + '</td>' +
+                                   '<td>' + semaforoHTML + '</td>' +
+                                   '<td>' + data.fecha + '</td>';
+                    tr.addEventListener('click', () => seleccionarObjetivo(docSnap.id, data));
+                    tbody.appendChild(tr);
+                });
+            } catch (e) {
+                console.error("Error al cargar objetivos:", e);
+            }
+        }
+
+        function seleccionarObjetivo(id, data) {
+            document.getElementById('objetivo-id').value = id;
+            document.getElementById('select-pareja').value = data.pareja;
+            document.getElementById('obj-descripcion').value = data.descripcion;
+            document.getElementById('obj-estado').value = data.estado;
+            document.getElementById('obj-fecha').value = data.fecha;
+
+            document.getElementById('btn-guardar').style.display = 'none';
+            document.getElementById('btn-editar').style.display = 'inline-block';
+            document.getElementById('btn-eliminar').style.display = 'inline-block';
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('objetivo-form').reset();
+            document.getElementById('objetivo-id').value = '';
+            document.getElementById('obj-fecha').valueAsDate = new Date();
+            document.getElementById('btn-guardar').style.display = 'inline-block';
+            document.getElementById('btn-editar').style.display = 'none';
+            document.getElementById('btn-eliminar').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
