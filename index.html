@@ -26,27 +26,32 @@
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        body {
+        html, body {
+            height: 100vh;
             background-color: var(--bg-color);
             color: var(--text-main);
-            line-height: 1.6;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
         /* --- PANTALLA DE LOGIN --- */
         #login-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
             background: linear-gradient(135deg, var(--primary-color), #090d16);
+            z-index: 1000;
         }
 
         .login-card {
             background: var(--card-bg);
             padding: 3rem 2.5rem;
             border-radius: 16px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
             width: 100%;
             max-width: 420px;
             text-align: center;
@@ -60,14 +65,12 @@
             border-radius: 50%;
             margin-bottom: 1.25rem;
             border: 3px solid var(--accent-color);
-            box-shadow: var(--shadow-subtle);
         }
 
         .login-card h1 {
             font-size: 1.35rem;
             color: var(--primary-color);
             font-weight: 700;
-            letter-spacing: -0.025em;
             margin-bottom: 0.25rem;
         }
 
@@ -92,7 +95,6 @@
             margin-bottom: 0.4rem;
             color: var(--primary-color);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
         }
 
         .form-group input {
@@ -101,7 +103,6 @@
             border: 1.5px solid var(--border-color);
             border-radius: 8px;
             font-size: 0.95rem;
-            transition: all 0.2s ease;
             background-color: #f8fafc;
         }
 
@@ -123,14 +124,6 @@
             font-weight: 600;
             cursor: pointer;
             margin-top: 1rem;
-            box-shadow: var(--shadow-subtle);
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-elevated);
-            filter: brightness(1.1);
         }
 
         .error-msg {
@@ -144,14 +137,14 @@
         /* --- APLICACIÓN PRINCIPAL --- */
         #app-container {
             display: none;
-            min-height: 100vh;
+            height: 100vh;
             flex-direction: column;
         }
 
         header {
             background: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
-            padding: 1rem 2rem;
+            padding: 0.85rem 2rem;
             box-shadow: var(--shadow-subtle);
             flex-shrink: 0;
         }
@@ -160,16 +153,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative;
         }
 
         .header-left img.logo-sup {
-            width: 54px;
-            height: 54px;
+            width: 48px;
+            height: 48px;
             object-fit: cover;
             border-radius: 50%;
             border: 2px solid var(--accent-color);
-            box-shadow: var(--shadow-subtle);
         }
 
         .header-title-container {
@@ -178,14 +169,13 @@
         }
 
         .header-title-container h1 {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             color: var(--primary-color);
             font-weight: 700;
-            letter-spacing: -0.02em;
         }
 
         .header-title-container h2 {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
             font-weight: 500;
             text-transform: uppercase;
@@ -197,32 +187,31 @@
             align-items: center;
             gap: 0.75rem;
             background: var(--bg-color);
-            padding: 0.35rem 0.85rem;
+            padding: 0.3rem 0.75rem;
             border-radius: 30px;
             border: 1px solid var(--border-color);
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
         }
 
         .user-profile img {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             object-fit: cover;
         }
 
         .user-profile span {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
             color: var(--primary-color);
         }
 
-        /* --- BARRA DE NAVEGACIÓN Y BOTONES UNIFICADOS --- */
+        /* --- BARRA DE NAVEGACIÓN --- */
         nav.nav-bar {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1.25rem;
-            padding-top: 1rem;
+            gap: 0.4rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
             border-top: 1px solid #e2e8f0;
             justify-content: center;
             align-items: center;
@@ -232,25 +221,22 @@
             background: var(--card-bg);
             border: 1.5px solid var(--border-color);
             color: var(--primary-color);
-            padding: 0.5rem 0.9rem;
-            border-radius: 7px;
-            font-size: 0.8rem;
+            padding: 0.45rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
             font-weight: 600;
             cursor: pointer;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease;
         }
 
         .nav-btn:hover {
             background-color: var(--secondary-color);
             color: #ffffff;
             border-color: var(--secondary-color);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-subtle);
         }
 
         .nav-btn-danger {
@@ -275,30 +261,23 @@
             display: none;
             position: absolute;
             background-color: var(--card-bg);
-            min-width: 190px;
+            min-width: 180px;
             box-shadow: var(--shadow-elevated);
             z-index: 10;
-            border-radius: 8px;
+            border-radius: 6px;
             border: 1px solid var(--border-color);
-            top: calc(100% + 6px);
+            top: calc(100% + 4px);
             left: 0;
             overflow: hidden;
-            animation: fadeIn 0.15s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-4px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .dropdown-content a {
             color: var(--text-main);
-            padding: 10px 14px;
+            padding: 8px 12px;
             text-decoration: none;
             display: block;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 500;
-            transition: background 0.15s;
             cursor: pointer;
         }
 
@@ -311,22 +290,19 @@
             display: block;
         }
 
-        /* --- CONTENEDOR IFRAME PRINCIPAL --- */
+        /* --- CONTENEDOR IFRAME PRINCIPAL (OCUPA TODO EL RESTO DE LA PANTALLA) --- */
         main.main-content {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: transparent;
-            padding: 0;
-            margin: 0;
-            height: calc(100vh - 150px);
+            width: 100%;
+            height: calc(100vh - 130px);
+            background: var(--bg-color);
         }
 
         iframe {
             width: 100%;
             height: 100%;
             border: none;
-            background: transparent;
+            display: block;
         }
     </style>
 </head>
@@ -358,19 +334,19 @@
         <header>
             <div class="header-top">
                 <div class="header-left">
-                    <img src="logotipo_pareja.jpg" alt="Logo" class="logo-sup" onerror="this.src='https://via.placeholder.com/54?text=Logo'">
+                    <img src="logotipo_pareja.jpg" alt="Logo" class="logo-sup" onerror="this.src='https://via.placeholder.com/48?text=Logo'">
                 </div>
                 <div class="header-title-container">
                     <h1>Clínica de la Convergencia</h1>
                     <h2>Terapia Vincular de Pareja</h2>
                 </div>
                 <div class="user-profile">
-                    <img src="yo.jpg" alt="Dr. Rubén M. Pereyra" onerror="this.src='https://via.placeholder.com/36?text=Dr'">
+                    <img src="yo.jpg" alt="Dr. Rubén M. Pereyra" onerror="this.src='https://via.placeholder.com/32?text=Dr'">
                     <span>Dr. y Mgter. Rubén M. Pereyra</span>
                 </div>
             </div>
 
-            <!-- Navegación controlada por JavaScript para cargar dinámicamente el iframe -->
+            <!-- Botonera de Navegación -->
             <nav class="nav-bar">
                 <button class="nav-btn" onclick="cargarModulo('pacientes.html')">Pacientes</button>
                 <button class="nav-btn" onclick="cargarModulo('agenda.html')">Agenda</button>
@@ -381,7 +357,6 @@
                 <button class="nav-btn" onclick="cargarModulo('objetivos.html')">Objetivos</button>
                 <button class="nav-btn" onclick="cargarModulo('tareas.html')">Tareas asignadas</button>
                 
-                <!-- Menú Desplegable -->
                 <div class="dropdown">
                     <button class="nav-btn">Evaluación ▼</button>
                     <div class="dropdown-content">
@@ -396,7 +371,7 @@
         </header>
 
         <main class="main-content">
-            <iframe id="main-iframe" src="pacientes.html" title="Panel Central de Gestión"></iframe>
+            <iframe id="main-iframe" name="main-iframe" src="pacientes.html" title="Panel Central de Gestión"></iframe>
         </main>
     </div>
 
