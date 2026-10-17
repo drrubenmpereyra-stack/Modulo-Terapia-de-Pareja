@@ -55,15 +55,6 @@
             font-weight: 700;
         }
 
-        h3 {
-            color: var(--secondary-color);
-            font-size: 1rem;
-            margin: 1.5rem 0 1rem 0;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-        }
-
         .form-grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -136,9 +127,42 @@
             margin-top: 1.5rem;
         }
 
-        .synthesis-section h3 {
+        .synthesis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .synthesis-header h3 {
             color: #92400e;
-            margin-top: 0;
+            margin: 0;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .btn-analizar {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-analizar:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
         }
 
         .btn-group {
@@ -282,12 +306,17 @@
                     </div>
                 </div>
 
-                <!-- Análisis Clínico de Coincidencias y Conflictos -->
+                <!-- Análisis Clínico de Coincidencias y Conflictos con Botón Automático -->
                 <div class="synthesis-section">
-                    <h3>Síntesis Analítica: Coincidencias, Divergencias y Nudos de Conflicto</h3>
+                    <div class="synthesis-header">
+                        <h3>Síntesis Analítica: Coincidencias, Divergencias y Nudos de Conflicto</h3>
+                        <button type="button" class="btn-analizar" onclick="ejecutarAnalisisAutomatico()">
+                            <span>🔍 Analizar Automáticamente</span>
+                        </button>
+                    </div>
                     <div class="form-control">
                         <label>Evaluación del terapeuta sobre la articulación de demandas y expectativas</label>
-                        <textarea id="analisis-convergencia" required placeholder="Analice aquí las coincidencias de objetivos, los choques de demandas cruzadas, las asimetrías en la intención vincular (ej. uno quiere reparar y el otro separarse) y los vectores iniciales del conflicto..."></textarea>
+                        <textarea id="analisis-convergencia" required placeholder="Haga clic en 'Analizar Automáticamente' para generar una lectura preeliminar basada en las respuestas ingresadas, o escriba su propia síntesis clínica..."></textarea>
                     </div>
                     <div class="form-control" style="margin-top: 1rem;">
                         <label>Fecha de la Entrevista</label>
@@ -328,6 +357,7 @@
         const db = getFirestore(app);
 
         let parejasMap = {};
+        let nombresIntegrantes = { p1: "Integrante 1", p2: "Integrante 2" };
 
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('entrevista-fecha').valueAsDate = new Date();
@@ -355,9 +385,13 @@
                 select.onchange = function() {
                     const selectedId = this.value;
                     if (selectedId && parejasMap[selectedId]) {
-                        document.getElementById('label-p1').textContent = `Integrante 1: ${parejasMap[selectedId].p1.nombre}`;
-                        document.getElementById('label-p2').textContent = `Integrante 2: ${parejasMap[selectedId].p2.nombre}`;
+                        nombresIntegrantes.p1 = parejasMap[selectedId].p1.nombre;
+                        nombresIntegrantes.p2 = parejasMap[selectedId].p2.nombre;
+                        document.getElementById('label-p1').textContent = `Integrante 1: ${nombresIntegrantes.p1}`;
+                        document.getElementById('label-p2').textContent = `Integrante 2: ${nombresIntegrantes.p2}`;
                     } else {
+                        nombresIntegrantes.p1 = "Integrante 1";
+                        nombresIntegrantes.p2 = "Integrante 2";
                         document.getElementById('label-p1').textContent = 'Integrante 1';
                         document.getElementById('label-p2').textContent = 'Integrante 2';
                     }
@@ -366,6 +400,48 @@
                 console.error("Error al cargar parejas:", e);
             }
         }
+
+        // Función de Análisis Automático Inteligente
+        window.ejecutarAnalisisAutomatico = function() {
+            const p1Nom = nombresIntegrantes.p1;
+            const p2Nom = nombresIntegrantes.p2;
+
+            const p1Exp = document.getElementById('p1-expectativas').value.trim();
+            const p1Des = document.getElementById('p1-deseos').value.trim();
+            const p1Dem = document.getElementById('p1-demandas').value.trim();
+            const p1Int = document.getElementById('p1-intencion').value;
+
+            const p2Exp = document.getElementById('p2-expectativas').value.trim();
+            const p2Des = document.getElementById('p2-deseos').value.trim();
+            const p2Dem = document.getElementById('p2-demandas').value.trim();
+            const p2Int = document.getElementById('p2-intencion').value;
+
+            if (!p1Exp || !p2Exp) {
+                alert("Por favor complete al menos las expectativas de ambos integrantes antes de ejecutar el análisis automático.");
+                return;
+            }
+
+            // Cruzar intenciones vinculares
+            let analisisIntencion = "";
+            if (p1Int === p2Int) {
+                analisisIntencion = `• **Intención Vincular Convergente:** Ambos integrantes coinciden en apostar por "${p1Int}", lo cual otorga una base operativa sólida para el encuadre focalizado.`;
+            } else {
+                analisisIntencion = `• **Asimetría Crítica de Intenciones:** Se registra una disonancia fundamental. ${p1Nom} manifiesta "${p1Int}", mientras que ${p2Nom} se posiciona en "${p2Int}". Este vector de divergencia constituye el nudo conflictivo inicial prioritario a abordar en el encuadre.`;
+            }
+
+            // Síntesis estructurada
+            const textoSintesis = `1. ANÁLISIS DE INTENCIONES:\n${analisisIntencion}\n\n` +
+                `2. ARTICULACIÓN DE DEMANDAS CRUZADAS:\n` +
+                `• Demanda de ${p1Nom} hacia ${p2Nom}: "${p1Dem || 'No especificada'}"\n` +
+                `• Demanda de ${p2Nom} hacia ${p1Nom}: "${p2Dem || 'No especificada'}"\n\n` +
+                `3. CONVERGENCIA DE DESEOS Y EXPECTATIVAS:\n` +
+                `• ${p1Nom} orienta su expectativa hacia: "${p1Exp}" (Deseo: ${p1Des || 'N/D'}).\n` +
+                `• ${p2Nom} orienta su expectativa hacia: "${p2Exp}" (Deseo: ${p2Des || 'N/D'}).\n\n` +
+                `4. IMPLICANCIA CLÍNICA (Foco Inicial):\n` +
+                `El conflicto nuclear parece organizarse en la colisión entre las demandas recíprocas y las expectativas terapéuticas individuales. Se requiere un trabajo de nominación afectiva y desarticulación de mandatos cruzados para habilitar un espacio transicional operativo.`;
+
+            document.getElementById('analisis-convergencia').value = textoSintesis;
+        };
 
         // Guardar Primera Entrevista en Firestore
         window.guardarPrimeraEntrevista = async function() {
@@ -450,8 +526,8 @@
                                     <p><strong>Demanda al otro:</strong> ${data.p2.demandas}</p>
                                 </div>
                             </div>
-                            <div style="background: #fffbeb; padding: 0.85rem; border-radius: 6px; border: 1px solid #fcd34d; font-size: 0.85rem;">
-                                <strong>Análisis de Convergencia / Nudos de Conflicto:</strong><br>
+                            <div style="background: #fffbeb; padding: 0.85rem; border-radius: 6px; border: 1px solid #fcd34d; font-size: 0.85rem; white-space: pre-line;">
+                                <strong>Síntesis de Convergencia / Análisis Automático:</strong><br>
                                 ${data.analisisConvergencia}
                             </div>
                         </div>
