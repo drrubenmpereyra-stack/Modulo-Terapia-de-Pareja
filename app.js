@@ -1,6 +1,6 @@
-// Importación de Firebase SDK y Firestore (Versión estable actualizada)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase.app.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase.firestore.js";
+// Importación de Firebase SDK y Firestore con la versión actual y estable de gstatic
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 // Configuración de Firebase provista
 const firebaseConfig = {
