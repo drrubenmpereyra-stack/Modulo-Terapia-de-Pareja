@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Pagos y Finanzas - Clínica de la Convergencia</title>
+    <!-- Chart.js para estadísticas visuales -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --border-focus: #3b82f6;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 1.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 950px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-subtle);
+            height: fit-content;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.4rem;
+            font-weight: 700;
+        }
+
+        .form-control {
+            margin-bottom: 1rem;
+        }
+
+        .form-control label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-control input, .form-control select {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background-color: #f8fafc;
+            transition: all 0.2s ease;
+        }
+
+        .form-control input:focus, .form-control select:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background-color: var(--card-bg);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.25rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-subtle);
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-registrar {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: #ffffff;
+        }
+
+        .btn-eliminar {
+            background-color: #dc2626;
+            color: #ffffff;
+            display: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-elevated);
+            filter: brightness(1.1);
+        }
+
+        /* Panel de Estadísticas con Gráfico de Barras */
+        .stats-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 450px;
+            height: 200px;
+        }
+
+        /* Tabla de Pagos */
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        table.data-table th, table.data-table td {
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        table.data-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+        }
+
+        table.data-table tr {
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        table.data-table tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .badge-pagado { background-color: #dcfce7; color: #166534; }
+        .badge-pendiente { background-color: #fef9c3; color: #854d0e; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Columna Izquierda: Formulario de Control Financiero -->
+        <div class="card">
+            <h2>Gestión de Pago de Sesión</h2>
+            <form id="pago-form">
+                <input type="hidden" id="pago-id">
+
+                <div class="form-control">
+                    <label>Pareja Consultante</label>
+                    <select id="select-pareja" required>
+                        <option value="">Seleccione una pareja registrada...</option>
+                    </select>
+                </div>
+
+                <div class="form-control">
+                    <label>Valor de la Sesión ($ ARS)</label>
+                    <input type="number" id="pago-monto" required placeholder="Ej: 35000">
+                </div>
+
+                <div class="form-control">
+                    <label>Estado del Pago</label>
+                    <select id="pago-estado">
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Pagado">Pagado</option>
+                    </select>
+                </div>
+
+                <div class="form-control">
+                    <label>Forma de Pago</label>
+                    <select id="pago-forma">
+                        <option value="Transferencia">Transferencia</option>
+                        <option value="Efectivo">Efectivo</option>
+                    </select>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-registrar" id="btn-guardar" onclick="guardarPago()">Registrar Pago</button>
+                    <button type="button" class="btn btn-eliminar" id="btn-eliminar" onclick="eliminarPago()">Eliminar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Columna Derecha: Estadísticas y Listado de Pagos -->
+        <div>
+            <!-- Estadísticas Semanales -->
+            <div class="stats-card">
+                <h2>Balance Semanal de Cobros</h2>
+                <div class="chart-container">
+                    <canvas id="statsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Listado Detallado -->
+            <div class="card">
+                <h2>Historial de Transacciones</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Pareja</th>
+                            <th>Monto</th>
+                            <th>Forma</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-pagos">
+                        <!-- Datos dinámicos -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase y Lógica del Módulo -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDv1wgWGICsvfrJHZV1s2HVXdsAvIRAOuI",
+            authDomain: "terapia-de-pareja-3bb81.firebaseapp.com",
+            projectId: "terapia-de-pareja-3bb81",
+            storageBucket: "terapia-de-pareja-3bb81.firebasestorage.app",
+            messagingSenderId: "173599055420",
+            appId: "1:173599055420:web:5b36414cc3b4c7a90b6d39"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let statsChart = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            inicializarGrafico();
+            cargarParejasSelector();
+            cargarPagosFirestore();
+        });
+
+        // Inicializar gráfico de barras Chart.js
+        function inicializarGrafico() {
+            const ctx = document.getElementById('statsChart').getContext('2d');
+            statsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Pagado', 'Pendiente'],
+                    datasets: [{
+                        label: 'Monto en $ ARS',
+                        data: [0, 0],
+                        backgroundColor: ['#166534', '#854d0e'],
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        // Cargar parejas registradas en el selector asociando apellidos
+        async function cargarParejasSelector() {
+            const select = document.getElementById('select-pareja');
+            try {
+                const querySnapshot = await getDocs(collection(db, "parejas_pacientes"));
+                select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const parejaNombre = `${data.p1.nombre} & ${data.p2.nombre}`;
+                    const opt = document.createElement('option');
+                    opt.value = parejaNombre;
+                    opt.textContent = parejaNombre;
+                    select.appendChild(opt);
+                });
+            } catch (e) {
+                console.error("Error al cargar parejas:", e);
+            }
+        }
+
+        // Cargar pagos desde Firestore y actualizar tabla y estadísticas
+        async function cargarPagosFirestore() {
+            const tbody = document.getElementById('lista-pagos');
+            tbody.innerHTML = '';
+            try {
+                const querySnapshot = await getDocs(collection(db, "pagos_sesiones"));
+                let totalPagado = 0;
+                let totalPendiente = 0;
+
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const monto = parseFloat(data.monto) || 0;
+
+                    if (data.estado === 'Pagado') {
+                        totalPagado += monto;
+                    } else {
+                        totalPendiente += monto;
+                    }
+
+                    const badgeClass = data.estado === 'Pagado' ? 'badge-pagado' : 'badge-pendiente';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${data.pareja}</strong></td>
+                        <td>$ ${monto.toLocaleString()}</td>
+                        <td>${data.forma}</td>
+                        <td><span class="badge ${badgeClass}">${data.estado}</span></td>
+                    `;
+                    // Al hacer clic en la fila, se carga para editar
+                    tr.onclick = () => seleccionarPago(docSnap.id, data);
+                    tbody.appendChild(tr);
+                });
+
+                // Actualizar gráfico de barras
+                if (statsChart) {
+                    statsChart.data.datasets[0].data = [totalPagado, totalPendiente];
+                    statsChart.update();
+                }
+
+            } catch (e) {
+                console.error("Error al cargar pagos:", e);
+            }
+        }
+
+        // Guardar o Actualizar Pago
+        window.guardarPago = async function() {
+            const id = document.getElementById('pago-id').value;
+            const pareja = document.getElementById('select-pareja').value;
+            const monto = document.getElementById('pago-monto').value;
+            const estado = document.getElementById('pago-estado').value;
+            const forma = document.getElementById('pago-forma').value;
+
+            if (!pareja || !monto) {
+                alert("Por favor complete la pareja y el valor de la sesión.");
+                return;
+            }
+
+            try {
+                if (id) {
+                    await updateDoc(doc(db, "pagos_sesiones", id), { pareja, monto, estado, forma });
+                    alert("Registro de pago actualizado.");
+                } else {
+                    await addDoc(collection(db, "pagos_sesiones"), { pareja, monto, estado, forma, fecha: new Date() });
+                    alert("Pago registrado con éxito.");
+                }
+                limpiarFormulario();
+                cargarPagosFirestore();
+            } catch (e) {
+                console.error("Error al guardar pago:", e);
+                alert("Error al conectar con la base de datos.");
+            }
+        };
+
+        // Seleccionar registro de la tabla para editar
+        function seleccionarPago(id, data) {
+            document.getElementById('pago-id').value = id;
+            document.getElementById('select-pareja').value = data.pareja;
+            document.getElementById('pago-monto').value = data.monto;
+            document.getElementById('pago-estado').value = data.estado;
+            document.getElementById('pago-forma').value = data.forma;
+            document.getElementById('btn-eliminar').style.display = 'block';
+            document.getElementById('btn-guardar').innerText = 'Actualizar Pago';
+        }
+
+        // Eliminar Pago
+        window.eliminarPago = async function() {
+            const id = document.getElementById('pago-id').value;
+            if (!id) return;
+
+            if (confirm("¿Desea eliminar este registro financiero?")) {
+                try {
+                    await deleteDoc(doc(db, "pagos_sesiones", id));
+                    alert("Registro eliminado.");
+                    limpiarFormulario();
+                    cargarPagosFirestore();
+                } catch (e) {
+                    console.error("Error al eliminar:", e);
+                }
+            }
+        };
+
+        function limpiarFormulario() {
+            document.getElementById('pago-form').reset();
+            document.getElementById('pago-id').value = '';
+            document.getElementById('btn-eliminar').style.display = 'none';
+            document.getElementById('btn-guardar').innerText = 'Registrar Pago';
+        }
+    </script>
+</body>
+</html>
