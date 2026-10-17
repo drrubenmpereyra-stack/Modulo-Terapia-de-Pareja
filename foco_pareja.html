@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foco Vincular de Pareja - Clínica de la Convergencia</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --border-focus: #3b82f6;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        /* Lienzo / Esquema superior */
+        .schema-preview {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f1f5f9;
+            border-radius: 10px;
+            border: 1px dashed var(--border-color);
+        }
+
+        .schema-preview img {
+            max-width: 100%;
+            height: auto;
+            max-height: 320px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .schema-preview p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+        }
+
+        .form-control {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-control label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .form-control textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background-color: #f8fafc;
+            resize: vertical;
+            min-height: 90px;
+            transition: all 0.2s ease;
+        }
+
+        .form-control textarea:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background-color: var(--card-bg);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 700px) {
+            .meta-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-control input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background-color: #f8fafc;
+        }
+
+        .btn-group {
+            margin-top: 2rem;
+            text-align: right;
+        }
+
+        .btn-registrar {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: #ffffff;
+            padding: 0.85rem 2rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.2s ease;
+        }
+
+        .btn-registrar:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-elevated);
+            filter: brightness(1.1);
+        }
+
+        /* Historial de Focos */
+        .history-item {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-color);
+            padding: 1.25rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.4rem;
+        }
+
+        .history-body p {
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+            color: var(--text-main);
+        }
+
+        .history-body strong {
+            color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Formulario de Foco Vincular -->
+        <div class="card">
+            <h2>Constelación del Foco Vincular (Modelo de Convergencia)</h2>
+            
+            <!-- Lienzo / Esquema Superior -->
+            <div class="schema-preview">
+                <img src="foco_pareja.jpg" alt="Esquema Foco Vincular" onerror="this.style.display='none'; document.getElementById('error-img-msg').style.display='block';">
+                <div id="error-img-msg" style="display:none; color: var(--text-muted); font-size: 0.85rem;">Esquema conceptual analítico (foco_pareja.jpg)</div>
+                <p>Esquema de articulación: Psicoanálisis Focal (Fiorini), Dimensión Vincular y Neurobiología de la Convergencia.</p>
+            </div>
+
+            <form id="foco-form">
+                <div class="form-grid">
+                    <!-- Selector de Pareja -->
+                    <div class="form-control">
+                        <label>Pareja Consultante</label>
+                        <select id="select-pareja" required style="padding: 0.75rem; border: 1.5px solid var(--border-color); border-radius: 8px; background-color: #f8fafc;">
+                            <option value="">Seleccione una pareja registrada...</option>
+                        </select>
+                    </div>
+
+                    <!-- 1. Dimensión Psicoanalítica -->
+                    <div class="form-control">
+                        <label>1. Dimensión Psicoanalítica (Fiorini: Núcleos conflictivos centrales)</label>
+                        <textarea id="foco-psico" required placeholder="Hint: Describa el recorte de los núcleos conflictivos nucleares, la economía de la libido estancada y la temporalidad operativa del motivo de consulta..."></textarea>
+                    </div>
+
+                    <!-- 2. Dimensión Vincular -->
+                    <div class="form-control">
+                        <label>2. Dimensión Vincular (El síntoma como propiedad del vínculo y pactos inconscientes)</label>
+                        <textarea id="foco-vincular" required placeholder="Hint: Detalle cómo el síntoma deja de ser individual y pasa a pertenecer al vínculo, identificando mandatos cruzados, contratos ocultos y escenas temidas compartidas..."></textarea>
+                    </div>
+
+                    <!-- 3. Dimensión Neurobiológica -->
+                    <div class="form-control">
+                        <label>3. Convergencia Neurobiológica (Regulación, nominación y reconsolidación)</label>
+                        <textarea id="foco-neuro" required placeholder="Hint: Escriba sobre la co-regulación autonómica del estrés (eje HPA), el impacto de la nominación afectiva en la amígdala y el proceso de reconsolidación de la memoria vincular..."></textarea>
+                    </div>
+                </div>
+
+                <div class="meta-grid">
+                    <div class="form-control">
+                        <label>Fecha de Generación del Foco</label>
+                        <input type="date" id="foco-fecha" required>
+                    </div>
+                    <div class="form-control" style="justify-content: flex-end;">
+                        <div class="btn-group">
+                            <button type="button" class="btn-registrar" onclick="guardarFoco()">Guardar Foco en Base de Datos</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Historial de Focos Sucesivos -->
+        <div class="card">
+            <h2>Historial de Focos Terapéuticos Generados</h2>
+            <div id="historial-focos">
+                <!-- Se cargan dinámicamente desde Firestore -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase y Lógica del Módulo -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDv1wgWGICsvfrJHZV1s2HVXdsAvIRAOuI",
+            authDomain: "terapia-de-pareja-3bb81.firebaseapp.com",
+            projectId: "terapia-de-pareja-3bb81",
+            storageBucket: "terapia-de-pareja-3bb81.firebasestorage.app",
+            messagingSenderId: "173599055420",
+            appId: "1:173599055420:web:5b36414cc3b4c7a90b6d39"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Establecer fecha actual por defecto en el selector
+            document.getElementById('foco-fecha').valueAsDate = new Date();
+            cargarParejasSelector();
+            cargarHistorialFocos();
+        });
+
+        // Cargar parejas registradas
+        async function cargarParejasSelector() {
+            const select = document.getElementById('select-pareja');
+            try {
+                const querySnapshot = await getDocs(collection(db, "parejas_pacientes"));
+                select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const parejaNombre = `${data.p1.nombre} & ${data.p2.nombre}`;
+                    const opt = document.createElement('option');
+                    opt.value = parejaNombre;
+                    opt.textContent = parejaNombre;
+                    select.appendChild(opt);
+                });
+            } catch (e) {
+                console.error("Error al cargar parejas:", e);
+            }
+        }
+
+        // Guardar Foco en Firestore
+        window.guardarFoco = async function() {
+            const pareja = document.getElementById('select-pareja').value;
+            const psico = document.getElementById('foco-psico').value;
+            const vincular = document.getElementById('foco-vincular').value;
+            const neuro = document.getElementById('foco-neuro').value;
+            const fecha = document.getElementById('foco-fecha').value;
+
+            if (!pareja || !psico || !vincular || !neuro || !fecha) {
+                alert("Por favor complete todos los campos analíticos y la fecha.");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "focos_terapeuticos"), {
+                    pareja,
+                    psicoanalitico: psico,
+                    vincular,
+                    neurobiologico: neuro,
+                    fecha,
+                    timestamp: new Date()
+                });
+                alert("Foco vincular guardado con éxito en la base de datos.");
+                document.getElementById('foco-form').reset();
+                document.getElementById('foco-fecha').valueAsDate = new Date();
+                cargarHistorialFocos();
+            } catch (e) {
+                console.error("Error al guardar foco:", e);
+                alert("Error al conectar con la base de datos.");
+            }
+        };
+
+        // Cargar historial de focos sucesivos
+        async function cargarHistorialFocos() {
+            const container = document.getElementById('historial-focos');
+            container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">Cargando registros históricos...</p>';
+            
+            try {
+                const querySnapshot = await getDocs(collection(db, "focos_terapeuticos"));
+                container.innerHTML = '';
+                
+                if (querySnapshot.empty) {
+                    container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">No se registran focos anteriores en el sistema.</p>';
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    container.innerHTML += `
+                        <div class="history-item">
+                            <div class="history-header">
+                                <span>Pareja: ${data.pareja}</span>
+                                <span>Fecha de Foco: ${data.fecha}</span>
+                            </div>
+                            <div class="history-body">
+                                <p><strong>1. Dimensión Psicoanalítica:</strong> ${data.psicoanalitico}</p>
+                                <p><strong>2. Dimensión Vincular:</strong> ${data.vincular}</p>
+                                <p><strong>3. Convergencia Neurobiológica:</strong> ${data.neurobiologico}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                console.error("Error al cargar historial:", e);
+                container.innerHTML = '<p style="color: #dc2626; font-size: 0.85rem;">Error al recuperar el historial de focos.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
