@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Pacientes - Clínica de la Convergencia</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --border-focus: #3b82f6;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            font-size: 1rem;
+            margin: 1.25rem 0 0.75rem 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-control {
+            margin-bottom: 1rem;
+        }
+
+        .form-control label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-control input, .form-control select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background-color: #f8fafc;
+        }
+
+        .form-control input:focus, .form-control select:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background-color: var(--card-bg);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .btn-registrar {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: #ffffff;
+        }
+
+        .btn-editar {
+            background-color: #0284c7;
+            color: #ffffff;
+        }
+
+        .btn-eliminar {
+            background-color: #dc2626;
+            color: #ffffff;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-elevated);
+            filter: brightness(1.1);
+        }
+
+        /* Tabla de registros */
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        table.data-table th, table.data-table td {
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.85rem;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        table.data-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        table.data-table tr:hover {
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <h2>Registro y Gestión de Pareja Consultante</h2>
+            
+            <form id="pacientes-form">
+                <!-- Paciente Pareja 1 -->
+                <h3>Paciente Pareja 1</h3>
+                <div class="form-grid">
+                    <div class="form-control">
+                        <label>Apellido y Nombre</label>
+                        <input type="text" id="p1-nombre" required placeholder="Ej: Pérez, Juan">
+                    </div>
+                    <div class="form-control">
+                        <label>Edad</label>
+                        <input type="number" id="p1-edad" required placeholder="Ej: 45">
+                    </div>
+                    <div class="form-control">
+                        <label>Sexo</label>
+                        <select id="p1-sexo">
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-control">
+                        <label>Celular</label>
+                        <input type="text" id="p1-celular" placeholder="Ej: 3514000000">
+                    </div>
+                </div>
+
+                <!-- Paciente Pareja 2 -->
+                <h3>Paciente Pareja 2</h3>
+                <div class="form-grid">
+                    <div class="form-control">
+                        <label>Apellido y Nombre</label>
+                        <input type="text" id="p2-nombre" required placeholder="Ej: Gómez, María">
+                    </div>
+                    <div class="form-control">
+                        <label>Edad</label>
+                        <input type="number" id="p2-edad" required placeholder="Ej: 42">
+                    </div>
+                    <div class="form-control">
+                        <label>Sexo</label>
+                        <select id="p2-sexo">
+                            <option value="Femenino">Femenino</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-control">
+                        <label>Celular</label>
+                        <input type="text" id="p2-celular" placeholder="Ej: 3514111111">
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="btn-group">
+                    <button type="button" class="btn btn-registrar" onclick="registrarPareja()">Registrar</button>
+                    <button type="button" class="btn btn-editar" onclick="editarPareja()">Editar</button>
+                    <button type="button" class="btn btn-eliminar" onclick="eliminarPareja()">Eliminar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Listado Persistente -->
+        <div class="card">
+            <h2>Parejas Registradas en el Sistema</h2>
+            <table class="data-table" id="tabla-pacientes">
+                <thead>
+                    <tr>
+                        <th>Pareja 1 (Ap. y Nombre)</th>
+                        <th>Pareja 2 (Ap. y Nombre)</th>
+                        <th>Contacto Principal</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-parejas">
+                    <!-- Los datos se cargan dinámicamente desde Firestore -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Script de Firebase y Lógica del Módulo -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDv1wgWGICsvfrJHZV1s2HVXdsAvIRAOuI",
+            authDomain: "terapia-de-pareja-3bb81.firebaseapp.com",
+            projectId: "terapia-de-pareja-3bb81",
+            storageBucket: "terapia-de-pareja-3bb81.firebasestorage.app",
+            messagingSenderId: "173599055420",
+            appId: "1:173599055420:web:5b36414cc3b4c7a90b6d39"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.registrarPareja = async function() {
+            const p1 = {
+                nombre: document.getElementById('p1-nombre').value,
+                edad: document.getElementById('p1-edad').value,
+                sexo: document.getElementById('p1-sexo').value,
+                celular: document.getElementById('p1-celular').value
+            };
+            const p2 = {
+                nombre: document.getElementById('p2-nombre').value,
+                edad: document.getElementById('p2-edad').value,
+                sexo: document.getElementById('p2-sexo').value,
+                celular: document.getElementById('p2-celular').value
+            };
+
+            if (!p1.nombre || !p2.nombre) {
+                alert("Por favor complete los nombres de ambos integrantes.");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "parejas_pacientes"), { p1, p2, fecha: new Date() });
+                alert("Pareja registrada con éxito en Firestore.");
+                document.getElementById('pacientes-form').reset();
+                cargarParejas();
+            } catch (e) {
+                console.error("Error al registrar:", e);
+                alert("Error al conectar con la base de datos.");
+            }
+        };
+
+        window.editarPareja = function() {
+            alert("Seleccione el registro de la tabla o cargue los datos actualizados para sobreescribir.");
+        };
+
+        window.eliminarPareja = function() {
+            alert("Seleccione el registro que desea eliminar de la base de datos.");
+        };
+
+        async function cargarParejas() {
+            const tbody = document.getElementById('lista-parejas');
+            tbody.innerHTML = '';
+            try {
+                const querySnapshot = await getDocs(collection(db, "parejas_pacientes"));
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><strong>${data.p1.nombre}</strong> (${data.p1.edad} años)<br><small>Tel: ${data.p1.celular}</small></td>
+                            <td><strong>${data.p2.nombre}</strong> (${data.p2.edad} años)<br><small>Tel: ${data.p2.celular}</small></td>
+                            <td>${data.p1.celular} / ${data.p2.celular}</td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                console.error("Error al cargar datos:", e);
+            }
+        }
+
+        // Cargar registros al iniciar
+        cargarParejas();
+    </script>
+</body>
+</html>
