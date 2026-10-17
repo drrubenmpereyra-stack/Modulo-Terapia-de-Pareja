@@ -33,13 +33,13 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 950px;
             margin: 0 auto;
         }
 
         .card {
             background: var(--card-bg);
-            padding: 2.5rem;
+            padding: 2rem;
             border-radius: 12px;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-subtle);
@@ -48,17 +48,17 @@
 
         h2 {
             color: var(--primary-color);
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            margin-bottom: 1.25rem;
             border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 0.5rem;
+            padding-bottom: 0.4rem;
             font-weight: 700;
         }
 
         h3 {
             color: var(--secondary-color);
-            font-size: 1rem;
-            margin: 1.25rem 0 0.75rem 0;
+            font-size: 0.95rem;
+            margin: 1rem 0 0.5rem 0;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.03em;
@@ -66,13 +66,13 @@
 
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
         .form-control {
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
         .form-control label {
@@ -87,10 +87,10 @@
 
         .form-control input, .form-control select {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.7rem;
             border: 1.5px solid var(--border-color);
             border-radius: 8px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: all 0.2s ease;
             background-color: #f8fafc;
         }
@@ -105,13 +105,13 @@
         .btn-group {
             display: flex;
             gap: 0.75rem;
-            margin-top: 1.5rem;
+            margin-top: 1.25rem;
         }
 
         .btn {
-            padding: 0.75rem 1.25rem;
+            padding: 0.7rem 1.2rem;
             border-radius: 8px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             border: none;
@@ -140,11 +140,10 @@
             filter: brightness(1.1);
         }
 
-        /* Tabla de registros */
         table.data-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 1.5rem;
+            margin-top: 1rem;
             background: var(--card-bg);
             border-radius: 8px;
             overflow: hidden;
@@ -153,7 +152,7 @@
 
         table.data-table th, table.data-table td {
             border-bottom: 1px solid var(--border-color);
-            padding: 0.85rem;
+            padding: 0.75rem;
             text-align: left;
             font-size: 0.85rem;
         }
@@ -229,7 +228,7 @@
                     </div>
                 </div>
 
-                <!-- Botones de Acción -->
+                <!-- Botones Solicitados -->
                 <div class="btn-group">
                     <button type="button" class="btn btn-registrar" onclick="registrarPareja()">Registrar</button>
                     <button type="button" class="btn btn-editar" onclick="editarPareja()">Editar</button>
@@ -238,25 +237,25 @@
             </form>
         </div>
 
-        <!-- Listado Persistente -->
+        <!-- Tabla de Registros -->
         <div class="card">
             <h2>Parejas Registradas en el Sistema</h2>
-            <table class="data-table" id="tabla-pacientes">
+            <table class="data-table">
                 <thead>
                     <tr>
                         <th>Pareja 1 (Ap. y Nombre)</th>
                         <th>Pareja 2 (Ap. y Nombre)</th>
-                        <th>Contacto Principal</th>
+                        <th>Celulares</th>
                     </tr>
                 </thead>
                 <tbody id="lista-parejas">
-                    <!-- Los datos se cargan dinámicamente desde Firestore -->
+                    <!-- Datos cargados dinámicamente -->
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- Script de Firebase y Lógica del Módulo -->
+    <!-- Script de Firebase Firestore -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -304,11 +303,11 @@
         };
 
         window.editarPareja = function() {
-            alert("Seleccione el registro de la tabla o cargue los datos actualizados para sobreescribir.");
+            alert("Seleccione el registro de la tabla para editar.");
         };
 
         window.eliminarPareja = function() {
-            alert("Seleccione el registro que desea eliminar de la base de datos.");
+            alert("Seleccione el registro de la tabla para eliminar.");
         };
 
         async function cargarParejas() {
@@ -320,8 +319,8 @@
                     const data = doc.data();
                     tbody.innerHTML += `
                         <tr>
-                            <td><strong>${data.p1.nombre}</strong> (${data.p1.edad} años)<br><small>Tel: ${data.p1.celular}</small></td>
-                            <td><strong>${data.p2.nombre}</strong> (${data.p2.edad} años)<br><small>Tel: ${data.p2.celular}</small></td>
+                            <td><strong>${data.p1.nombre}</strong> (${data.p1.edad}a)<br><small>${data.p1.sexo}</small></td>
+                            <td><strong>${data.p2.nombre}</strong> (${data.p2.edad}a)<br><small>${data.p2.sexo}</small></td>
                             <td>${data.p1.celular} / ${data.p2.celular}</td>
                         </tr>
                     `;
@@ -331,7 +330,6 @@
             }
         }
 
-        // Cargar registros al iniciar
         cargarParejas();
     </script>
 </body>
