@@ -299,6 +299,7 @@
             font-size: 0.8rem;
             font-weight: 500;
             transition: background 0.15s;
+            cursor: pointer;
         }
 
         .dropdown-content a:hover {
@@ -369,24 +370,24 @@
                 </div>
             </div>
 
-            <!-- Navegación conectada al iframe con target="main-iframe" -->
+            <!-- Navegación controlada por JavaScript para cargar dinámicamente el iframe -->
             <nav class="nav-bar">
-                <a href="pacientes.html" target="main-iframe" class="nav-btn">Pacientes</a>
-                <a href="agenda.html" target="main-iframe" class="nav-btn">Agenda</a>
-                <a href="pagos.html" target="main-iframe" class="nav-btn">Pagos</a>
-                <a href="prim_ent.html" target="main-iframe" class="nav-btn">Primera entrevista</a>
-                <a href="gen_vincular.html" target="main-iframe" class="nav-btn">Genograma dinámico vincular</a>
-                <a href="foco_pareja.html" target="main-iframe" class="nav-btn">Foco vincular de pareja</a>
-                <a href="objetivos.html" target="main-iframe" class="nav-btn">Objetivos</a>
-                <a href="tareas.html" target="main-iframe" class="nav-btn">Tareas asignadas</a>
+                <button class="nav-btn" onclick="cargarModulo('pacientes.html')">Pacientes</button>
+                <button class="nav-btn" onclick="cargarModulo('agenda.html')">Agenda</button>
+                <button class="nav-btn" onclick="cargarModulo('pagos.html')">Pagos</button>
+                <button class="nav-btn" onclick="cargarModulo('prim_ent.html')">Primera entrevista</button>
+                <button class="nav-btn" onclick="cargarModulo('gen_vincular.html')">Genograma dinámico vincular</button>
+                <button class="nav-btn" onclick="cargarModulo('foco_pareja.html')">Foco vincular de pareja</button>
+                <button class="nav-btn" onclick="cargarModulo('objetivos.html')">Objetivos</button>
+                <button class="nav-btn" onclick="cargarModulo('tareas.html')">Tareas asignadas</button>
                 
                 <!-- Menú Desplegable -->
                 <div class="dropdown">
-                    <a href="#" class="nav-btn">Evaluación ▼</a>
+                    <button class="nav-btn">Evaluación ▼</button>
                     <div class="dropdown-content">
-                        <a href="eval_1.html" target="main-iframe">Eval Inmediata 1</a>
-                        <a href="eval_2.html" target="main-iframe">Eval Inmediatra 2</a>
-                        <a href="follow_up.html" target="main-iframe">Follow up</a>
+                        <a onclick="cargarModulo('eval_1.html')">Eval Inmediata 1</a>
+                        <a onclick="cargarModulo('eval_2.html')">Eval Inmediatra 2</a>
+                        <a onclick="cargarModulo('follow_up.html')">Follow up</a>
                     </div>
                 </div>
 
@@ -395,7 +396,7 @@
         </header>
 
         <main class="main-content">
-            <iframe id="main-iframe" name="main-iframe" src="pacientes.html" title="Panel Central de Gestión"></iframe>
+            <iframe id="main-iframe" src="pacientes.html" title="Panel Central de Gestión"></iframe>
         </main>
     </div>
 
