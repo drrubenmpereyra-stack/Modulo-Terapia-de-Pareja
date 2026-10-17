@@ -21,6 +21,14 @@ try {
     console.error("Error al inicializar Firebase:", e);
 }
 
+// Función global para cambiar dinámicamente la página dentro del iframe central
+window.cargarModulo = function(pagina) {
+    const iframe = document.getElementById('main-iframe');
+    if (iframe) {
+        iframe.src = pagina;
+    }
+};
+
 // Control Estricto de Login
 document.getElementById('login-form').addEventListener('submit', function(e) {
     e.preventDefault();
