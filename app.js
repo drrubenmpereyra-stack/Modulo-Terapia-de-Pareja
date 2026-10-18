@@ -1,40 +1,48 @@
 // ==========================================
-// APP.JS - Núcleo de Enrutamiento y Login Blindado
+// APP.JS - Núcleo de Enrutamiento y Login Ultra-Blindado
 // Clínica de la Convergencia
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    inicializarLogin();
+    inicializarLoginSeguro();
     inicializarNavegacion();
 });
 
-// Sistema de Login Institucional con validación estricta de nulidad
-function inicializarLogin() {
-    const loginForm = document.getElementById('login-form');
-    if (!loginForm) return; // Sale limpiamente si no hay formulario de login en la vista actual
+function inicializarLoginSeguro() {
+    // Buscamos el formulario por ID, por tag 'form' o por cualquier clase relacionada al login
+    const loginForm = document.getElementById('login-form') || document.querySelector('form');
+    if (!loginForm) return;
 
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
-        const inputUser = document.getElementById('username');
-        const inputPass = document.getElementById('password');
+        // Capturamos los campos por ID o por su posición/tipo dentro del formulario
+        const inputUser = document.getElementById('username') || loginForm.querySelector('input[type="text"]') || loginForm.querySelectorAll('input')[0];
+        const inputPass = document.getElementById('password') || loginForm.querySelector('input[type="password"]') || loginForm.querySelectorAll('input')[1];
 
-        // Validación defensiva para evitar cualquier TypeError si el elemento no existe
         const usuario = inputUser ? inputUser.value.trim() : '';
         const clave = inputPass ? inputPass.value.trim() : '';
 
         if (usuario === 'DRPEREYRA' && clave === '235689') {
             sessionStorage.setItem('clinica_auth', 'true');
-            const loginOverlay = document.getElementById('login-overlay');
+            
+            // Ocultamos el login y mostramos la app buscando contenedores comunes
+            const loginOverlay = document.getElementById('login-overlay') || loginForm.closest('div');
             const appContainer = document.getElementById('app-container');
+            
             if (loginOverlay) loginOverlay.style.display = 'none';
-            if (appContainer) appContainer.style.display = 'flex';
+            if (appContainer) {
+                appContainer.style.display = 'flex';
+            } else {
+                // Si el contenedor principal no usa ese ID exacto, recargamos o mostramos el body
+                location.reload();
+            }
         } else {
             alert('Credenciales incorrectas. Verifique usuario y contraseña.');
         }
     });
 
-    // Comprobación de sesión activa
+    // Comprobación de sesión activa previa
     if (sessionStorage.getItem('clinica_auth') === 'true') {
         const loginOverlay = document.getElementById('login-overlay');
         const appContainer = document.getElementById('app-container');
