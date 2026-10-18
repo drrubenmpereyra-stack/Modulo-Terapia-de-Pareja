@@ -259,11 +259,13 @@
         <h2>Evaluación de Cierre y Marcha del Proceso Terapéutico (Eval 2)</h2>
         <p class="subtitle">Clínica de la Convergencia — Perspectiva Vincular de los Pacientes</p>
 
-        <!-- Cabecera de Datos -->
+        <!-- Cabecera de Datos con Selección Dinámica de Parejas -->
         <div class="form-grid">
             <div class="form-group">
-                <label for="eval2-pareja">Identificación de la Pareja / Pacientes</label>
-                <input type="text" id="eval2-pareja" placeholder="Ej: Pérez - Gómez">
+                <label for="eval2-pareja">Seleccionar Pareja / Pacientes</label>
+                <select id="eval2-pareja">
+                    <option value="">Cargando parejas...</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="eval2-momento">Momento del Proceso</label>
@@ -407,6 +409,35 @@
         let chartInstance = null;
         let ultimosDatosCalculados = null;
 
+        // Cargar automáticamente las parejas registradas desde la colección "pacientes"
+        async function cargarPacientesSelect() {
+            const selectPareja = document.getElementById('eval2-pareja');
+            if (!selectPareja) return;
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "pacientes"));
+                selectPareja.innerHTML = '<option value="">Seleccione una pareja...</option>';
+                
+                if (querySnapshot.empty) {
+                    selectPareja.innerHTML = '<option value="">No hay parejas registradas</option>';
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if (data.nombres) {
+                        const option = document.createElement('option');
+                        option.value = data.nombres;
+                        option.textContent = data.nombres;
+                        selectPareja.appendChild(option);
+                    }
+                });
+            } catch (e) {
+                console.error("Error al cargar pacientes para el select:", e);
+                selectPareja.innerHTML = '<option value="">Error al cargar pacientes</option>';
+            }
+        }
+
         window.calcularPuntajeEval2 = function() {
             const inputsA = document.querySelectorAll('.score-a');
             const inputsB = document.querySelectorAll('.score-b');
@@ -531,7 +562,7 @@
         window.guardarEval2Firestore = async function() {
             const pareja = document.getElementById('eval2-pareja').value.trim();
             if (!pareja) {
-                alert("Por favor ingrese el nombre de la pareja antes de guardar.");
+                alert("Por favor seleccione una pareja antes de guardar.");
                 return;
             }
 
@@ -590,8 +621,9 @@
             }
         }
 
-        // Cargar historial al iniciar el módulo
+        // Cargar select de pacientes e historial al iniciar el módulo
         document.addEventListener('DOMContentLoaded', () => {
+            cargarPacientesSelect();
             cargarHistorialEval2();
         });
     </script>
