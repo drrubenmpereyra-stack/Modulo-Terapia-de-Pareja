@@ -31,7 +31,7 @@ window.switchView = function(viewId) {
     }
 };
 
-// Sistema de Login Estricto (Restaurado con IDs correctos 'user' y 'password')
+// Sistema de Login Estricto con Activación de Vista por Defecto
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
@@ -44,6 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (user === "DRPEREYRA" && pass === "235689") {
                 document.getElementById('login-container').style.display = 'none';
                 document.getElementById('app-container').style.display = 'flex';
+                
+                // Mostrar la primera vista por defecto (ej. 'view-pacientes') para que no quede en blanco
+                if (typeof window.switchView === 'function') {
+                    window.switchView('view-pacientes');
+                }
+                
                 cargarDatosGenerales();
             } else {
                 if (errorMsg) errorMsg.style.display = 'block';
