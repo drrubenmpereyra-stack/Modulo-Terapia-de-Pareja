@@ -291,7 +291,6 @@
             padding-bottom: 0.4rem;
         }
 
-        /* Formularios y Tablas Generales dentro de las vistas */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -363,7 +362,6 @@
     <!-- ================= PANTALLA DE LOGIN ================= -->
     <div id="login-container">
         <div class="login-card">
-            <!-- Imagen logotipo_pareja.jpg centrada -->
             <img src="logotipo_pareja.jpg" alt="Logotipo Pareja" class="logo" onerror="this.src='https://via.placeholder.com/90?text=Logo'">
             <h1>Clínica de la Convergencia</h1>
             <h2>Terapia Vincular de Pareja</h2>
@@ -387,7 +385,6 @@
         <header>
             <div class="header-top">
                 <div class="header-left">
-                    <!-- Logotipo en borde superior izquierdo -->
                     <img src="logotipo_pareja.jpg" alt="Logo" class="logo-sup" onerror="this.src='https://via.placeholder.com/60?text=Logo'">
                 </div>
                 <div class="header-title-container">
@@ -395,13 +392,11 @@
                     <h2>Terapia Vincular de Pareja</h2>
                 </div>
                 <div class="user-profile">
-                    <!-- yo.jpg en borde superior izquierdo del perfil -->
                     <img src="yo.jpg" alt="Dr. Rubén M. Pereyra" onerror="this.src='https://via.placeholder.com/40?text=Dr'">
                     <span>Dr. y Mgter. Rubén M. Pereyra</span>
                 </div>
             </div>
 
-            <!-- Menú de Botones Persistente -->
             <nav class="nav-bar">
                 <button class="nav-btn active" onclick="switchView('view-pacientes')">Pacientes</button>
                 <button class="nav-btn" onclick="switchView('view-agenda')">Agenda</button>
@@ -412,12 +407,11 @@
                 <button class="nav-btn" onclick="switchView('view-objetivos')">Objetivos</button>
                 <button class="nav-btn" onclick="switchView('view-tareas')">Tareas Asignadas</button>
                 
-                <!-- Menú Desplegable de Evaluación -->
                 <div class="dropdown">
                     <button class="nav-btn">Evaluación ▼</button>
                     <div class="dropdown-content">
                         <button onclick="switchView('view-eval-1')">Eval Inmediata 1</button>
-                        <button onclick="switchView('view-eval-2')">Eval Inmediata 2</button>
+                        <button onclick="switchView('view-eval-2')">Eval Inmediatra 2</button>
                         <button onclick="switchView('view-follow-up')">Follow up</button>
                     </div>
                 </div>
@@ -426,10 +420,7 @@
             </nav>
         </header>
 
-        <!-- Contenedor de Vistas Dinámicas -->
         <main class="main-content">
-            
-            <!-- 1. PACIENTES -->
             <section id="view-pacientes" class="view-section active">
                 <h3>Gestión de Parejas / Pacientes</h3>
                 <div class="form-grid">
@@ -449,13 +440,12 @@
                 <button class="btn-action" onclick="guardarPaciente()">Registrar Pareja</button>
                 <table class="data-table" id="tabla-pacientes">
                     <thead>
-                        <tr><th>Pareja</th><th>Contacto</th><th>Motivo</th><th>Acciones</th></tr>
+                        <tr><th>Pareja</th><th>Contacto</th><th>Motivo</th></tr>
                     </thead>
                     <tbody></tbody>
                 </table>
             </section>
 
-            <!-- 2. AGENDA -->
             <section id="view-agenda" class="view-section">
                 <h3>Agenda de Sesiones Clínicas</h3>
                 <div class="form-grid">
@@ -477,7 +467,6 @@
                 </table>
             </section>
 
-            <!-- 3. PAGOS -->
             <section id="view-pagos" class="view-section">
                 <h3>Control de Pagos (Transferencia / Efectivo)</h3>
                 <div class="form-grid">
@@ -506,135 +495,74 @@
                 </table>
             </section>
 
-            <!-- 4. PRIMERA ENTREVISTA -->
             <section id="view-prim-ent" class="view-section">
                 <h3>Primera Entrevista Vincular</h3>
-                <div class="form-control">
-                    <label>Pareja Evaluada</label>
-                    <input type="text" id="pe-pareja">
-                </div>
-                <div class="form-control">
-                    <label>Genograma y Estructura Familiar de Origen</label>
-                    <textarea id="pe-genograma" placeholder="Descripción de las familias de origen y marcas transgeneracionales..."></textarea>
-                </div>
-                <div class="form-control">
-                    <label>Hipótesis Preliminar Convergente (Metapsicología + Neurobiología)</label>
-                    <textarea id="pe-hipotesis" placeholder="Desregulación afectiva, fijaciones y modalidad de ligadura..."></textarea>
-                </div>
+                <div class="form-control"><label>Pareja Evaluada</label><input type="text" id="pe-pareja"></div>
+                <div class="form-control"><label>Genograma y Estructura Familiar de Origen</label><textarea id="pe-genograma"></textarea></div>
+                <div class="form-control"><label>Hipótesis Preliminar Convergente</label><textarea id="pe-hipotesis"></textarea></div>
                 <button class="btn-action" onclick="guardarPrimeraEntrevista()">Guardar Evaluación Inicial</button>
             </section>
 
-            <!-- 5. GENOGRAMA DINÁMICO VINCULAR -->
             <section id="view-gen-vincular" class="view-section">
                 <h3>Genograma Dinámico Vincular</h3>
-                <div class="form-control">
-                    <label>Pareja</label>
-                    <input type="text" id="gv-pareja">
-                </div>
-                <div class="form-control">
-                    <label>Alianzas, Mandatos y Transmisiones Psíquicas Inconscientes</label>
-                    <textarea id="gv-analisis" placeholder="Registro de alianzas cruzadas, mandatos parentales no elaborados y puntos ciegos vinculares..."></textarea>
-                </div>
+                <div class="form-control"><label>Pareja</label><input type="text" id="gv-pareja"></div>
+                <div class="form-control"><label>Alianzas, Mandatos y Transmisiones</label><textarea id="gv-analisis"></textarea></div>
                 <button class="btn-action" onclick="guardarGenograma()">Registrar Análisis Vincular</button>
             </section>
 
-            <!-- 6. FOCO VINCULAR DE PAREJA -->
             <section id="view-foco-pareja" class="view-section">
                 <h3>Foco Vincular de Pareja</h3>
-                <div class="form-control">
-                    <label>Pareja</label>
-                    <input type="text" id="fp-pareja">
-                </div>
-                <div class="form-control">
-                    <label>Delimitación del Foco Clínico Actual</label>
-                    <textarea id="fp-foco" placeholder="Punto de urgencia, desacople erótico/afectivo o crisis de duelos actuales..."></textarea>
-                </div>
+                <div class="form-control"><label>Pareja</label><input type="text" id="fp-pareja"></div>
+                <div class="form-control"><label>Delimitación del Foco Clínico Actual</label><textarea id="fp-foco"></textarea></div>
                 <button class="btn-action" onclick="guardarFoco()">Establecer Foco Terapéutico</button>
             </section>
 
-            <!-- 7. OBJETIVOS -->
             <section id="view-objetivos" class="view-section">
                 <h3>Objetivos Terapéuticos</h3>
-                <div class="form-control">
-                    <label>Pareja</label>
-                    <input type="text" id="obj-pareja">
-                </div>
-                <div class="form-control">
-                    <label>Metas de Elaboración y Regulación Simbólica</label>
-                    <textarea id="obj-metas" placeholder="Desarticulación de proyecciones, nominación afectiva, reconfiguración del lazo..."></textarea>
-                </div>
+                <div class="form-control"><label>Pareja</label><input type="text" id="obj-pareja"></div>
+                <div class="form-control"><label>Metas de Elaboración</label><textarea id="obj-metas"></textarea></div>
                 <button class="btn-action" onclick="guardarObjetivos()">Guardar Objetivos</button>
             </section>
 
-            <!-- 8. TAREAS ASIGNADAS -->
             <section id="view-tareas" class="view-section">
-                <h3>Tareas Asignadas (Clínica de la Convergencia)</h3>
-                <div class="form-control">
-                    <label>Pareja</label>
-                    <input type="text" id="tar-pareja">
-                </div>
-                <div class="form-control">
-                    <label>Actividades Inter sesión (Escritura focalizada, rituales de contención, freno vagal)</label>
-                    <textarea id="tar-detalle" placeholder="Indicaciones precisas para la semana..."></textarea>
-                </div>
+                <h3>Tareas Asignadas</h3>
+                <div class="form-control"><label>Pareja</label><input type="text" id="tar-pareja"></div>
+                <div class="form-control"><label>Actividades Inter sesión</label><textarea id="tar-detalle"></textarea></div>
                 <button class="btn-action" onclick="guardarTarea()">Asignar Tarea</button>
             </section>
 
-            <!-- 9. EVAL INMEDIATA 1 -->
             <section id="view-eval-1" class="view-section">
                 <h3>Evaluación Inmediata 1 (Nominación de Afectos)</h3>
-                <div class="form-control">
-                    <label>Pareja</label>
-                    <input type="text" id="ev1-pareja">
-                </div>
-                <div class="form-control">
-                    <label>Grado de Registro y Simbolización de la Angustia (Escala 1 a 3)</label>
+                <div class="form-control"><label>Pareja</label><input type="text" id="ev1-pareja"></div>
+                <div class="form-control"><label>Grado de Registro (Escala 1 a 3)</label>
                     <select id="ev1-puntaje">
                         <option value="1 - Bloqueo / Descarga Automática">1 - Bloqueo / Descarga Automática</option>
                         <option value="2 - Transición / Inicio de Registro">2 - Transición / Inicio de Registro</option>
                         <option value="3 - Elaboración y Fluidez Simbólica">3 - Elaboración y Fluidez Simbólica</option>
                     </select>
                 </div>
-                <div class="form-control">
-                    <label>Observaciones Clínicas</label>
-                    <textarea id="ev1-obs"></textarea>
-                </div>
+                <div class="form-control"><label>Observaciones</label><textarea id="ev1-obs"></textarea></div>
                 <button class="btn-action" onclick="guardarEval1()">Registrar Evaluación 1</button>
             </section>
 
-            <!-- 10. EVAL INMEDIATA 2 -->
             <section id="view-eval-2" class="view-section">
                 <h3>Evaluación Inmediata 2 (Desarticulación de Proyecciones)</h3>
-                <div class="form-control">
-                    <label>Pareja</label>
-                    <input type="text" id="ev2-pareja">
-                </div>
-                <div class="form-control">
-                    <label>Nivel de Implicancia Subjetiva vs Proyección en el Otro (Escala 1 a 3)</label>
+                <div class="form-control"><label>Pareja</label><input type="text" id="ev2-pareja"></div>
+                <div class="form-control"><label>Nivel de Implicancia (Escala 1 a 3)</label>
                     <select id="ev2-puntaje">
                         <option value="1 - Sostenimiento Rígido de Culpa Mutua">1 - Sostenimiento Rígido de Culpa Mutua</option>
                         <option value="2 - Reconocimiento Parcial de Implicancia">2 - Reconocimiento Parcial de Implicancia</option>
                         <option value="3 - Desarme Activo de Proyecciones">3 - Desarme Activo de Proyecciones</option>
                     </select>
                 </div>
-                <div class="form-control">
-                    <label>Observaciones Clínicas</label>
-                    <textarea id="ev2-obs"></textarea>
-                </div>
+                <div class="form-control"><label>Observaciones</label><textarea id="ev2-obs"></textarea></div>
                 <button class="btn-action" onclick="guardarEval2()">Registrar Evaluación 2</button>
             </section>
 
-            <!-- 11. FOLLOW UP -->
             <section id="view-follow-up" class="view-section">
-                <h3>Follow Up (Seguimiento del Proceso Vincular)</h3>
-                <div class="form-control">
-                    <label>Pareja</label>
-                    <input type="text" id="fu-pareja">
-                </div>
-                <div class="form-control">
-                    <label>Evolución General del Vínculo y Estabilidad Alostática</label>
-                    <textarea id="fu-evolucion" placeholder="Evolución clínica longitudinal..."></textarea>
-                </div>
+                <h3>Follow Up</h3>
+                <div class="form-control"><label>Pareja</label><input type="text" id="fu-pareja"></div>
+                <div class="form-control"><label>Evolución General del Vínculo</label><textarea id="fu-evolucion"></textarea></div>
                 <button class="btn-action" onclick="guardarFollowUp()">Registrar Follow Up</button>
             </section>
 
