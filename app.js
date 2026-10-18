@@ -8,24 +8,31 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarNavegacion();
 });
 
-// Sistema de Login Institucional
+// Sistema de Login Institucional Blindado
 function inicializarLogin() {
     const loginForm = document.getElementById('login-form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const usuario = document.getElementById('username').value.trim();
-            const clave = document.getElementById('password').value.trim();
+    if (!loginForm) return; // Si no estamos en la vista de login, evitamos errores
 
-            if (usuario === 'DRPEREYRA' && clave === '235689') {
-                sessionStorage.setItem('clinica_auth', 'true');
-                document.getElementById('login-overlay').style.display = 'none';
-                document.getElementById('app-container').style.display = 'flex';
-            } else {
-                alert('Credenciales incorrectas. Verifique usuario y contraseña.');
-            }
-        });
-    }
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const inputUser = document.getElementById('username');
+        const inputPass = document.getElementById('password');
+
+        if (!inputUser || !inputPass) return;
+
+        const usuario = inputUser.value.trim();
+        const clave = inputPass.value.trim();
+
+        if (usuario === 'DRPEREYRA' && clave === '235689') {
+            sessionStorage.setItem('clinica_auth', 'true');
+            const loginOverlay = document.getElementById('login-overlay');
+            const appContainer = document.getElementById('app-container');
+            if (loginOverlay) loginOverlay.style.display = 'none';
+            if (appContainer) appContainer.style.display = 'flex';
+        } else {
+            alert('Credenciales incorrectas. Verifique usuario y contraseña.');
+        }
+    });
 
     // Verificar si ya hay sesión activa
     if (sessionStorage.getItem('clinica_auth') === 'true') {
