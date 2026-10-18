@@ -1,53 +1,381 @@
-// Importación unificada de Firebase SDK y Firestore
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica de la Convergencia - Terapia Vincular</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --border-focus: #3b82f6;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
 
-// Configuración de Firebase provista
-const firebaseConfig = {
-    apiKey: "AIzaSyDv1wgWGICsvfrJHZV1s2HVXdsAvIRAOuI",
-    authDomain: "terapia-de-pareja-3bb81.firebaseapp.com",
-    projectId: "terapia-de-pareja-3bb81",
-    storageBucket: "terapia-de-pareja-3bb81.firebasestorage.app",
-    messagingSenderId: "173599055420",
-    appId: "1:173599055420:web:5b36414cc3b4c7a90b6d39"
-};
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
 
-// Inicialización segura de Firebase Firestore
-let db;
-try {
-    const app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-} catch (e) {
-    console.error("Error al inicializar Firebase:", e);
-}
+        html, body {
+            height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow: hidden;
+        }
 
-// Función global para cambiar dinámicamente la página dentro del iframe central
-window.cargarModulo = function(pagina) {
-    const iframe = document.getElementById('main-iframe');
-    if (iframe) {
-        iframe.src = pagina;
-    }
-};
+        /* --- PANTALLA DE LOGIN --- */
+        #login-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary-color), #090d16);
+            z-index: 1000;
+        }
 
-// Control Estricto de Login
-document.getElementById('login-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const user = document.getElementById('user').value.trim().toUpperCase();
-    const pass = document.getElementById('password').value.trim();
-    const errorMsg = document.getElementById('login-error');
+        .login-card {
+            background: var(--card-bg);
+            padding: 3rem 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-    if (user === "DRPEREYRA" && pass === "235689") {
-        document.getElementById('login-container').style.display = 'none';
-        document.getElementById('app-container').style.display = 'flex';
-    } else {
-        errorMsg.style.display = 'block';
-    }
-});
+        .login-card img.logo {
+            width: 96px;
+            height: 96px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 1.25rem;
+            border: 3px solid var(--accent-color);
+        }
 
-// Función de Cierre de Sesión
-window.logout = function() {
-    document.getElementById('app-container').style.display = 'none';
-    document.getElementById('login-container').style.display = 'flex';
-    document.getElementById('login-form').reset();
-    document.getElementById('login-error').style.display = 'none';
-};
+        .login-card h1 {
+            font-size: 1.35rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .login-card h2 {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background-color: #f8fafc;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background-color: var(--card-bg);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: #ffffff;
+            border: none;
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .error-msg {
+            color: #dc2626;
+            font-size: 0.85rem;
+            margin-top: 0.75rem;
+            font-weight: 500;
+            display: none;
+        }
+
+        /* --- APLICACIÓN PRINCIPAL --- */
+        #app-container {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.85rem 2rem;
+            box-shadow: var(--shadow-subtle);
+            flex-shrink: 0;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left img.logo-sup {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid var(--accent-color);
+        }
+
+        .header-title-container {
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .header-title-container h1 {
+            font-size: 1.15rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .header-title-container h2 {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--bg-color);
+            padding: 0.3rem 0.75rem;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .user-profile img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile span {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* --- BARRA DE NAVEGACIÓN --- */
+        nav.nav-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #e2e8f0;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: var(--card-bg);
+            border: 1.5px solid var(--border-color);
+            color: var(--primary-color);
+            padding: 0.45rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--secondary-color);
+            color: #ffffff;
+            border-color: var(--secondary-color);
+        }
+
+        .nav-btn-danger {
+            background-color: #fef2f2;
+            border-color: #fecaca;
+            color: #dc2626;
+        }
+
+        .nav-btn-danger:hover {
+            background-color: #dc2626;
+            color: #ffffff;
+            border-color: #dc2626;
+        }
+
+        /* --- MENÚ DESPLEGABLE CORREGIDO (SIN ESPACIO INVISIBLE) --- */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--card-bg);
+            min-width: 180px;
+            box-shadow: var(--shadow-elevated);
+            z-index: 10;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            top: 100%;
+            left: 0;
+            padding-top: 4px;
+        }
+
+        .dropdown-content a {
+            color: var(--text-main);
+            padding: 8px 12px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f5f9;
+            color: var(--secondary-color);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* --- CONTENEDOR IFRAME PRINCIPAL --- */
+        main.main-content {
+            flex: 1;
+            width: 100%;
+            height: calc(100vh - 130px);
+            background: var(--bg-color);
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= PANTALLA DE LOGIN ================= -->
+    <div id="login-container">
+        <div class="login-card">
+            <img src="logotipo_pareja.jpg" alt="Logotipo Pareja" class="logo" onerror="this.src='https://via.placeholder.com/96?text=Logo'">
+            <h1>Clínica de la Convergencia</h1>
+            <h2>Terapia Vincular de Pareja</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="user">Usuario</label>
+                    <input type="text" id="user" required placeholder="DRPEREYRA" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" required placeholder="••••••" autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn-primary">Ingresar al Sistema</button>
+                <div id="login-error" class="error-msg">Usuario o contraseña incorrectos.</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= APLICACIÓN PRINCIPAL ================= -->
+    <div id="app-container">
+        <header>
+            <div class="header-top">
+                <div class="header-left">
+                    <img src="logotipo_pareja.jpg" alt="Logo" class="logo-sup" onerror="this.src='https://via.placeholder.com/48?text=Logo'">
+                </div>
+                <div class="header-title-container">
+                    <h1>Clínica de la Convergencia</h1>
+                    <h2>Terapia Vincular de Pareja</h2>
+                </div>
+                <div class="user-profile">
+                    <img src="yo.jpg" alt="Dr. Rubén M. Pereyra" onerror="this.src='https://via.placeholder.com/32?text=Dr'">
+                    <span>Dr. y Mgter. Rubén M. Pereyra</span>
+                </div>
+            </div>
+
+            <!-- Botonera de Navegación -->
+            <nav class="nav-bar">
+                <button class="nav-btn" onclick="cargarModulo('pacientes.html')">Pacientes</button>
+                <button class="nav-btn" onclick="cargarModulo('agenda.html')">Agenda</button>
+                <button class="nav-btn" onclick="cargarModulo('pagos.html')">Pagos</button>
+                <button class="nav-btn" onclick="cargarModulo('prim_ent.html')">Primera entrevista</button>
+                <button class="nav-btn" onclick="cargarModulo('gen_vincular.html')">Genograma dinámico vincular</button>
+                <button class="nav-btn" onclick="cargarModulo('foco_pareja.html')">Foco vincular de pareja</button>
+                <button class="nav-btn" onclick="cargarModulo('objetivos.html')">Objetivos</button>
+                <button class="nav-btn" onclick="cargarModulo('tareas.html')">Tareas asignadas</button>
+                
+                <div class="dropdown">
+                    <button class="nav-btn">Evaluación ▼</button>
+                    <div class="dropdown-content">
+                        <a onclick="cargarModulo('eval_1.html')">Eval Inmediata 1</a>
+                        <a onclick="cargarModulo('eval_2.html')">Eval Inmediata 2</a>
+                        <a onclick="cargarModulo('follow_up.html')">Follow up</a>
+                    </div>
+                </div>
+
+                <button class="nav-btn nav-btn-danger" onclick="logout()">Salir</button>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <iframe id="main-iframe" name="main-iframe" src="pacientes.html" title="Panel Central de Gestión"></iframe>
+        </main>
+    </div>
+
+    <!-- Script Principal -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
