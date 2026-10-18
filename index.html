@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clínica de la Convergencia - Terapia Vincular</title>
-    <!-- Estilos CSS Modernos y Académicos -->
     <style>
         :root {
             --primary-color: #1a365d;
@@ -29,7 +28,7 @@
             line-height: 1.6;
         }
 
-        /* --- PANTALLA DE LOGIN --- */
+        /* --- LOGIN --- */
         #login-container {
             display: flex;
             justify-content: center;
@@ -101,7 +100,6 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
             margin-top: 1rem;
         }
 
@@ -123,7 +121,6 @@
             flex-direction: column;
         }
 
-        /* Encabezado Superior */
         header {
             background: var(--white);
             border-bottom: 1px solid var(--border-color);
@@ -141,7 +138,6 @@
         .header-left {
             display: flex;
             align-items: center;
-            gap: 1rem;
         }
 
         .header-left img.logo-sup {
@@ -211,10 +207,12 @@
             font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
             transition: all 0.2s;
         }
 
-        .nav-btn:hover, .nav-btn.active {
+        .nav-btn:hover {
             background-color: var(--primary-color);
             color: var(--white);
             border-color: var(--primary-color);
@@ -239,20 +237,15 @@
             left: 0;
         }
 
-        .dropdown-content button {
+        .dropdown-content a {
             color: var(--text-color);
             padding: 10px 14px;
             text-decoration: none;
             display: block;
-            width: 100%;
-            text-align: left;
-            background: none;
-            border: none;
-            cursor: pointer;
             font-size: 0.85rem;
         }
 
-        .dropdown-content button:hover {
+        .dropdown-content a:hover {
             background-color: var(--bg-color);
             color: var(--primary-color);
         }
@@ -261,99 +254,31 @@
             display: block;
         }
 
-        /* Contenido Dinámico de los Módulos */
         main.main-content {
             flex: 1;
-            padding: 2rem;
-            max-width: 1200px;
+            padding: 3rem;
+            max-width: 900px;
             margin: 0 auto;
-            width: 100%;
+            text-align: center;
         }
 
-        .view-section {
-            display: none;
+        .welcome-panel {
             background: var(--white);
-            padding: 2rem;
+            padding: 3rem;
             border-radius: 8px;
+            border: 1px solid var(--border-color);
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            border: 1px solid var(--border-color);
         }
 
-        .view-section.active {
-            display: block;
-        }
-
-        .view-section h3 {
+        .welcome-panel h3 {
             color: var(--primary-color);
-            margin-bottom: 1.2rem;
-            font-size: 1.25rem;
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 0.4rem;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-control {
             margin-bottom: 1rem;
+            font-size: 1.4rem;
         }
 
-        .form-control label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 0.3rem;
-            color: var(--primary-color);
-        }
-
-        .form-control input, .form-control textarea, .form-control select {
-            width: 100%;
-            padding: 0.6rem;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 0.95rem;
-        }
-
-        .form-control textarea {
-            resize: vertical;
-            height: 100px;
-        }
-
-        table.data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-
-        table.data-table th, table.data-table td {
-            border: 1px solid var(--border-color);
-            padding: 0.75rem;
-            text-align: left;
-            font-size: 0.9rem;
-        }
-
-        table.data-table th {
-            background-color: var(--bg-color);
-            color: var(--primary-color);
-        }
-
-        .btn-action {
-            background-color: var(--secondary-color);
-            color: var(--white);
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-
-        .btn-action:hover {
-            background-color: var(--primary-color);
+        .welcome-panel p {
+            color: #718096;
+            font-size: 1rem;
         }
     </style>
 </head>
@@ -368,7 +293,7 @@
             <form id="login-form">
                 <div class="form-group">
                     <label for="user">Usuario</label>
-                    <input type="text" id="user" required placeholder="Ej: DRPEREYRA">
+                    <input type="text" id="user" required placeholder="DRPEREYRA">
                 </div>
                 <div class="form-group">
                     <label for="password">Contraseña</label>
@@ -397,179 +322,40 @@
                 </div>
             </div>
 
+            <!-- Menú de Botones / Enlaces solicitados conectados a tus futuros archivos -->
             <nav class="nav-bar">
-                <button class="nav-btn active" onclick="switchView('view-pacientes')">Pacientes</button>
-                <button class="nav-btn" onclick="switchView('view-agenda')">Agenda</button>
-                <button class="nav-btn" onclick="switchView('view-pagos')">Pagos</button>
-                <button class="nav-btn" onclick="switchView('view-prim-ent')">Primera Entrevista</button>
-                <button class="nav-btn" onclick="switchView('view-gen-vincular')">Genograma Vincular</button>
-                <button class="nav-btn" onclick="switchView('view-foco-pareja')">Foco Vincular de Pareja</button>
-                <button class="nav-btn" onclick="switchView('view-objetivos')">Objetivos</button>
-                <button class="nav-btn" onclick="switchView('view-tareas')">Tareas Asignadas</button>
+                <a href="pacientes.html" class="nav-btn">Pacientes</a>
+                <a href="agenda.html" class="nav-btn">Agenda</a>
+                <a href="pagos.html" class="nav-btn">Pagos</a>
+                <a href="prim_ent.html" class="nav-btn">Primera entrevista</a>
+                <a href="gen_vincular.html" class="nav-btn">Genograma dinámico vincular</a>
+                <a href="foco_pareja.html" class="nav-btn">Foco vincular de pareja</a>
+                <a href="objetivos.html" class="nav-btn">Objetivos</a>
+                <a href="tareas.html" class="nav-btn">Tareas asignadas</a>
                 
+                <!-- Menú Desplegable de Evaluación -->
                 <div class="dropdown">
-                    <button class="nav-btn">Evaluación ▼</button>
+                    <a href="#" class="nav-btn">Evaluación ▼</a>
                     <div class="dropdown-content">
-                        <button onclick="switchView('view-eval-1')">Eval Inmediata 1</button>
-                        <button onclick="switchView('view-eval-2')">Eval Inmediatra 2</button>
-                        <button onclick="switchView('view-follow-up')">Follow up</button>
+                        <a href="eval_1.html">Eval Inmediata 1</a>
+                        <a href="eval_2.html">Eval Inmediatra 2</a>
+                        <a href="follow_up.html">Follow up</a>
                     </div>
                 </div>
 
-                <button class="nav-btn" style="background-color: #e53e3e; color: white; border-color: #e53e3e;" onclick="logout()">Salir</button>
+                <button class="nav-btn" style="background-color: #e53e3e; color: white; border-color: #e53e3e; cursor: pointer;" onclick="logout()">Salir</button>
             </nav>
         </header>
 
         <main class="main-content">
-            <section id="view-pacientes" class="view-section active">
-                <h3>Gestión de Parejas / Pacientes</h3>
-                <div class="form-grid">
-                    <div class="form-control">
-                        <label>Nombre de los Integrantes</label>
-                        <input type="text" id="pac-nombres" placeholder="Ej: Juan Pérez y María Gómez">
-                    </div>
-                    <div class="form-control">
-                        <label>Teléfono / Contacto</label>
-                        <input type="text" id="pac-contacto" placeholder="Ej: 351-XXXXXXX">
-                    </div>
-                    <div class="form-control">
-                        <label>Motivo de Consulta Principal</label>
-                        <input type="text" id="pac-motivo" placeholder="Ej: Crisis por duelos o distanciamiento">
-                    </div>
-                </div>
-                <button class="btn-action" onclick="guardarPaciente()">Registrar Pareja</button>
-                <table class="data-table" id="tabla-pacientes">
-                    <thead>
-                        <tr><th>Pareja</th><th>Contacto</th><th>Motivo</th></tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </section>
-
-            <section id="view-agenda" class="view-section">
-                <h3>Agenda de Sesiones Clínicas</h3>
-                <div class="form-grid">
-                    <div class="form-control">
-                        <label>Pareja / Consultante</label>
-                        <input type="text" id="agenda-pareja" placeholder="Nombre de la pareja">
-                    </div>
-                    <div class="form-control">
-                        <label>Fecha y Hora</label>
-                        <input type="datetime-local" id="agenda-fecha">
-                    </div>
-                </div>
-                <button class="btn-action" onclick="guardarAgenda()">Agendar Sesión</button>
-                <table class="data-table" id="tabla-agenda">
-                    <thead>
-                        <tr><th>Pareja</th><th>Fecha y Hora</th><th>Estado</th></tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </section>
-
-            <section id="view-pagos" class="view-section">
-                <h3>Control de Pagos (Transferencia / Efectivo)</h3>
-                <div class="form-grid">
-                    <div class="form-control">
-                        <label>Pareja</label>
-                        <input type="text" id="pago-pareja" placeholder="Nombre de la pareja">
-                    </div>
-                    <div class="form-control">
-                        <label>Monto ($ ARS)</label>
-                        <input type="number" id="pago-monto" value="35000">
-                    </div>
-                    <div class="form-control">
-                        <label>Método de Pago</label>
-                        <select id="pago-metodo">
-                            <option value="Transferencia Bancaria CBU">Transferencia Bancaria CBU</option>
-                            <option value="Efectivo">Efectivo</option>
-                        </select>
-                    </div>
-                </div>
-                <button class="btn-action" onclick="guardarPago()">Registrar Pago</button>
-                <table class="data-table" id="tabla-pagos">
-                    <thead>
-                        <tr><th>Pareja</th><th>Monto</th><th>Método</th><th>Fecha</th></tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </section>
-
-            <section id="view-prim-ent" class="view-section">
-                <h3>Primera Entrevista Vincular</h3>
-                <div class="form-control"><label>Pareja Evaluada</label><input type="text" id="pe-pareja"></div>
-                <div class="form-control"><label>Genograma y Estructura Familiar de Origen</label><textarea id="pe-genograma"></textarea></div>
-                <div class="form-control"><label>Hipótesis Preliminar Convergente</label><textarea id="pe-hipotesis"></textarea></div>
-                <button class="btn-action" onclick="guardarPrimeraEntrevista()">Guardar Evaluación Inicial</button>
-            </section>
-
-            <section id="view-gen-vincular" class="view-section">
-                <h3>Genograma Dinámico Vincular</h3>
-                <div class="form-control"><label>Pareja</label><input type="text" id="gv-pareja"></div>
-                <div class="form-control"><label>Alianzas, Mandatos y Transmisiones</label><textarea id="gv-analisis"></textarea></div>
-                <button class="btn-action" onclick="guardarGenograma()">Registrar Análisis Vincular</button>
-            </section>
-
-            <section id="view-foco-pareja" class="view-section">
-                <h3>Foco Vincular de Pareja</h3>
-                <div class="form-control"><label>Pareja</label><input type="text" id="fp-pareja"></div>
-                <div class="form-control"><label>Delimitación del Foco Clínico Actual</label><textarea id="fp-foco"></textarea></div>
-                <button class="btn-action" onclick="guardarFoco()">Establecer Foco Terapéutico</button>
-            </section>
-
-            <section id="view-objetivos" class="view-section">
-                <h3>Objetivos Terapéuticos</h3>
-                <div class="form-control"><label>Pareja</label><input type="text" id="obj-pareja"></div>
-                <div class="form-control"><label>Metas de Elaboración</label><textarea id="obj-metas"></textarea></div>
-                <button class="btn-action" onclick="guardarObjetivos()">Guardar Objetivos</button>
-            </section>
-
-            <section id="view-tareas" class="view-section">
-                <h3>Tareas Asignadas</h3>
-                <div class="form-control"><label>Pareja</label><input type="text" id="tar-pareja"></div>
-                <div class="form-control"><label>Actividades Inter sesión</label><textarea id="tar-detalle"></textarea></div>
-                <button class="btn-action" onclick="guardarTarea()">Asignar Tarea</button>
-            </section>
-
-            <section id="view-eval-1" class="view-section">
-                <h3>Evaluación Inmediata 1 (Nominación de Afectos)</h3>
-                <div class="form-control"><label>Pareja</label><input type="text" id="ev1-pareja"></div>
-                <div class="form-control"><label>Grado de Registro (Escala 1 a 3)</label>
-                    <select id="ev1-puntaje">
-                        <option value="1 - Bloqueo / Descarga Automática">1 - Bloqueo / Descarga Automática</option>
-                        <option value="2 - Transición / Inicio de Registro">2 - Transición / Inicio de Registro</option>
-                        <option value="3 - Elaboración y Fluidez Simbólica">3 - Elaboración y Fluidez Simbólica</option>
-                    </select>
-                </div>
-                <div class="form-control"><label>Observaciones</label><textarea id="ev1-obs"></textarea></div>
-                <button class="btn-action" onclick="guardarEval1()">Registrar Evaluación 1</button>
-            </section>
-
-            <section id="view-eval-2" class="view-section">
-                <h3>Evaluación Inmediata 2 (Desarticulación de Proyecciones)</h3>
-                <div class="form-control"><label>Pareja</label><input type="text" id="ev2-pareja"></div>
-                <div class="form-control"><label>Nivel de Implicancia (Escala 1 a 3)</label>
-                    <select id="ev2-puntaje">
-                        <option value="1 - Sostenimiento Rígido de Culpa Mutua">1 - Sostenimiento Rígido de Culpa Mutua</option>
-                        <option value="2 - Reconocimiento Parcial de Implicancia">2 - Reconocimiento Parcial de Implicancia</option>
-                        <option value="3 - Desarme Activo de Proyecciones">3 - Desarme Activo de Proyecciones</option>
-                    </select>
-                </div>
-                <div class="form-control"><label>Observaciones</label><textarea id="ev2-obs"></textarea></div>
-                <button class="btn-action" onclick="guardarEval2()">Registrar Evaluación 2</button>
-            </section>
-
-            <section id="view-follow-up" class="view-section">
-                <h3>Follow Up</h3>
-                <div class="form-control"><label>Pareja</label><input type="text" id="fu-pareja"></div>
-                <div class="form-control"><label>Evolución General del Vínculo</label><textarea id="fu-evolucion"></textarea></div>
-                <button class="btn-action" onclick="guardarFollowUp()">Registrar Follow Up</button>
-            </section>
-
+            <div class="welcome-panel">
+                <h3>Panel Central Institucional</h3>
+                <p>Selecciona una opción en la barra de navegación superior para acceder a los módulos de gestión clínica y vincular.</p>
+            </div>
         </main>
     </div>
 
-    <!-- Script Principal con Firebase y Lógica -->
+    <!-- Script Principal -->
     <script type="module" src="app.js"></script>
 </body>
 </html>
