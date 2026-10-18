@@ -342,7 +342,7 @@
         </div>
     </div>
 
-    <!-- Firebase y Lógica del Módulo con Asignación de Event Listeners Directos -->
+    <!-- Firebase y Lógica del Módulo con Asignación Global al Objeto Window -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -368,10 +368,10 @@
             cargarParejasSelector();
             cargarHistorialEvaluaciones();
 
-            // Enlace seguro de eventos para evitar problemas de ámbito en iframes
-            document.getElementById('btn-puntuar').addEventListener('click', calcularPuntaje);
-            document.getElementById('btn-graficar').addEventListener('click', generarGraficoRadar);
-            document.getElementById('btn-guardar').addEventListener('click', guardarEvaluacion);
+            // Exposición explícita de eventos al DOM del iframe
+            document.getElementById('btn-puntuar').addEventListener('click', window.calcularPuntaje);
+            document.getElementById('btn-graficar').addEventListener('click', window.generarGraficoRadar);
+            document.getElementById('btn-guardar').addEventListener('click', window.guardarEvaluacion);
         });
 
         async function cargarParejasSelector() {
@@ -427,7 +427,8 @@
             return { fase, criterio, accion };
         }
 
-        function calcularPuntaje() {
+        // Exposición global estricta para el iframe
+        window.calcularPuntaje = function() {
             const vals = obtenerValoresRúbrica();
             if (!vals) {
                 alert("Por favor complete todos los indicadores de la rúbrica.");
@@ -443,10 +444,10 @@
             document.getElementById('res-accion').innerHTML = `<strong>Estrategia:</strong> ${info.accion}`;
 
             return vals;
-        }
+        };
 
-        function generarGraficoRadar() {
-            const vals = calcularPuntaje();
+        window.generarGraficoRadar = function() {
+            const vals = window.calcularPuntaje();
             if (!vals) return;
 
             document.getElementById('radar-wrapper').style.display = 'block';
@@ -480,12 +481,12 @@
                     }
                 }
             });
-        }
+        };
 
-        async function guardarEvaluacion() {
+        window.guardarEvaluacion = async function() {
             const pareja = document.getElementById('select-pareja').value;
             const fecha = document.getElementById('eval-fecha').value;
-            const vals = calcularPuntaje();
+            const vals = window.calcularPuntaje();
 
             if (!pareja || !fecha || !vals) {
                 alert("Por favor seleccione la pareja, la fecha y complete todos los indicadores antes de guardar.");
@@ -517,7 +518,7 @@
                 console.error("Error al guardar evaluación:", e);
                 alert("Error al conectar con la base de datos.");
             }
-        }
+        };
 
         async function cargarHistorialEvaluaciones() {
             const container = document.getElementById('historial-evaluaciones');
