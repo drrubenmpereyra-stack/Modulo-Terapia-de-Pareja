@@ -1,6 +1,6 @@
 // Importación de Firebase SDK y Firestore
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase.app.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase.firestore.js";
 
 // Configuración de Firebase provista
 const firebaseConfig = {
@@ -31,7 +31,7 @@ window.switchView = function(viewId) {
     }
 };
 
-// Sistema de Login Estricto Original
+// Sistema de Login Estricto
 document.getElementById('login-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const user = document.getElementById('user').value.trim();
@@ -81,7 +81,6 @@ window.guardarPaciente = async function() {
 
 async function cargarPacientes() {
     const tbody = document.querySelector('#tabla-pacientes tbody');
-    if (!tbody) return;
     tbody.innerHTML = '';
     try {
         const querySnapshot = await getDocs(collection(db, "pacientes"));
@@ -117,7 +116,6 @@ window.guardarAgenda = async function() {
 
 async function cargarAgenda() {
     const tbody = document.querySelector('#tabla-agenda tbody');
-    if (!tbody) return;
     tbody.innerHTML = '';
     try {
         const querySnapshot = await getDocs(collection(db, "agenda"));
@@ -148,7 +146,6 @@ window.guardarPago = async function() {
 
 async function cargarPagos() {
     const tbody = document.querySelector('#tabla-pagos tbody');
-    if (!tbody) return;
     tbody.innerHTML = '';
     try {
         const querySnapshot = await getDocs(collection(db, "pagos"));
