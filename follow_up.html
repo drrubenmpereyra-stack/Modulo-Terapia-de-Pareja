@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguimiento y Follow Up - Clínica de la Convergencia</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --border-focus: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-elevated);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        input, select, textarea {
+            padding: 0.75rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background-color: #f8fafc;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background-color: var(--card-bg);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        /* --- SECCIÓN DE OPCIONES DE FOLLOW UP --- */
+        .followup-options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: #f1f5f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .followup-option-row {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1.5fr;
+            gap: 1rem;
+            align-items: center;
+            background: #fff;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 768px) {
+            .followup-option-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* --- BOTONES DE ACCIÓN --- */
+        .actions-bar {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primary-color);
+        }
+
+        .btn-accent {
+            background: var(--accent-color);
+        }
+        .btn-accent:hover {
+            background: #b45309;
+        }
+
+        /* --- HISTORIAL --- */
+        .card-box {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .card-box h3 {
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .history-table th, .history-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        .history-table th {
+            background-color: #e2e8f0;
+            color: var(--primary-color);
+        }
+
+        .badge-verde { background-color: #d1fae5; color: #065f46; padding: 3px 8px; border-radius: 4px; font-weight: 600; }
+        .badge-amarillo { background-color: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 4px; font-weight: 600; }
+        .badge-rojo { background-color: #fee2e2; color: #991b1b; padding: 3px 8px; border-radius: 4px; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Pautas de Seguimiento y Follow Up</h2>
+        <p class="subtitle">Clínica de la Convergencia — Catamnesis y Control Post-Terapéutico</p>
+
+        <!-- Selección de Pareja -->
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="fu-pareja">Seleccionar Pareja / Pacientes</label>
+                <select id="fu-pareja">
+                    <option value="">Cargando parejas...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="fu-observaciones-gen">Observaciones Generales de Cierre</label>
+                <input type="text" id="fu-observaciones-gen" placeholder="Ej: Acuerdos de convivencia consolidados...">
+            </div>
+        </div>
+
+        <!-- OPCIONES DE FOLLOW UP CON CASILLAS, FECHA Y SEMÁFORO -->
+        <label style="margin-bottom: 0.75rem; display: block;">Modalidades de Seguimiento Acordadas (Marque una o varias)</label>
+        <div class="followup-options-container">
+            
+            <!-- Opción 1 -->
+            <div class="followup-option-row">
+                <label class="checkbox-label">
+                    <input type="checkbox" class="fu-check" data-tipo="Una sesión en 15 días">
+                    Una sesión en 15 días
+                </label>
+                <div class="form-group" style="margin:0;">
+                    <input type="date" class="fu-fecha" data-tipo="Una sesión en 15 días">
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <select class="fu-semaforo" data-tipo="Una sesión en 15 días">
+                        <option value="Pendiente">Estado: Pendiente</option>
+                        <option value="Efectuado">🟢 Efectuado</option>
+                        <option value="Pospuesto">🟡 Pospuesto</option>
+                        <option value="No efectuado">🔴 No efectuado</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Opción 2 -->
+            <div class="followup-option-row">
+                <label class="checkbox-label">
+                    <input type="checkbox" class="fu-check" data-tipo="Una sesión al mes">
+                    Una sesión al mes
+                </label>
+                <div class="form-group" style="margin:0;">
+                    <input type="date" class="fu-fecha" data-tipo="Una sesión al mes">
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <select class="fu-semaforo" data-tipo="Una sesión al mes">
+                        <option value="Pendiente">Estado: Pendiente</option>
+                        <option value="Efectuado">🟢 Efectuado</option>
+                        <option value="Pospuesto">🟡 Pospuesto</option>
+                        <option value="No efectuado">🔴 No efectuado</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Opción 3 -->
+            <div class="followup-option-row">
+                <label class="checkbox-label">
+                    <input type="checkbox" class="fu-check" data-tipo="Una sesión en 2 meses">
+                    Una sesión en 2 meses
+                </label>
+                <div class="form-group" style="margin:0;">
+                    <input type="date" class="fu-fecha" data-tipo="Una sesión en 2 meses">
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <select class="fu-semaforo" data-tipo="Una sesión en 2 meses">
+                        <option value="Pendiente">Estado: Pendiente</option>
+                        <option value="Efectuado">🟢 Efectuado</option>
+                        <option value="Pospuesto">🟡 Pospuesto</option>
+                        <option value="No efectuado">🔴 No efectuado</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Opción 4 -->
+            <div class="followup-option-row">
+                <label class="checkbox-label">
+                    <input type="checkbox" class="fu-check" data-tipo="Consulta particular a demanda">
+                    Sesión ante cuestión particular a consultar
+                </label>
+                <div class="form-group" style="margin:0;">
+                    <input type="date" class="fu-fecha" data-tipo="Consulta particular a demanda">
+                </div>
+                <div class="form-group" style="margin:0;">
+                    <select class="fu-semaforo" data-tipo="Consulta particular a demanda">
+                        <option value="Pendiente">Estado: Pendiente</option>
+                        <option value="Efectuado">🟢 Efectuado</option>
+                        <option value="Pospuesto">🟡 Pospuesto</option>
+                        <option value="No efectuado">🔴 No efectuado</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Botonera de Acción -->
+        <div class="actions-bar">
+            <button class="btn btn-accent" onclick="guardarFollowUpFirestore()">Guardar Follow Up en Base de Datos</button>
+        </div>
+
+        <!-- Historial en Firestore -->
+        <div class="card-box" style="margin-top: 2rem;">
+            <h3>Historial de Seguimientos Registrados</h3>
+            <div style="overflow-x: auto;">
+                <table class="history-table" id="tabla-historial-followup">
+                    <thead>
+                        <tr>
+                            <th>Fecha Registro</th>
+                            <th>Pareja</th>
+                            <th>Modalidades Acordadas & Fechas</th>
+                            <th>Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Cargando historial...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK y Lógica -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDv1wgWGICsvfrJHZV1s2HVXdsAvIRAOuI",
+            authDomain: "terapia-de-pareja-3bb81.firebaseapp.com",
+            projectId: "terapia-de-pareja-3bb81",
+            storageBucket: "terapia-de-pareja-3bb81.firebasestorage.app",
+            messagingSenderId: "173599055420",
+            appId: "1:173599055420:web:5b36414cc3b4c7a90b6d39"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function cargarPacientesSelect() {
+            const selectPareja = document.getElementById('fu-pareja');
+            if (!selectPareja) return;
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "pacientes"));
+                selectPareja.innerHTML = '<option value="">Seleccione una pareja...</option>';
+                
+                if (querySnapshot.empty) {
+                    selectPareja.innerHTML = '<option value="">No hay parejas registradas</option>';
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if (data.nombres) {
+                        const option = document.createElement('option');
+                        option.value = data.nombres;
+                        option.textContent = data.nombres;
+                        selectPareja.appendChild(option);
+                    }
+                });
+            } catch (e) {
+                console.error("Error al cargar pacientes:", e);
+                selectPareja.innerHTML = '<option value="">Error al cargar pacientes</option>';
+            }
+        }
+
+        window.guardarFollowUpFirestore = async function() {
+            const pareja = document.getElementById('fu-pareja').value.trim();
+            if (!pareja) {
+                alert("Por favor seleccione una pareja.");
+                return;
+            }
+
+            const observacionesGen = document.getElementById('fu-observaciones-gen').value.trim();
+            
+            const checks = document.querySelectorAll('.fu-check');
+            let modalidadesSeleccionadas = [];
+
+            checks.forEach(chk => {
+                if (chk.checked) {
+                    const tipo = chk.getAttribute('data-tipo');
+                    const fila = chk.closest('.followup-option-row');
+                    const fechaInput = fila.querySelector('.fu-fecha').value;
+                    const semaforoSelect = fila.querySelector('.fu-semaforo').value;
+
+                    modalidadesSeleccionadas.push({
+                        modalidad: tipo,
+                        fechaAcordada: fechaInput || "Sin fecha",
+                        estado: semaforoSelect
+                    });
+                }
+            });
+
+            if (modalidadesSeleccionadas.length === 0) {
+                alert("Debe marcar al menos una modalidad de follow up.");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "follow_up"), {
+                    pareja,
+                    modalidades: modalidadesSeleccionadas,
+                    observacionesGenerales: observacionesGen,
+                    fechaCreacion: new Date()
+                });
+                alert("Plan de Follow Up guardado exitosamente en la base de datos.");
+                cargarHistorialFollowUp();
+            } catch (e) {
+                console.error("Error al guardar follow up:", e);
+                alert("Error al guardar en la base de datos.");
+            }
+        };
+
+        async function cargarHistorialFollowUp() {
+            const tbody = document.querySelector('#tabla-historial-followup tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            try {
+                const q = query(collection(db, "follow_up"), orderBy("fechaCreacion", "desc"));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No hay seguimientos registrados aún.</td></tr>`;
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const fechaStr = data.fechaCreacion && data.fechaCreacion.toDate ? data.fechaCreacion.toDate().toLocaleDateString() : "Fecha rec.";
+                    
+                    let modalidadesHtml = "<ul style='padding-left: 15px; margin:0;'>";
+                    if (data.modalidades && Array.isArray(data.modalidades)) {
+                        data.modalidades.forEach(m => {
+                            let badgeClass = "badge-amarillo";
+                            if (m.estado === "Efectuado") badgeClass = "badge-verde";
+                            if (m.estado === "No efectuado") badgeClass = "badge-rojo";
+
+                            modalidadesHtml += `<li><b>${m.modalidad}</b> (Fecha: ${m.fechaAcordada}) — <span class="${badgeClass}">${m.estado}</span></li>`;
+                        });
+                    }
+                    modalidadesHtml += "</ul>";
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${fechaStr}</td>
+                            <td><b>${data.pareja}</b></td>
+                            <td>${modalidadesHtml}</td>
+                            <td>${data.observacionesGenerales || "—"}</td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                console.error("Error al cargar historial de follow up:", e);
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Error al cargar historial.</td></tr>`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarPacientesSelect();
+            cargarHistorialFollowUp();
+        });
+    </script>
+</body>
+</html>
