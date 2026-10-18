@@ -21,206 +21,44 @@
             --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 2rem; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .card { background: var(--card-bg); padding: 2.5rem; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow-subtle); margin-bottom: 2rem; }
+        h2 { color: var(--primary-color); font-size: 1.3rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--accent-color); padding-bottom: 0.5rem; font-weight: 700; }
+        .form-control { margin-bottom: 1.25rem; }
+        .form-control label { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--primary-color); text-transform: uppercase; }
+        .form-control select, .form-control input { width: 100%; max-width: 400px; padding: 0.75rem; border: 1.5px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background-color: #ffffff; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 2rem;
-        }
+        table.rubrica-table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: var(--card-bg); border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); }
+        table.rubrica-table th, table.rubrica-table td { border-bottom: 1px solid var(--border-color); padding: 0.85rem; font-size: 0.85rem; vertical-align: middle; }
+        table.rubrica-table th { background-color: #f1f5f9; color: var(--primary-color); font-weight: 700; text-transform: uppercase; font-size: 0.75rem; text-align: center; }
+        table.rubrica-table td:first-child { font-weight: 600; color: var(--secondary-color); width: 25%; }
+        .nivel-cell { text-align: center; cursor: pointer; transition: background 0.15s; }
+        .nivel-cell:hover { background-color: #f8fafc; }
+        .nivel-cell input[type="radio"] { transform: scale(1.2); cursor: pointer; }
+        .nivel-desc { display: block; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem; }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-subtle);
-            margin-bottom: 2rem;
-        }
-
-        h2 {
-            color: var(--primary-color);
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 0.5rem;
-            font-weight: 700;
-        }
-
-        .form-control {
-            margin-bottom: 1.25rem;
-        }
-
-        .form-control label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin-bottom: 0.4rem;
-            color: var(--primary-color);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .form-control select, .form-control input {
-            width: 100%;
-            max-width: 400px;
-            padding: 0.75rem;
-            border: 1.5px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 0.9rem;
-            background-color: #ffffff;
-        }
-
-        /* Tabla de Rúbrica */
-        table.rubrica-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-            background: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-        }
-
-        table.rubrica-table th, table.rubrica-table td {
-            border-bottom: 1px solid var(--border-color);
-            padding: 0.85rem;
-            font-size: 0.85rem;
-            vertical-align: middle;
-        }
-
-        table.rubrica-table th {
-            background-color: #f1f5f9;
-            color: var(--primary-color);
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
-            text-align: center;
-        }
-
-        table.rubrica-table td:first-child {
-            font-weight: 600;
-            color: var(--secondary-color);
-            width: 25%;
-        }
-
-        .nivel-cell {
-            text-align: center;
-            cursor: pointer;
-            transition: background 0.15s;
-        }
-
-        .nivel-cell:hover {
-            background-color: #f8fafc;
-        }
-
-        .nivel-cell input[type="radio"] {
-            transform: scale(1.2);
-            cursor: pointer;
-        }
-
-        .nivel-desc {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 0.3rem;
-        }
-
-        /* Botonera de Acción */
-        .btn-group {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s ease;
-            box-shadow: var(--shadow-subtle);
-        }
-
+        .btn-group { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s ease; box-shadow: var(--shadow-subtle); }
         .btn-puntuar { background-color: #0284c7; color: #ffffff; }
         .btn-graficar { background-color: #059669; color: #ffffff; }
         .btn-guardar { background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)); color: #ffffff; }
+        .btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
-        .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-elevated);
-            filter: brightness(1.1);
-        }
-
-        /* Resultados y Gráfico */
-        .results-box {
-            background: #fffbeb;
-            border: 1.5px solid #fcd34d;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin-top: 2rem;
-            display: none;
-        }
-
-        .results-box h4 {
-            color: #92400e;
-            margin-bottom: 0.75rem;
-            font-size: 1.05rem;
-        }
-
-        .radar-container {
-            width: 100%;
-            max-width: 450px;
-            margin: 1.5rem auto 0 auto;
-            background: #ffffff;
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-        }
-
-        /* Historial */
-        .history-item {
-            background: #f8fafc;
-            border: 1px solid var(--border-color);
-            border-left: 4px solid var(--accent-color);
-            padding: 1.25rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.3rem;
-        }
+        .results-box { background: #fffbeb; border: 1.5px solid #fcd34d; padding: 1.5rem; border-radius: 10px; margin-top: 2rem; display: none; }
+        .results-box h4 { color: #92400e; margin-bottom: 0.75rem; font-size: 1.05rem; }
+        .radar-container { width: 100%; max-width: 450px; margin: 1.5rem auto 0 auto; background: #ffffff; padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); }
+        .history-item { background: #f8fafc; border: 1px solid var(--border-color); border-left: 4px solid var(--accent-color); padding: 1.25rem; border-radius: 8px; margin-bottom: 1rem; }
+        .history-header { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.3rem; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Formulario de Evaluación Rúbrica -->
         <div class="card">
             <h2>Evaluación Inmediata y Rúbrica del Proceso Vincular</h2>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Marco de referencia: <em>Clínica de la Convergencia</em>. Evalúe cada indicador clínico marcando el nivel correspondiente (1 a 3 puntos).</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Marco de referencia: <em>Clínica de la Convergencia</em>.</p>
             
             <form id="eval-form" onsubmit="return false;">
                 <div class="form-control">
@@ -238,103 +76,59 @@
                 <table class="rubrica-table">
                     <thead>
                         <tr>
-                            <th>Indicadores de Devolución y Proceso</th>
-                            <th>Nivel 1 (1 pt)<br><span style="font-weight:400; font-size:0.7rem;">Bloqueo / Descarga</span></th>
-                            <th>Nivel 2 (2 pts)<br><span style="font-weight:400; font-size:0.7rem;">Transición / Registro</span></th>
-                            <th>Nivel 3 (3 pts)<br><span style="font-weight:400; font-size:0.7rem;">Elaboración / Fluidez</span></th>
+                            <th>Indicadores</th>
+                            <th>Nivel 1 (1 pt)</th>
+                            <th>Nivel 2 (2 pts)</th>
+                            <th>Nivel 3 (3 pts)</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- A -->
                         <tr>
                             <td><strong>A. Nominación de Afectos</strong></td>
-                            <td class="nivel-cell" onclick="document.querySelector('input[name=indA][value=\'1\']').checked = true;">
-                                <input type="radio" name="indA" value="1">
-                                <span class="nivel-desc">Predominio de descarga somática; ausencia de palabras.</span>
-                            </td>
-                            <td class="nivel-cell" onclick="document.querySelector('input[name=indA][value=\'2\']').checked = true;">
-                                <input type="radio" name="indA" value="2">
-                                <span class="nivel-desc">Nombra emociones básicas con guía del terapeuta.</span>
-                            </td>
-                            <td class="nivel-cell" onclick="document.querySelector('input[name=indA][value=\'3\']').checked = true;">
-                                <input type="radio" name="indA" value="3">
-                                <span class="nivel-desc">Capacidad autónoma para discriminar afectos complejos.</span>
-                            </td>
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indA][value=\'1\']').checked = true;"><input type="radio" name="indA" value="1"><span class="nivel-desc">Descarga somática; sin palabras.</span></td>
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indA][value=\'2\']').checked = true;"><input type="radio" name="indA" value="2"><span class="nivel-desc">Emociones básicas con guía.</span></td>
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indA][value=\'3\']').checked = true;"><input type="radio" name="indA" value="3"><span class="nivel-desc">Discriminación autónoma.</span></td>
                         </tr>
-                        <!-- B -->
                         <tr>
                             <td><strong>B. Deconstrucción de Proyecciones</strong></td>
-                            <td class="nivel-cell" onclick="document.querySelector('input[name=indB][value=\'1\']').checked = true;">
-                                <input type="radio" name="indB" value="1">
-                                <span class="nivel-desc">Sostenimiento rígido de la culpa en el otro ("él/ella es el problema").</span>
-                            </td>
-                            <td class="nivel-cell" onclick="document.querySelector('input[name=indB][value=\'2\']').checked = true;">
-                                <input type="radio" name="indB" value="2">
-                                <span class="nivel-desc">Reconoce fragmentos de implicancia defensiva con resistencia.</span>
-                            </td>
-                            <td class="nivel-cell" onclick="document.querySelector('input[name=indB][value=\'3\']').checked = true;">
-                                <input type="radio" name="indB" value="3">
-                                <span class="nivel-desc">Desarma activamente proyecciones y asume implicancia.</span>
-                            </td>
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indB][value=\'1\']').checked = true;"><input type="radio" name="indB" value="1"><span class="nivel-desc">Culpa rígida en el otro.</span></td>
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indB][value=\'2\']').checked = true;"><input type="radio" name="indB" value="2"><span class="nivel-desc">Reconoce implicancia con resistencia.</span></td>
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indB][value=\'3\']').checked = true;"><input type="radio" name="indB" value="3"><span class="nivel-desc">Asume implicancia psíquica.</span></td>
                         </tr>
-                        <!-- C -->
                         <tr>
                             <td><strong>C. Regulación Alostática/Límbica</strong></td>
-                            <td class="nivel-cell" onclick="document.querySelector('input[name=indC][value=\'1\']').checked = true;">
-                                <input type="radio" name="indC" value="1">
-                                <span class="nivel-desc">Desborde constante; sesión vivida como amenaza/pelea.</span>
-                            </td>
-                            <td class="nivel-cell" onclick="document.querySelector('input[name=indC][value=\'2\']').checked = true;">
-                                <input type="radio" name="indC" value="2">
-                                <span class="nivel-desc">Labilidad moderada; tolera contención externa temporal.</span>
-                            </td>
-                            <td class="nivel-cell" onclick="document.querySelector('input[name=indC][value=\'3\']').checked = true;">
-                                <input type="radio" name="indC" value="3">
-                                <span class="nivel-desc">Autoposesión del afecto; espacio de calma y ligadura.</span>
-                            </td>
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indC][value=\'1\']').checked = true;"><input type="radio" name="indC" value="1"><span class="nivel-desc">Desborde constante / amenaza.</span></td>
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indC][value=\'2\']').checked = true;"><input type="radio" name="indC" value="2"><span class="nivel-desc">Tolera contención externa.</span></td>
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indC][value=\'3\']').checked = true;"><input type="radio" name="indC" value="3"><span class="nivel-desc">Espacio de calma y ligadura.</span></td>
                         </tr>
-                        <!-- D -->
                         <tr>
                             <td><strong>D. Apertura del Deseo y Alteridad</strong></td>
-                            <td class="nivel-cell" onclick="document.querySelector('input[name=indD][value=\'1\']').checked = true;">
-                                <input type="radio" name="indD" value="1">
-                                <span class="nivel-desc">Demanda de completud simbiótica o ruptura radical.</span>
-                            </td>
-                            <td class="nivel-cell" onclick="document.querySelector('input[name=indD][value=\'2\']').checked = true;">
-                                <input type="radio" name="indD" value="2">
-                                <span class="nivel-desc">Tolera la diferencia de manera intermitente; ceden reclamos.</span>
-                            </td>
-                            <td class="nivel-cell" onclick="document.querySelector('input[name=indD][value=\'3\']').checked = true;">
-                                <input type="radio" name="indD" value="3">
-                                <span class="nivel-desc">Reconoce y respeta la alteridad; reorganización del lazo.</span>
-                            </td>
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indD][value=\'1\']').checked = true;"><input type="radio" name="indD" value="1"><span class="nivel-desc">Completud simbiótica / ruptura.</span></td>
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indD][value=\'2\']').checked = true;"><input type="radio" name="indD" value="2"><span class="nivel-desc">Tolera diferencia intermitente.</span></td>
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indD][value=\'3\']').checked = true;"><input type="radio" name="indD" value="3"><span class="nivel-desc">Reconoce y respeta alteridad.</span></td>
                         </tr>
                     </tbody>
                 </table>
 
-                <!-- BOTONES CON ACCIÓN EN LÍNEA DIRECTA (onclick) PARA GARANTIZAR RESPUESTA INMEDIATA -->
                 <div class="btn-group">
-                    <button type="button" class="btn btn-puntuar" onclick="ejecutarPuntuar()">📊 Puntuar y Evaluar</button>
-                    <button type="button" class="btn btn-graficar" onclick="ejecutarGraficar()">📈 Graficar (Radar)</button>
-                    <button type="button" class="btn btn-guardar" onclick="ejecutarGuardar()">💾 Guardar Informe en BD</button>
+                    <button type="button" class="btn btn-puntuar" onclick="window.ejecutarPuntuar()">📊 Puntuar y Evaluar</button>
+                    <button type="button" class="btn btn-graficar" onclick="window.ejecutarGraficar()">📈 Graficar (Radar)</button>
+                    <button type="button" class="btn btn-guardar" onclick="window.ejecutarGuardar()">💾 Guardar Informe en BD</button>
                 </div>
             </form>
 
-            <!-- Caja de Resultados e Informe Automático -->
             <div id="resultado-box" class="results-box">
                 <h4 id="res-titulo">Resultado de la Evaluación</h4>
                 <p id="res-puntaje" style="font-weight: 700; margin-bottom: 0.5rem;"></p>
                 <p id="res-criterio" style="margin-bottom: 0.5rem;"></p>
                 <p id="res-accion" style="font-style: italic; color: #78350f;"></p>
 
-                <!-- Contenedor del Gráfico de Radar -->
                 <div class="radar-container" id="radar-wrapper" style="display:none;">
                     <canvas id="radarChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Historial de Evaluaciones -->
         <div class="card">
             <h2>Historial de Informes de Evaluación Inmediata</h2>
             <div id="historial-evaluaciones">
@@ -343,7 +137,7 @@
         </div>
     </div>
 
-    <!-- Firebase y Lógica del Módulo con Funciones Globales Autocontenidas -->
+    <!-- Firebase SDK Modular y Lógica -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -394,63 +188,49 @@
             const vC = parseInt(document.querySelector('input[name="indC"]:checked')?.value || 0);
             const vD = parseInt(document.querySelector('input[name="indD"]:checked')?.value || 0);
 
-            if (!vA || !vB || !vC || !vD) {
-                return null;
-            }
+            if (!vA || !vB || !vC || !vD) return null;
             return { vA, vB, vC, vD, total: vA + vB + vC + vD };
         }
 
         function generarAnalisisInforme(total) {
-            let fase = "";
-            let criterio = "";
-            let accion = "";
-
+            let fase = "", criterio = "", accion = "";
             if (total >= 4 && total <= 6) {
                 fase = "Fase Crítica / Estancamiento Defensivo";
-                criterio = "El proceso se encuentra atrapado en un bucle de repetición sintomática y rigidez vincular.";
-                accion = "Acción Técnica: Las devoluciones del terapeuta deben ser altamente focalizadas, breves y de corte directivo-contenedor. Es necesario priorizar la contención del desborde neurovegetativo.";
+                criterio = "Proceso atrapado en repetición sintomática y rigidez vincular.";
+                accion = "Acción Técnica: Devoluciones breves, focalizadas y directivo-contenedoras para regular el desborde neurovegetativo.";
             } else if (total >= 7 && total <= 9) {
                 fase = "Fase de Elaboración Intermedia / Apertura de Puentes";
-                criterio = "Hay indicios claros de plasticidad psíquica. La pareja tolera la frustración de la diferencia y las intervenciones operan como huellas mnémicas.";
-                accion = "Acción Técnica: Profundizar en las devoluciones técnicas articulando la historia inconsciente individual con la dinámica vincular actual.";
+                criterio = "Plasticidad psíquica incipiente; la pareja tolera la diferencia y la intervención opera como huella mnémica.";
+                accion = "Acción Técnica: Articular la historia inconsciente individual con la dinámica vincular actual.";
             } else {
                 fase = "Fase de Consolidación / Autonomía Vincular";
-                criterio = "Éxito en el proceso de convergencia clínica. Alta capacidad de simbolización y respeto por la alteridad.";
-                accion = "Acción Técnica: Espaciamiento progresivo de las sesiones (high-spacing terapéutico) y evaluación de cierre o consolidación.";
+                criterio = "Alta capacidad de simbolización y respeto por la alteridad.";
+                accion = "Acción Técnica: Espaciamiento progresivo de las sesiones (high-spacing) y evaluación de cierre.";
             }
-
             return { fase, criterio, accion };
         }
 
-        // FUNCIONES GLOBALES EXPUESTAS DIRECTAMENTE AL OBJETO WINDOW PARA LOS ONCLICK
         window.ejecutarPuntuar = function() {
             const vals = obtenerValoresRúbrica();
             if (!vals) {
                 alert("Por favor complete todos los indicadores de la rúbrica.");
                 return null;
             }
-
             const info = generarAnalisisInforme(vals.total);
-            
             document.getElementById('resultado-box').style.display = 'block';
             document.getElementById('res-titulo').textContent = `Informe Clínico: ${info.fase}`;
             document.getElementById('res-puntaje').textContent = `Puntaje Total: ${vals.total} / 12 puntos (Nominación: ${vals.vA}, Proyecciones: ${vals.vB}, Regulación: ${vals.vC}, Deseo: ${vals.vD})`;
             document.getElementById('res-criterio').innerHTML = `<strong>Criterio:</strong> ${info.criterio}`;
             document.getElementById('res-accion').innerHTML = `<strong>Estrategia:</strong> ${info.accion}`;
-
             return vals;
         };
 
         window.ejecutarGraficar = function() {
             const vals = window.ejecutarPuntuar();
             if (!vals) return;
-
             document.getElementById('radar-wrapper').style.display = 'block';
             const ctx = document.getElementById('radarChart').getContext('2d');
-
-            if (radarChartInstance) {
-                radarChartInstance.destroy();
-            }
+            if (radarChartInstance) radarChartInstance.destroy();
 
             radarChartInstance = new Chart(ctx, {
                 type: 'radar',
@@ -465,16 +245,7 @@
                         borderWidth: 2
                     }]
                 },
-                options: {
-                    responsive: true,
-                    scales: {
-                        r: {
-                            min: 0,
-                            max: 3,
-                            ticks: { stepSize: 1 }
-                        }
-                    }
-                }
+                options: { responsive: true, scales: { r: { min: 0, max: 3, ticks: { stepSize: 1 } } } }
             });
         };
 
@@ -482,35 +253,27 @@
             const pareja = document.getElementById('select-pareja').value;
             const fecha = document.getElementById('eval-fecha').value;
             const vals = window.ejecutarPuntuar();
-
             if (!pareja || !fecha || !vals) {
-                alert("Por favor seleccione la pareja, la fecha y complete todos los indicadores antes de guardar.");
+                alert("Por favor seleccione la pareja, la fecha y complete todos los indicadores.");
                 return;
             }
-
             const informe = generarAnalisisInforme(vals.total);
-
             const record = {
-                pareja,
-                fecha,
-                puntajeTotal: vals.total,
+                pareja, fecha, puntajeTotal: vals.total,
                 detalle: { a: vals.vA, b: vals.vB, c: vals.vC, d: vals.vD },
-                fase: informe.fase,
-                criterio: informe.criterio,
-                accion: informe.accion,
+                fase: informe.fase, criterio: informe.criterio, accion: informe.accion,
                 timestamp: new Date()
             };
-
             try {
                 await addDoc(collection(db, "evaluaciones_inmediatas"), record);
-                alert("Informe de evaluación guardado con éxito en la base de datos.");
+                alert("Informe guardado con éxito.");
                 document.getElementById('eval-form').reset();
                 document.getElementById('eval-fecha').valueAsDate = new Date();
                 document.getElementById('resultado-box').style.display = 'none';
                 if (radarChartInstance) radarChartInstance.destroy();
                 cargarHistorialEvaluaciones();
             } catch (e) {
-                console.error("Error al guardar evaluación:", e);
+                console.error("Error al guardar:", e);
                 alert("Error al conectar con la base de datos.");
             }
         };
@@ -519,16 +282,13 @@
             const container = document.getElementById('historial-evaluaciones');
             if (!container) return;
             container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">Cargando historial...</p>';
-
             try {
                 const querySnapshot = await getDocs(collection(db, "evaluaciones_inmediatas"));
                 container.innerHTML = '';
-
                 if (querySnapshot.empty) {
                     container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">No se registran evaluaciones anteriores.</p>';
                     return;
                 }
-
                 querySnapshot.forEach((docSnap) => {
                     const data = docSnap.data();
                     container.innerHTML += `
@@ -547,7 +307,6 @@
                 });
             } catch (e) {
                 console.error("Error al cargar historial:", e);
-                container.innerHTML = '<p style="color: #dc2626; font-size: 0.85rem;">Error al recuperar el historial.</p>';
             }
         }
     </script>
