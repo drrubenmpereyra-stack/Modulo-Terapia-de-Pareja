@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Final y Marcha del Proceso (Eval 2) - Clínica de la Convergencia</title>
+    <!-- Chart.js para visualización en gráfico de barras / semáforo -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --border-focus: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-elevated);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        input, select, textarea {
+            padding: 0.75rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background-color: #f8fafc;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background-color: var(--card-bg);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        /* --- RUBRICA TABLE --- */
+        .rubrica-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+        }
+
+        .rubrica-table th, .rubrica-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .rubrica-table th {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .rubrica-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        .criterio-title {
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+
+        .criterio-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        /* --- BOTONES DE ACCIÓN --- */
+        .actions-bar {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primary-color);
+        }
+
+        .btn-accent {
+            background: var(--accent-color);
+        }
+        .btn-accent:hover {
+            background: #b45309;
+        }
+
+        /* --- SECCIÓN DE RESULTADOS Y SEMÁFOROS --- */
+        .results-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .results-container, .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card-box {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .card-box h3 {
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .semaforo-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .semaforo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .semaforo-verde { background-color: #d1fae5; color: #065f46; border-left: 5px solid var(--success-color); }
+        .semaforo-amarillo { background-color: #fef3c7; color: #92400e; border-left: 5px solid var(--warning-color); }
+        .semaforo-rojo { background-color: #fee2e2; color: #991b1b; border-left: 5px solid var(--danger-color); }
+
+        /* --- INFORME CLÍNICO --- */
+        .informe-box {
+            background: #f8fafc;
+            border: 1px dashed var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            color: #334155;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        /* --- HISTORIAL --- */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .history-table th, .history-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        .history-table th {
+            background-color: #e2e8f0;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Evaluación de Cierre y Marcha del Proceso Terapéutico (Eval 2)</h2>
+        <p class="subtitle">Clínica de la Convergencia — Perspectiva Vincular de los Pacientes</p>
+
+        <!-- Cabecera de Datos -->
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="eval2-pareja">Identificación de la Pareja / Pacientes</label>
+                <input type="text" id="eval2-pareja" placeholder="Ej: Pérez - Gómez">
+            </div>
+            <div class="form-group">
+                <label for="eval2-momento">Momento del Proceso</label>
+                <select id="eval2-momento">
+                    <option value="Marcha Intermedia Avanzada">Marcha Intermedia Avanzada</option>
+                    <option value="Cierre y Evaluación Final">Cierre y Evaluación Final</option>
+                    <option value="Catamnesis / Follow-up">Catamnesis / Follow-up</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- RÚBRICA DE EVALUACIÓN (Doble óptica: Integrante A e Integrante B) -->
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:1rem; color:var(--secondary-color);">
+            Califique de 1 (Muy Desfavorable / Nulo) a 5 (Muy Favorable / Logrado) según la percepción de cada miembro:
+        </p>
+
+        <table class="rubrica-table">
+            <thead>
+                <tr>
+                    <th style="width: 40%;">Criterio de Análisis Vincular</th>
+                    <th style="width: 30%;">Integrante A (Puntaje 1-5)</th>
+                    <th style="width: 30%;">Integrante B (Puntaje 1-5)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="criterio-title">1. Nominación Afectiva y Conciencia Emocional</div>
+                        <div class="criterio-desc">Capacidad para identificar, poner en palabras y validar los afectos propios y del otro sin desbordes.</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-a" data-criterio="Nominación Afectiva"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-b" data-criterio="Nominación Afectiva"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="criterio-title">2. Regulación del Estrés y Tensión Vincular</div>
+                        <div class="criterio-desc">Habilidad para contener la reactividad defensiva, disminuir escaladas simétricas y recuperar la calma.</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-a" data-criterio="Regulación del Estrés"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-b" data-criterio="Regulación del Estrés"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="criterio-title">3. Flexibilidad en los Guiones Vinculares</div>
+                        <div class="criterio-desc">Superación de roles rígidos o complementariedades patológicas estancadas; apertura a nuevas posiciones.</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-a" data-criterio="Flexibilidad Vincular"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-b" data-criterio="Flexibilidad Vincular"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="criterio-title">4. Reconsolidación de Memorias y Ressignificación</div>
+                        <div class="criterio-desc">Capacidad de revisar escenas críticas del pasado común transformando su sentido afectivo actual.</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-a" data-criterio="Reconsolidación de Memorias"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-b" data-criterio="Reconsolidación de Memorias"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="criterio-title">5. Construcción de Proyectos y Autonomía Vincular</div>
+                        <div class="criterio-desc">Grado de cooperación actual, disfrute compartido y respeto por la individuación de cada miembro.</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-a" data-criterio="Proyectos y Autonomía"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-b" data-criterio="Proyectos y Autonomía"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Observaciones Subjetivas Conjuntas -->
+        <div class="form-grid" style="margin-bottom: 1.5rem;">
+            <div class="form-group full-width">
+                <label for="eval2-observaciones">Observaciones Cualitativas y Síntesis de la Pareja</label>
+                <textarea id="eval2-observaciones" rows="3" placeholder="Describa los logros percibidos, nudos pendientes o reflexiones finales aportadas por la pareja..."></textarea>
+            </div>
+        </div>
+
+        <!-- Botonera de Acciones -->
+        <div class="actions-bar">
+            <button class="btn" onclick="calcularPuntajeEval2()">1. Calcular Puntaje</button>
+            <button class="btn btn-accent" onclick="graficarSemaforoEval2()">2. Graficar Semáforos</button>
+            <button class="btn" onclick="generarInformeEval2()">3. Generar Informe</button>
+            <button class="btn btn-accent" onclick="guardarEval2Firestore()">4. Guardar en Base de Datos</button>
+        </div>
+
+        <!-- Resultados, Semáforos y Gráfico -->
+        <div class="results-container">
+            <div class="card-box">
+                <h3>Valuación Semafórica por Criterio (Promedio Pareja)</h3>
+                <div id="semaforo-output" class="semaforo-grid">
+                    <span style="color:var(--text-muted); font-style:italic;">Pulse "Graficar Semáforos" para procesar los datos.</span>
+                </div>
+                <div style="margin-top: 1.5rem;">
+                    <canvas id="chartEval2" style="max-height: 220px;"></canvas>
+                </div>
+            </div>
+
+            <div class="card-box">
+                <h3>Informe de Resultados y Criterios</h3>
+                <div id="informe-output" class="informe-box">El informe clínico estructurado aparecerá aquí al presionar "Generar Informe"...</div>
+            </div>
+        </div>
+
+        <!-- Historial de Informes Guardados -->
+        <div class="card-box" style="margin-top: 2rem;">
+            <h3>Historial de Evaluaciones Finales (Registradas en Firestore)</h3>
+            <div style="overflow-x: auto;">
+                <table class="history-table" id="tabla-historial-eval2">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Pareja</th>
+                            <th>Momento</th>
+                            <th>Puntaje Promedio</th>
+                            <th>Estado General</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Cargando historial...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK y Lógica del Módulo -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDv1wgWGICsvfrJHZV1s2HVXdsAvIRAOuI",
+            authDomain: "terapia-de-pareja-3bb81.firebaseapp.com",
+            projectId: "terapia-de-pareja-3bb81",
+            storageBucket: "terapia-de-pareja-3bb81.firebasestorage.app",
+            messagingSenderId: "173599055420",
+            appId: "1:173599055420:web:5b36414cc3b4c7a90b6d39"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        let chartInstance = null;
+        let ultimosDatosCalculados = null;
+
+        window.calcularPuntajeEval2 = function() {
+            const inputsA = document.querySelectorAll('.score-a');
+            const inputsB = document.querySelectorAll('.score-b');
+            
+            let sumaTotal = 0;
+            let detalles = [];
+
+            inputsA.forEach((inputA, index) => {
+                const inputB = inputsB[index];
+                const criterio = inputA.getAttribute('data-criterio');
+                const valA = parseFloat(inputA.value) || 0;
+                const valB = parseFloat(inputB.value) || 0;
+                const promedioCriterio = (valA + valB) / 2;
+                
+                sumaTotal += promedioCriterio;
+                detalles.push({ criterio, valA, valB, promedio: promedioCriterio });
+            });
+
+            const puntajeGlobal = (sumaTotal / inputsA.length).toFixed(2);
+            ultimosDatosCalculados = { puntajeGlobal, detalles };
+
+            alert(`Puntaje Promedio General de la Pareja: ${puntajeGlobal} / 5.00`);
+            return ultimosDatosCalculados;
+        };
+
+        window.graficarSemaforoEval2 = function() {
+            const datos = window.calcularPuntajeEval2();
+            if (!datos) return;
+
+            const contenedorSemaforo = document.getElementById('semaforo-output');
+            contenedorSemaforo.innerHTML = '';
+
+            let labels = [];
+            let valores = [];
+            let coloresFondo = [];
+
+            datos.detalles.forEach(item => {
+                labels.push(item.criterio);
+                valores.push(item.promedio);
+
+                let claseSemaforo = '';
+                let textoEstado = '';
+
+                if (item.promedio >= 4.0) {
+                    claseSemaforo = 'semaforo-verde';
+                    textoEstado = `Óptimo (${item.promedio})`;
+                    coloresFondo.push('#10b981');
+                } else if (item.promedio >= 2.5) {
+                    claseSemaforo = 'semaforo-amarillo';
+                    textoEstado = `En Proceso / Frágil (${item.promedio})`;
+                    coloresFondo.push('#f59e0b');
+                } else {
+                    claseSemaforo = 'semaforo-rojo';
+                    textoEstado = `Crítico / Nudo (${item.promedio})`;
+                    coloresFondo.push('#ef4444');
+                }
+
+                const div = document.createElement('div');
+                div.className = `semaforo-item ${claseSemaforo}`;
+                div.innerHTML = `<span>${item.criterio}</span><span>${textoEstado}</span>`;
+                contenedorSemaforo.appendChild(div);
+            });
+
+            // Renderizado con Chart.js
+            const ctx = document.getElementById('chartEval2').getContext('2d');
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Puntaje Promedio (Pareja)',
+                        data: valores,
+                        backgroundColor: coloresFondo,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true, max: 5 }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        };
+
+        window.generarInformeEval2 = function() {
+            const datos = window.calcularPuntajeEval2();
+            if (!datos) return;
+
+            const pareja = document.getElementById('eval2-pareja').value.trim() || "Sin especificar";
+            const momento = document.getElementById('eval2-momento').value;
+            const observaciones = document.getElementById('eval2-observaciones').value.trim();
+            const fechaActual = new Date().toLocaleDateString();
+
+            let informe = `==================================================\n`;
+            informe += `CLÍNICA DE LA CONVERGENCIA - INFORME EVALUACIÓN FINAL\n`;
+            informe += `==================================================\n`;
+            informe += `Fecha: ${fechaActual}\n`;
+            informe += `Pareja: ${pareja}\n`;
+            informe += `Instancia: ${momento}\n`;
+            informe += `Puntaje Global Promedio: ${datos.puntajeGlobal} / 5.00\n\n`;
+            informe += `DETALLE DE PERCEPCIÓN VINCULAR:\n`;
+
+            datos.detalles.forEach(item => {
+                let estadoTxt = item.promedio >= 4.0 ? "LOGRADO / SÓLIDO" : (item.promedio >= 2.5 ? "EN PROCESO / REGULAR" : "NUDO CRÍTICO");
+                informe += `- ${item.criterio}: Integrante A (${item.valA}) | Integrante B (${item.valB}) [Promedio: ${item.promedio} - ${estadoTxt}]\n`;
+            });
+
+            informe += `\nOBSERVACIONES CLÍNICAS Y SINTESIS DE LOS PACIENTES:\n`;
+            informe += `${observaciones || "Sin observaciones adicionales registradas."}\n`;
+            informe += `==================================================\n`;
+
+            document.getElementById('informe-output').textContent = informe;
+            return informe;
+        };
+
+        window.guardarEval2Firestore = async function() {
+            const pareja = document.getElementById('eval2-pareja').value.trim();
+            if (!pareja) {
+                alert("Por favor ingrese el nombre de la pareja antes de guardar.");
+                return;
+            }
+
+            const momento = document.getElementById('eval2-momento').value;
+            const informeTexto = window.generarInformeEval2();
+            const puntajeGlobal = ultimosDatosCalculados ? ultimosDatosCalculados.puntajeGlobal : "0.00";
+
+            try {
+                await addDoc(collection(db, "evaluacion_2"), {
+                    pareja,
+                    momento,
+                    puntajeGlobal,
+                    informe: informeTexto,
+                    fecha: new Date()
+                });
+                alert("Evaluación final guardada exitosamente en la base de datos.");
+                cargarHistorialEval2();
+            } catch (e) {
+                console.error("Error al guardar evaluación en Firestore:", e);
+                alert("Error al guardar en la base de datos.");
+            }
+        };
+
+        async function cargarHistorialEval2() {
+            const tbody = document.querySelector('#tabla-historial-eval2 tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            try {
+                const q = query(collection(db, "evaluacion_2"), orderBy("fecha", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No hay evaluaciones registradas aún.</td></tr>`;
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const fechaStr = data.fecha && data.fecha.toDate ? data.fecha.toDate().toLocaleDateString() : "Fecha rec.";
+                    let estadoBadge = parseFloat(data.puntajeGlobal) >= 4.0 ? "Óptimo / Consolidado" : (parseFloat(data.puntajeGlobal) >= 2.5 ? "En Marcha / Intermedio" : "Crítico");
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${fechaStr}</td>
+                            <td>${data.pareja}</td>
+                            <td>${data.momento}</td>
+                            <td><b>${data.puntajeGlobal} / 5</b></td>
+                            <td>${estadoBadge}</td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                console.error("Error cargando historial de evaluaciones:", e);
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">Error al cargar historial.</td></tr>`;
+            }
+        }
+
+        // Cargar historial al iniciar el módulo
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarHistorialEval2();
+        });
+    </script>
+</body>
+</html>
