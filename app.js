@@ -1,5 +1,5 @@
 // ==========================================
-// APP.JS - Autenticación y Enrutamiento Principal
+// APP.JS - Núcleo de Enrutamiento y Login Blindado
 // Clínica de la Convergencia
 // ==========================================
 
@@ -8,20 +8,20 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarNavegacion();
 });
 
-// Sistema de Login Institucional Blindado
+// Sistema de Login Institucional con validación estricta de nulidad
 function inicializarLogin() {
     const loginForm = document.getElementById('login-form');
-    if (!loginForm) return; // Si no estamos en la vista de login, evitamos errores
+    if (!loginForm) return; // Sale limpiamente si no hay formulario de login en la vista actual
 
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        
         const inputUser = document.getElementById('username');
         const inputPass = document.getElementById('password');
 
-        if (!inputUser || !inputPass) return;
-
-        const usuario = inputUser.value.trim();
-        const clave = inputPass.value.trim();
+        // Validación defensiva para evitar cualquier TypeError si el elemento no existe
+        const usuario = inputUser ? inputUser.value.trim() : '';
+        const clave = inputPass ? inputPass.value.trim() : '';
 
         if (usuario === 'DRPEREYRA' && clave === '235689') {
             sessionStorage.setItem('clinica_auth', 'true');
@@ -34,7 +34,7 @@ function inicializarLogin() {
         }
     });
 
-    // Verificar si ya hay sesión activa
+    // Comprobación de sesión activa
     if (sessionStorage.getItem('clinica_auth') === 'true') {
         const loginOverlay = document.getElementById('login-overlay');
         const appContainer = document.getElementById('app-container');
