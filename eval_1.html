@@ -57,15 +57,6 @@
             font-weight: 700;
         }
 
-        h3 {
-            color: var(--secondary-color);
-            font-size: 1rem;
-            margin: 1.5rem 0 1rem 0;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-        }
-
         .form-control {
             margin-bottom: 1.25rem;
         }
@@ -231,7 +222,7 @@
             <h2>Evaluación Inmediata y Rúbrica del Proceso Vincular</h2>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Marco de referencia: <em>Clínica de la Convergencia</em>[cite: 1]. Evalúe cada indicador clínico marcando el nivel correspondiente (1 a 3 puntos)[cite: 1].</p>
             
-            <form id="eval-form">
+            <form id="eval-form" onsubmit="return false;">
                 <div class="form-control">
                     <label>Pareja Consultante</label>
                     <select id="select-pareja" required>
@@ -258,12 +249,12 @@
                         <tr>
                             <td><strong>A. Nominación de Afectos[cite: 1]</strong></td>
                             <td class="nivel-cell" onclick="seleccionarRadio('indA', 1)">
-                                <input type="radio" name="indA" value="1" required>
+                                <input type="radio" name="indA" value="1">
                                 <span class="nivel-desc">Predominio de descarga somática; ausencia de palabras[cite: 1].</span>
                             </td>
                             <td class="nivel-cell" onclick="seleccionarRadio('indA', 2)">
                                 <input type="radio" name="indA" value="2">
-                                <span class="nivel-desc">Nombrasemociones básicas con guía del terapeuta[cite: 1].</span>
+                                <span class="nivel-desc">Nombra emociones básicas con guía del terapeuta[cite: 1].</span>
                             </td>
                             <td class="nivel-cell" onclick="seleccionarRadio('indA', 3)">
                                 <input type="radio" name="indA" value="3">
@@ -274,7 +265,7 @@
                         <tr>
                             <td><strong>B. Deconstrucción de Proyecciones[cite: 1]</strong></td>
                             <td class="nivel-cell" onclick="seleccionarRadio('indB', 1)">
-                                <input type="radio" name="indB" value="1" required>
+                                <input type="radio" name="indB" value="1">
                                 <span class="nivel-desc">Sostenimiento rígido de la culpa en el otro ("él/ella es el problema")[cite: 1].</span>
                             </td>
                             <td class="nivel-cell" onclick="seleccionarRadio('indB', 2)">
@@ -290,7 +281,7 @@
                         <tr>
                             <td><strong>C. Regulación Alostática/Límbica[cite: 1]</strong></td>
                             <td class="nivel-cell" onclick="seleccionarRadio('indC', 1)">
-                                <input type="radio" name="indC" value="1" required>
+                                <input type="radio" name="indC" value="1">
                                 <span class="nivel-desc">Desborde constante; sesión vivida como amenaza/pelea[cite: 1].</span>
                             </td>
                             <td class="nivel-cell" onclick="seleccionarRadio('indC', 2)">
@@ -306,7 +297,7 @@
                         <tr>
                             <td><strong>D. Apertura del Deseo y Alteridad[cite: 1]</strong></td>
                             <td class="nivel-cell" onclick="seleccionarRadio('indD', 1)">
-                                <input type="radio" name="indD" value="1" required>
+                                <input type="radio" name="indD" value="1">
                                 <span class="nivel-desc">Demanda de completud simbiótica o ruptura radical[cite: 1].</span>
                             </td>
                             <td class="nivel-cell" onclick="seleccionarRadio('indD', 2)">
@@ -445,8 +436,6 @@
             
             document.getElementById('resultado-box').style.display = 'block';
             document.getElementById('res-titulo').textContent = `Informe Clínico: ${info.fase}`;
-            document.getElementById('res-puntaje.textContent', `Puntaje Total: ${vals.total} / 12 puntos (A: ${vals.vA}, B: ${vals.vB}, C: ${vals.vC}, D: ${vals.vD})`);
-            // Fix textContent assignment
             document.getElementById('res-puntaje').textContent = `Puntaje Total: ${vals.total} / 12 puntos (Nominación: ${vals.vA}, Proyecciones: ${vals.vB}, Regulación: ${vals.vC}, Deseo: ${vals.vD})`;
             document.getElementById('res-criterio').innerHTML = `<strong>Criterio:</strong> ${info.criterio}`;
             document.getElementById('res-accion').innerHTML = `<strong>Estrategia:</strong> ${info.accion}`;
