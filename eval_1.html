@@ -220,7 +220,7 @@
         <!-- Formulario de Evaluación Rúbrica -->
         <div class="card">
             <h2>Evaluación Inmediata y Rúbrica del Proceso Vincular</h2>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Marco de referencia: <em>Clínica de la Convergencia</em>[cite: 1]. Evalúe cada indicador clínico marcando el nivel correspondiente (1 a 3 puntos)[cite: 1].</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Marco de referencia: <em>Clínica de la Convergencia</em>. Evalúe cada indicador clínico marcando el nivel correspondiente (1 a 3 puntos).</p>
             
             <form id="eval-form" onsubmit="return false;">
                 <div class="form-control">
@@ -238,84 +238,84 @@
                 <table class="rubrica-table">
                     <thead>
                         <tr>
-                            <th>Indicadores de Devolución y Proceso[cite: 1]</th>
-                            <th>Nivel 1 (1 pt)[cite: 1]<br><span style="font-weight:400; font-size:0.7rem;">Bloqueo / Descarga</span></th>
-                            <th>Nivel 2 (2 pts)[cite: 1]<br><span style="font-weight:400; font-size:0.7rem;">Transición / Registro</span></th>
-                            <th>Nivel 3 (3 pts)[cite: 1]<br><span style="font-weight:400; font-size:0.7rem;">Elaboración / Fluidez</span></th>
+                            <th>Indicadores de Devolución y Proceso</th>
+                            <th>Nivel 1 (1 pt)<br><span style="font-weight:400; font-size:0.7rem;">Bloqueo / Descarga</span></th>
+                            <th>Nivel 2 (2 pts)<br><span style="font-weight:400; font-size:0.7rem;">Transición / Registro</span></th>
+                            <th>Nivel 3 (3 pts)<br><span style="font-weight:400; font-size:0.7rem;">Elaboración / Fluidez</span></th>
                         </tr>
                     </thead>
                     <tbody>
                         <!-- A -->
                         <tr>
-                            <td><strong>A. Nominación de Afectos[cite: 1]</strong></td>
-                            <td class="nivel-cell" onclick="seleccionarRadio('indA', 1)">
+                            <td><strong>A. Nominación de Afectos</strong></td>
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indA][value=\'1\']').checked = true;">
                                 <input type="radio" name="indA" value="1">
-                                <span class="nivel-desc">Predominio de descarga somática; ausencia de palabras[cite: 1].</span>
+                                <span class="nivel-desc">Predominio de descarga somática; ausencia de palabras.</span>
                             </td>
-                            <td class="nivel-cell" onclick="seleccionarRadio('indA', 2)">
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indA][value=\'2\']').checked = true;">
                                 <input type="radio" name="indA" value="2">
-                                <span class="nivel-desc">Nombra emociones básicas con guía del terapeuta[cite: 1].</span>
+                                <span class="nivel-desc">Nombra emociones básicas con guía del terapeuta.</span>
                             </td>
-                            <td class="nivel-cell" onclick="seleccionarRadio('indA', 3)">
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indA][value=\'3\']').checked = true;">
                                 <input type="radio" name="indA" value="3">
-                                <span class="nivel-desc">Capacidad autónoma para discriminar afectos complejos[cite: 1].</span>
+                                <span class="nivel-desc">Capacidad autónoma para discriminar afectos complejos.</span>
                             </td>
                         </tr>
                         <!-- B -->
                         <tr>
-                            <td><strong>B. Deconstrucción de Proyecciones[cite: 1]</strong></td>
-                            <td class="nivel-cell" onclick="seleccionarRadio('indB', 1)">
+                            <td><strong>B. Deconstrucción de Proyecciones</strong></td>
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indB][value=\'1\']').checked = true;">
                                 <input type="radio" name="indB" value="1">
-                                <span class="nivel-desc">Sostenimiento rígido de la culpa en el otro ("él/ella es el problema")[cite: 1].</span>
+                                <span class="nivel-desc">Sostenimiento rígido de la culpa en el otro ("él/ella es el problema").</span>
                             </td>
-                            <td class="nivel-cell" onclick="seleccionarRadio('indB', 2)">
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indB][value=\'2\']').checked = true;">
                                 <input type="radio" name="indB" value="2">
-                                <span class="nivel-desc">Reconoce fragmentos de implicancia defensiva con resistencia[cite: 1].</span>
+                                <span class="nivel-desc">Reconoce fragmentos de implicancia defensiva con resistencia.</span>
                             </td>
-                            <td class="nivel-cell" onclick="seleccionarRadio('indB', 3)">
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indB][value=\'3\']').checked = true;">
                                 <input type="radio" name="indB" value="3">
-                                <span class="nivel-desc">Desarma activamente proyecciones y asume implicancia[cite: 1].</span>
+                                <span class="nivel-desc">Desarma activamente proyecciones y asume implicancia.</span>
                             </td>
                         </tr>
                         <!-- C -->
                         <tr>
-                            <td><strong>C. Regulación Alostática/Límbica[cite: 1]</strong></td>
-                            <td class="nivel-cell" onclick="seleccionarRadio('indC', 1)">
+                            <td><strong>C. Regulación Alostática/Límbica</strong></td>
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indC][value=\'1\']').checked = true;">
                                 <input type="radio" name="indC" value="1">
-                                <span class="nivel-desc">Desborde constante; sesión vivida como amenaza/pelea[cite: 1].</span>
+                                <span class="nivel-desc">Desborde constante; sesión vivida como amenaza/pelea.</span>
                             </td>
-                            <td class="nivel-cell" onclick="seleccionarRadio('indC', 2)">
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indC][value=\'2\']').checked = true;">
                                 <input type="radio" name="indC" value="2">
-                                <span class="nivel-desc">Labilidad moderada; tolera contención externa temporal[cite: 1].</span>
+                                <span class="nivel-desc">Labilidad moderada; tolera contención externa temporal.</span>
                             </td>
-                            <td class="nivel-cell" onclick="seleccionarRadio('indC', 3)">
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indC][value=\'3\']').checked = true;">
                                 <input type="radio" name="indC" value="3">
-                                <span class="nivel-desc">Autoposesión del afecto; espacio de calma y ligadura[cite: 1].</span>
+                                <span class="nivel-desc">Autoposesión del afecto; espacio de calma y ligadura.</span>
                             </td>
                         </tr>
                         <!-- D -->
                         <tr>
-                            <td><strong>D. Apertura del Deseo y Alteridad[cite: 1]</strong></td>
-                            <td class="nivel-cell" onclick="seleccionarRadio('indD', 1)">
+                            <td><strong>D. Apertura del Deseo y Alteridad</strong></td>
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indD][value=\'1\']').checked = true;">
                                 <input type="radio" name="indD" value="1">
-                                <span class="nivel-desc">Demanda de completud simbiótica o ruptura radical[cite: 1].</span>
+                                <span class="nivel-desc">Demanda de completud simbiótica o ruptura radical.</span>
                             </td>
-                            <td class="nivel-cell" onclick="seleccionarRadio('indD', 2)">
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indD][value=\'2\']').checked = true;">
                                 <input type="radio" name="indD" value="2">
-                                <span class="nivel-desc">Tolera la diferencia de manera intermitente; ceden reclamos[cite: 1].</span>
+                                <span class="nivel-desc">Tolera la diferencia de manera intermitente; ceden reclamos.</span>
                             </td>
-                            <td class="nivel-cell" onclick="seleccionarRadio('indD', 3)">
+                            <td class="nivel-cell" onclick="document.querySelector('input[name=indD][value=\'3\']').checked = true;">
                                 <input type="radio" name="indD" value="3">
-                                <span class="nivel-desc">Reconoce y respeta la alteridad; reorganización del lazo[cite: 1].</span>
+                                <span class="nivel-desc">Reconoce y respeta la alteridad; reorganización del lazo.</span>
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
                 <div class="btn-group">
-                    <button type="button" class="btn btn-puntuar" onclick="calcularPuntaje()">📊 Puntuar y Evaluar</button>
-                    <button type="button" class="btn btn-graficar" onclick="generarGraficoRadar()">📈 Graficar (Radar)</button>
-                    <button type="button" class="btn btn-guardar" onclick="guardarEvaluacion()">💾 Guardar Informe en BD</button>
+                    <button type="button" id="btn-puntuar" class="btn btn-puntuar">📊 Puntuar y Evaluar</button>
+                    <button type="button" id="btn-graficar" class="btn btn-graficar">📈 Graficar (Radar)</button>
+                    <button type="button" id="btn-guardar" class="btn btn-guardar">💾 Guardar Informe en BD</button>
                 </div>
             </form>
 
@@ -342,7 +342,7 @@
         </div>
     </div>
 
-    <!-- Firebase y Lógica del Módulo -->
+    <!-- Firebase y Lógica del Módulo con Asignación de Event Listeners Directos -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -360,21 +360,23 @@
         const db = getFirestore(app);
 
         let radarChartInstance = null;
-        let datosUltimaEval = null;
 
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('eval-fecha').valueAsDate = new Date();
+            const fechaInput = document.getElementById('eval-fecha');
+            if (fechaInput) fechaInput.valueAsDate = new Date();
+
             cargarParejasSelector();
             cargarHistorialEvaluaciones();
-        });
 
-        window.seleccionarRadio = function(nombreGrupo, valor) {
-            const radio = document.querySelector(`input[name="${nombreGrupo}"][value="${valor}"]`);
-            if (radio) radio.checked = true;
-        };
+            // Enlace seguro de eventos para evitar problemas de ámbito en iframes
+            document.getElementById('btn-puntuar').addEventListener('click', calcularPuntaje);
+            document.getElementById('btn-graficar').addEventListener('click', generarGraficoRadar);
+            document.getElementById('btn-guardar').addEventListener('click', guardarEvaluacion);
+        });
 
         async function cargarParejasSelector() {
             const select = document.getElementById('select-pareja');
+            if (!select) return;
             try {
                 const querySnapshot = await getDocs(collection(db, "parejas_pacientes"));
                 select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
@@ -403,36 +405,36 @@
             return { vA, vB, vC, vD, total: vA + vB + vC + vD };
         }
 
-        function generarAnalisisInforme(total, vA, vB, vC, vD) {
+        function generarAnalisisInforme(total) {
             let fase = "";
             let criterio = "";
             let accion = "";
 
             if (total >= 4 && total <= 6) {
-                fase = "Fase Crítica / Estancamiento Defensivo[cite: 1]";
-                criterio = "El proceso se encuentra atrapado en un bucle de repetición sintomática y rigidez vincular[cite: 1].";
-                accion = "Acción Técnica: Las devoluciones del terapeuta deben ser altamente focalizadas, breves y de corte directivo-contenedor. Es necesario priorizar la contención del desborde neurovegetativo[cite: 1].";
+                fase = "Fase Crítica / Estancamiento Defensivo";
+                criterio = "El proceso se encuentra atrapado en un bucle de repetición sintomática y rigidez vincular.";
+                accion = "Acción Técnica: Las devoluciones del terapeuta deben ser altamente focalizadas, breves y de corte directivo-contenedor. Es necesario priorizar la contención del desborde neurovegetativo.";
             } else if (total >= 7 && total <= 9) {
-                fase = "Fase de Elaboración Intermedia / Apertura de Puentes[cite: 1]";
-                criterio = "Hay indicios claros de plasticidad psíquica. La pareja tolera la frustración de la diferencia y las intervenciones operan como huellas mnémicas[cite: 1].";
-                accion = "Acción Técnica: Profundizar en las devoluciones técnicas articulando la historia inconsciente individual con la dinámica vincular actual[cite: 1].";
+                fase = "Fase de Elaboración Intermedia / Apertura de Puentes";
+                criterio = "Hay indicios claros de plasticidad psíquica. La pareja tolera la frustración de la diferencia y las intervenciones operan como huellas mnémicas.";
+                accion = "Acción Técnica: Profundizar en las devoluciones técnicas articulando la historia inconsciente individual con la dinámica vincular actual.";
             } else {
-                fase = "Fase de Consolidación / Autonomía Vincular[cite: 1]";
-                criterio = "Éxito en el proceso de convergencia clínica. Alta capacidad de simbolización y respeto por la alteridad[cite: 1].";
-                accion = "Acción Técnica: Espaciamiento progresivo de las sesiones (high-spacing terapéutico) y evaluación de cierre o consolidación[cite: 1].";
+                fase = "Fase de Consolidación / Autonomía Vincular";
+                criterio = "Éxito en el proceso de convergencia clínica. Alta capacidad de simbolización y respeto por la alteridad.";
+                accion = "Acción Técnica: Espaciamiento progresivo de las sesiones (high-spacing terapéutico) y evaluación de cierre o consolidación.";
             }
 
             return { fase, criterio, accion };
         }
 
-        window.calcularPuntaje = function() {
+        function calcularPuntaje() {
             const vals = obtenerValoresRúbrica();
             if (!vals) {
                 alert("Por favor complete todos los indicadores de la rúbrica.");
                 return null;
             }
 
-            const info = generarAnalisisInforme(vals.total, vals.vA, vals.vB, vals.vC, vals.vD);
+            const info = generarAnalisisInforme(vals.total);
             
             document.getElementById('resultado-box').style.display = 'block';
             document.getElementById('res-titulo').textContent = `Informe Clínico: ${info.fase}`;
@@ -440,11 +442,10 @@
             document.getElementById('res-criterio').innerHTML = `<strong>Criterio:</strong> ${info.criterio}`;
             document.getElementById('res-accion').innerHTML = `<strong>Estrategia:</strong> ${info.accion}`;
 
-            datosUltimaEval = { ...vals, ...info };
             return vals;
-        };
+        }
 
-        window.generarGraficoRadar = function() {
+        function generarGraficoRadar() {
             const vals = calcularPuntaje();
             if (!vals) return;
 
@@ -479,9 +480,9 @@
                     }
                 }
             });
-        };
+        }
 
-        window.guardarEvaluacion = async function() {
+        async function guardarEvaluacion() {
             const pareja = document.getElementById('select-pareja').value;
             const fecha = document.getElementById('eval-fecha').value;
             const vals = calcularPuntaje();
@@ -491,7 +492,7 @@
                 return;
             }
 
-            const informe = generarAnalisisInforme(vals.total, vals.vA, vals.vB, vals.vC, vals.vD);
+            const informe = generarAnalisisInforme(vals.total);
 
             const record = {
                 pareja,
@@ -516,10 +517,11 @@
                 console.error("Error al guardar evaluación:", e);
                 alert("Error al conectar con la base de datos.");
             }
-        };
+        }
 
         async function cargarHistorialEvaluaciones() {
             const container = document.getElementById('historial-evaluaciones');
+            if (!container) return;
             container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">Cargando historial...</p>';
 
             try {
