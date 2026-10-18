@@ -1,6 +1,6 @@
-// Importación de Firebase SDK y Firestore
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase.app.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase.firestore.js";
+// Importación de Firebase SDK y Firestore (Versión estable actualizada)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase.app.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase.firestore.js";
 
 // Configuración de Firebase provista
 const firebaseConfig = {
@@ -75,7 +75,7 @@ window.guardarPaciente = async function() {
         cargarPacientes();
     } catch (e) {
         console.error("Error al guardar paciente: ", e);
-        alert("Guardado localmente / Error en Firestore: " + e.message);
+        alert("Error en Firestore: " + e.message);
     }
 };
 
