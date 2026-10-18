@@ -31,30 +31,19 @@ window.switchView = function(viewId) {
     }
 };
 
-// Sistema de Login Estricto con Activación de Vista por Defecto
-document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.getElementById('login-form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const user = document.getElementById('user').value.trim();
-            const pass = document.getElementById('password').value.trim();
-            const errorMsg = document.getElementById('login-error');
+// Sistema de Login Estricto Original
+document.getElementById('login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const user = document.getElementById('user').value.trim();
+    const pass = document.getElementById('password').value.trim();
+    const errorMsg = document.getElementById('login-error');
 
-            if (user === "DRPEREYRA" && pass === "235689") {
-                document.getElementById('login-container').style.display = 'none';
-                document.getElementById('app-container').style.display = 'flex';
-                
-                // Mostrar la primera vista por defecto (ej. 'view-pacientes') para que no quede en blanco
-                if (typeof window.switchView === 'function') {
-                    window.switchView('view-pacientes');
-                }
-                
-                cargarDatosGenerales();
-            } else {
-                if (errorMsg) errorMsg.style.display = 'block';
-            }
-        });
+    if (user === "DRPEREYRA" && pass === "235689") {
+        document.getElementById('login-container').style.display = 'none';
+        document.getElementById('app-container').style.display = 'flex';
+        cargarDatosGenerales();
+    } else {
+        errorMsg.style.display = 'block';
     }
 });
 
@@ -62,8 +51,7 @@ window.logout = function() {
     document.getElementById('app-container').style.display = 'none';
     document.getElementById('login-container').style.display = 'flex';
     document.getElementById('login-form').reset();
-    const errorMsg = document.getElementById('login-error');
-    if (errorMsg) errorMsg.style.display = 'none';
+    document.getElementById('login-error').style.display = 'none';
 };
 
 // ================= FUNCIONES DE PERSISTENCIA EN FIRESTORE =================
