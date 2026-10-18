@@ -251,7 +251,7 @@
             border-color: #dc2626;
         }
 
-        /* --- MENÚ DESPLEGABLE --- */
+        /* --- MENÚ DESPLEGABLE CORREGIDO (SIN ESPACIO INVISIBLE) --- */
         .dropdown {
             position: relative;
             display: inline-block;
@@ -266,9 +266,9 @@
             z-index: 10;
             border-radius: 6px;
             border: 1px solid var(--border-color);
-            top: calc(100% + 4px);
+            top: 100%;
             left: 0;
-            overflow: hidden;
+            padding-top: 4px;
         }
 
         .dropdown-content a {
@@ -290,7 +290,7 @@
             display: block;
         }
 
-        /* --- CONTENEDOR IFRAME PRINCIPAL (OCUPA TODO EL RESTO DE LA PANTALLA) --- */
+        /* --- CONTENEDOR IFRAME PRINCIPAL --- */
         main.main-content {
             flex: 1;
             width: 100%;
@@ -361,7 +361,7 @@
                     <button class="nav-btn">Evaluación ▼</button>
                     <div class="dropdown-content">
                         <a onclick="cargarModulo('eval_1.html')">Eval Inmediata 1</a>
-                        <a onclick="cargarModulo('eval_2.html')">Eval Inmediatra 2</a>
+                        <a onclick="cargarModulo('eval_2.html')">Eval Inmediata 2</a>
                         <a onclick="cargarModulo('follow_up.html')">Follow up</a>
                     </div>
                 </div>
