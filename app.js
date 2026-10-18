@@ -1,12 +1,40 @@
 // ==========================================
-// APP.JS - Núcleo de Enrutamiento y Gestión
+// APP.JS - Autenticación y Enrutamiento Principal
 // Clínica de la Convergencia
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
+    inicializarLogin();
     inicializarNavegacion();
-    verificarAutenticacion();
 });
+
+// Sistema de Login Institucional
+function inicializarLogin() {
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const usuario = document.getElementById('username').value.trim();
+            const clave = document.getElementById('password').value.trim();
+
+            if (usuario === 'DRPEREYRA' && clave === '235689') {
+                sessionStorage.setItem('clinica_auth', 'true');
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('app-container').style.display = 'flex';
+            } else {
+                alert('Credenciales incorrectas. Verifique usuario y contraseña.');
+            }
+        });
+    }
+
+    // Verificar si ya hay sesión activa
+    if (sessionStorage.getItem('clinica_auth') === 'true') {
+        const loginOverlay = document.getElementById('login-overlay');
+        const appContainer = document.getElementById('app-container');
+        if (loginOverlay) loginOverlay.style.display = 'none';
+        if (appContainer) appContainer.style.display = 'flex';
+    }
+}
 
 // Sistema de enrutamiento dinámico hacia el iframe central
 window.cargarModulo = function(urlPagina) {
@@ -15,19 +43,10 @@ window.cargarModulo = function(urlPagina) {
         console.error("No se encontró el contenedor principal (main-iframe).");
         return;
     }
-
-    // Efecto visual de transición sutil al cambiar de módulo clínico
-    iframe.style.opacity = '0.4';
     iframe.src = urlPagina;
-    
-    iframe.onload = () => {
-        iframe.style.opacity = '1';
-        // Ajuste automático de altura según contenido si es necesario
-    };
 };
 
 function inicializarNavegacion() {
-    // Manejador global para los enlaces del menú institucional
     const navLinks = document.querySelectorAll('[data-module]');
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
@@ -38,11 +57,4 @@ function inicializarNavegacion() {
             }
         });
     });
-}
-
-function verificarAutenticacion() {
-    // Control de sesión institucional para Dr. y Mgter. Rubén M. Pereyra (DRPEREYRA)
-    const sesionActiva = sessionStorage.getItem('clnica_convergencia_auth');
-    // Si manejas un login previo en index.html, aquí validas las credenciales (235689)
-    console.log("Sistema de Terapia de Pareja inicializado correctamente.");
 }
