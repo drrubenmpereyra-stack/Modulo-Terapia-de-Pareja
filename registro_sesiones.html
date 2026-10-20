@@ -299,7 +299,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Establecer fecha actual por defecto en el input de fecha
+        // Inicialización al cargar el DOM
         document.addEventListener('DOMContentLoaded', () => {
             const today = new Date().toISOString().split('T')[0];
             const dateInput = document.getElementById('ses-fecha');
@@ -309,31 +309,37 @@
             cargarHistorialSesiones();
         });
 
+        // Carga robusta de parejas desde Firestore
         async function cargarPacientesSelect() {
             const selectPareja = document.getElementById('ses-pareja');
             if (!selectPareja) return;
 
             try {
+                selectPareja.innerHTML = '<option value="">Cargando parejas...</option>';
                 const querySnapshot = await getDocs(collection(db, "pacientes"));
                 selectPareja.innerHTML = '<option value="">Seleccione una pareja...</option>';
                 
-                if (querySnapshot.empty) {
-                    selectPareja.innerHTML = '<option value="">No hay parejas registradas</option>';
-                    return;
-                }
+                let totalParejas = 0;
 
                 querySnapshot.forEach((docSnap) => {
                     const data = docSnap.data();
-                    if (data.nombres) {
+                    const nombrePareja = data.nombres || data.pareja || data.nombrePareja || data.pacientes;
+                    
+                    if (nombrePareja) {
                         const option = document.createElement('option');
-                        option.value = data.nombres;
-                        option.textContent = data.nombres;
+                        option.value = nombrePareja;
+                        option.textContent = nombrePareja;
                         selectPareja.appendChild(option);
+                        totalParejas++;
                     }
                 });
+
+                if (totalParejas === 0) {
+                    selectPareja.innerHTML = '<option value="">No hay parejas registradas en la base de datos</option>';
+                }
             } catch (e) {
                 console.error("Error al cargar pacientes:", e);
-                selectPareja.innerHTML = '<option value="">Error al cargar pacientes</option>';
+                selectPareja.innerHTML = '<option value="">Error al conectar con la base de datos</option>';
             }
         }
 
@@ -355,7 +361,7 @@
 
             if (!isRecording) {
                 recognition = new SpeechRecognition();
-                recognition.lang = 'es-AR'; // Configurado en español
+                recognition.lang = 'es-AR';
                 recognition.continuous = true;
                 recognition.interimResults = true;
 
@@ -371,7 +377,6 @@
                     for (let i = event.resultIndex; i < event.results.length; i++) {
                         transcript += event.results[i][0].transcript;
                     }
-                    // Añade el texto dictado al contenido actual del textarea
                     textarea.value += (textarea.value ? ' ' : '') + transcript;
                 };
 
@@ -422,7 +427,6 @@
                 return;
             }
 
-            // Asegurar que el dictado se detenga al guardar
             if (isRecording) detenerDictado();
 
             try {
