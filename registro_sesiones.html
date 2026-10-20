@@ -105,7 +105,6 @@
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
 
-        /* --- BOTÓN DE MICRÓFONO --- */
         .mic-container {
             display: flex;
             align-items: center;
@@ -152,7 +151,6 @@
             display: none;
         }
 
-        /* --- BOTONES DE ACCIÓN --- */
         .actions-bar {
             display: flex;
             gap: 1rem;
@@ -183,7 +181,6 @@
             background: #b45309;
         }
 
-        /* --- HISTORIAL --- */
         .card-box {
             background: #fff;
             border: 1px solid var(--border-color);
@@ -225,7 +222,6 @@
         <h2>Registro Evolutivo de Sesiones</h2>
         <p class="subtitle">Clínica de la Convergencia — Bitácora Terapéutica y Foco Vincular</p>
 
-        <!-- Formulario de Registro -->
         <div class="form-grid">
             <div class="form-group">
                 <label for="ses-pareja">Seleccionar Pareja / Pacientes</label>
@@ -252,16 +248,14 @@
                         </button>
                     </div>
                 </div>
-                <textarea id="ses-puntos" rows="5" placeholder="Describa los movimientos de nominación afectiva, regulación de tensión o nudos vinculares trabajados, o dicte mediante el micrófono..."></textarea>
+                <textarea id="ses-puntos" rows="5" placeholder="Describa los movimientos de nominación afectiva, regulación de tensión o nudos vinculares trabajados..."></textarea>
             </div>
         </div>
 
-        <!-- Botonera -->
         <div class="actions-bar">
             <button class="btn btn-accent" onclick="guardarSesionFirestore()">Guardar Sesión en Base de Datos</button>
         </div>
 
-        <!-- Historial de Sesiones -->
         <div class="card-box" style="margin-top: 2rem;">
             <h3>Historial de Sesiones Registradas</h3>
             <div style="overflow-x: auto;">
@@ -282,7 +276,6 @@
         </div>
     </div>
 
-    <!-- Firebase SDK y Lógica -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -299,59 +292,44 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Inicialización al cargar el DOM
         document.addEventListener('DOMContentLoaded', () => {
             const today = new Date().toISOString().split('T')[0];
             const dateInput = document.getElementById('ses-fecha');
             if (dateInput) dateInput.value = today;
 
-            cargarPacientesSelect();
+            cargarParejasSelector();
             cargarHistorialSesiones();
         });
 
-        // Carga robusta de parejas desde Firestore
-        async function cargarPacientesSelect() {
-            const selectPareja = document.getElementById('ses-pareja');
-            if (!selectPareja) return;
-
+        // Conexión idéntica al módulo de pagos usando "parejas_pacientes"
+        async function cargarParejasSelector() {
+            const select = document.getElementById('ses-pareja');
             try {
-                selectPareja.innerHTML = '<option value="">Cargando parejas...</option>';
-                const querySnapshot = await getDocs(collection(db, "pacientes"));
-                selectPareja.innerHTML = '<option value="">Seleccione una pareja...</option>';
-                
-                let totalParejas = 0;
-
+                const querySnapshot = await getDocs(collection(db, "parejas_pacientes"));
+                select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
                 querySnapshot.forEach((docSnap) => {
                     const data = docSnap.data();
-                    const nombrePareja = data.nombres || data.pareja || data.nombrePareja || data.pacientes;
-                    
-                    if (nombrePareja) {
-                        const option = document.createElement('option');
-                        option.value = nombrePareja;
-                        option.textContent = nombrePareja;
-                        selectPareja.appendChild(option);
-                        totalParejas++;
+                    if (data.p1 && data.p2) {
+                        const parejaNombre = `${data.p1.nombre} &${data.p2.nombre}`;
+                        const opt = document.createElement('option');
+                        opt.value = parejaNombre;
+                        opt.textContent = parejaNombre;
+                        select.appendChild(opt);
                     }
                 });
-
-                if (totalParejas === 0) {
-                    selectPareja.innerHTML = '<option value="">No hay parejas registradas en la base de datos</option>';
-                }
             } catch (e) {
-                console.error("Error al cargar pacientes:", e);
-                selectPareja.innerHTML = '<option value="">Error al conectar con la base de datos</option>';
+                console.error("Error al cargar parejas:", e);
+                select.innerHTML = '<option value="">Error al cargar parejas</option>';
             }
         }
 
-        // ================= DICTADO POR VOZ (MICRÓFONO) =================
         let recognition = null;
         let isRecording = false;
 
         window.toggleDictadoVoz = function() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            
             if (!SpeechRecognition) {
-                alert("Su navegador no soporta el reconocimiento de voz por micrófono. Utilice Google Chrome o Edge.");
+                alert("Su navegador no soporta reconocimiento de voz.");
                 return;
             }
 
@@ -380,15 +358,9 @@
                     textarea.value += (textarea.value ? ' ' : '') + transcript;
                 };
 
-                recognition.onerror = function(event) {
-                    console.error("Error de reconocimiento de voz:", event.error);
-                    detenerDictado();
-                };
-
+                recognition.onerror = function() { detenerDictado(); };
                 recognition.onend = function() {
-                    if (isRecording) {
-                        try { recognition.start(); } catch(e) { detenerDictado(); }
-                    }
+                    if (isRecording) { try { recognition.start(); } catch(e) { detenerDictado(); } }
                 };
 
                 recognition.start();
@@ -399,9 +371,7 @@
 
         function detenerDictado() {
             isRecording = false;
-            if (recognition) {
-                try { recognition.stop(); } catch(e) {}
-            }
+            if (recognition) { try { recognition.stop(); } catch(e) {} }
             const btnMic = document.getElementById('btn-toggle-mic');
             const micStatus = document.getElementById('mic-status');
             if (btnMic) {
@@ -411,21 +381,14 @@
             if (micStatus) micStatus.style.display = 'none';
         }
 
-        // ================= PERSISTENCIA EN FIRESTORE =================
         window.guardarSesionFirestore = async function() {
             const pareja = document.getElementById('ses-pareja').value.trim();
             const numero = document.getElementById('ses-numero').value.trim();
             const fechaSesion = document.getElementById('ses-fecha').value;
             const puntos = document.getElementById('ses-puntos').value.trim();
 
-            if (!pareja) {
-                alert("Por favor seleccione una pareja.");
-                return;
-            }
-            if (!puntos) {
-                alert("Por favor ingrese o dicte los puntos centrales trabajados en la sesión.");
-                return;
-            }
+            if (!pareja) { alert("Por favor seleccione una pareja."); return; }
+            if (!puntos) { alert("Por favor ingrese o dicte los puntos centrales."); return; }
 
             if (isRecording) detenerDictado();
 
@@ -438,7 +401,7 @@
                     fechaRegistro: new Date()
                 });
 
-                alert("Sesión registrada exitosamente en la base de datos.");
+                alert("Sesión registrada exitosamente.");
                 document.getElementById('ses-puntos').value = '';
                 document.getElementById('ses-numero').value = parseInt(numero || 1) + 1;
                 cargarHistorialSesiones();
@@ -464,7 +427,6 @@
 
                 querySnapshot.forEach((docSnap) => {
                     const data = docSnap.data();
-                    
                     tbody.innerHTML += `
                         <tr>
                             <td><b>${data.fechaSesion}</b></td>
@@ -476,7 +438,6 @@
                 });
             } catch (e) {
                 console.error("Error cargando historial de sesiones:", e);
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Error al cargar historial.</td></tr>`;
             }
         }
     </script>
