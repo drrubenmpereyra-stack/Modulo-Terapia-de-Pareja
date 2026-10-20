@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenda Clínica - Clínica de la Convergencia</title>
-    <!-- FullCalendar CSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
     <style>
         :root {
             --primary-color: #0f172a;
@@ -17,6 +15,8 @@
             --text-muted: #64748b;
             --border-color: #cbd5e1;
             --border-focus: #3b82f6;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
             --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
         }
@@ -31,187 +31,202 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding: 1.5rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 1.5rem;
-        }
-
-        @media (max-width: 900px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .card {
             background: var(--card-bg);
-            padding: 1.5rem;
+            padding: 2.5rem;
             border-radius: 12px;
+            box-shadow: var(--shadow-elevated);
             border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-subtle);
-            height: fit-content;
+            margin-bottom: 2rem;
         }
 
         h2 {
+            font-size: 1.4rem;
             color: var(--primary-color);
-            font-size: 1.15rem;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 0.4rem;
+            margin-bottom: 0.5rem;
             font-weight: 700;
         }
 
-        .form-control {
-            margin-bottom: 1rem;
-        }
-
-        .form-control label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin-bottom: 0.3rem;
-            color: var(--primary-color);
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
-        .form-control input, .form-control select {
-            width: 100%;
-            padding: 0.7rem;
-            border: 1.5px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 0.9rem;
-            background-color: #f8fafc;
-            transition: all 0.2s ease;
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
-        .form-control input:focus, .form-control select:focus {
+        @media (max-width: 900px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        input, select, textarea {
+            padding: 0.75rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background-color: #f8fafc;
+        }
+
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--border-focus);
             background-color: var(--card-bg);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
 
-        .btn-group {
+        .actions-bar {
             display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-top: 1.25rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
         }
 
         .btn {
-            padding: 0.7rem;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
             border-radius: 8px;
-            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
-            border: none;
-            transition: all 0.2s ease;
-            box-shadow: var(--shadow-subtle);
-            text-align: center;
-        }
-
-        .btn-registrar {
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            color: #ffffff;
-        }
-
-        .btn-eliminar {
-            background-color: #dc2626;
-            color: #ffffff;
-            display: none; /* Se muestra al seleccionar un turno */
+            font-size: 0.9rem;
+            transition: background 0.2s;
         }
 
         .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-elevated);
-            filter: brightness(1.1);
+            background: var(--primary-color);
         }
 
-        /* Contenedor del Almanaque */
-        #calendar-container {
-            background: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 12px;
+        .btn-accent {
+            background: var(--accent-color);
+        }
+        .btn-accent:hover {
+            background: #b45309;
+        }
+
+        .card-box {
+            background: #fff;
             border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
             box-shadow: var(--shadow-subtle);
-            min-height: 650px;
         }
 
-        /* Ajustes visuales de FullCalendar */
-        .fc {
-            font-size: 0.9rem;
-        }
-        .fc-toolbar-title {
-            font-size: 1.1rem !important;
+        .card-box h3 {
+            font-size: 1rem;
             color: var(--primary-color);
-            font-weight: 700;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
         }
-        .fc-button-primary {
-            background-color: var(--secondary-color) !important;
-            border-color: var(--secondary-color) !important;
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.85rem;
         }
-        .fc-event {
-            cursor: pointer;
-            padding: 2px 4px;
-            border-radius: 4px;
+
+        .history-table th, .history-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        .history-table th {
+            background-color: #e2e8f0;
+            color: var(--primary-color);
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Panel de Formulario / Gestión de Turnos -->
-        <div class="card">
-            <h2>Gestión de Turnos</h2>
-            <form id="agenda-form">
-                <input type="hidden" id="turno-id">
-                
-                <div class="form-control">
-                    <label>Pareja Consultante</label>
-                    <input type="text" id="agenda-pareja" required placeholder="Ej: Pérez - Gómez">
-                </div>
-                
-                <div class="form-control">
-                    <label>Fecha y Hora de Sesión</label>
-                    <input type="datetime-local" id="agenda-fechahora" required>
-                </div>
+        <h2>Agenda de Citas y Turnos Vinculares</h2>
+        <p class="subtitle">Clínica de la Convergencia — Programación y Gestión de Encuentros</p>
 
-                <div class="form-control">
-                    <label>Estado del Turno</label>
-                    <select id="agenda-estado">
-                        <option value="Confirmado">Confirmado</option>
-                        <option value="En Curso">En Curso</option>
-                        <option value="Realizado">Realizado</option>
-                        <option value="Cancelado">Cancelado</option>
-                    </select>
-                </div>
-
-                <div class="btn-group">
-                    <button type="button" class="btn btn-registrar" id="btn-guardar" onclick="guardarTurno()">Guardar / Agendar</button>
-                    <button type="button" class="btn btn-eliminar" id="btn-eliminar" onclick="eliminarTurno()">Eliminar Turno</button>
-                </div>
-            </form>
+        <!-- Formulario de Turnos -->
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="agenda-pareja">Seleccionar Pareja / Pacientes</label>
+                <select id="agenda-pareja">
+                    <option value="">Cargando parejas...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="agenda-fecha">Fecha del Turno</label>
+                <input type="date" id="agenda-fecha">
+            </div>
+            <div class="form-group">
+                <label for="agenda-hora">Hora del Turno</label>
+                <input type="time" id="agenda-hora">
+            </div>
+            <div class="form-group full-width">
+                <label for="agenda-motivo">Motivo o Notas del Encuentro</label>
+                <input type="text" id="agenda-motivo" placeholder="Ej: Entrevista de seguimiento, revisión de tareas, sesión focal...">
+            </div>
         </div>
 
-        <!-- Visor Almanaque Semanal y Mensual -->
-        <div id="calendar-container">
-            <div id="calendar"></div>
+        <!-- Botonera -->
+        <div class="actions-bar">
+            <button class="btn btn-accent" onclick="guardarTurnoFirestore()">Agendar Turno en Base de Datos</button>
+        </div>
+
+        <!-- Historial de Turnos -->
+        <div class="card-box" style="margin-top: 2rem;">
+            <h3>Agenda de Turnos Registrados</h3>
+            <div style="overflow-x: auto;">
+                <table class="history-table" id="tabla-historial-agenda">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Fecha y Hora</th>
+                            <th style="width: 30%;">Pareja</th>
+                            <th style="width: 50%;">Motivo / Notas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="3" style="text-align:center; color:var(--text-muted);">Cargando agenda...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <!-- FullCalendar JS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-
-    <!-- Firebase y Lógica del Almanaque -->
+    <!-- Firebase SDK y Lógica -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDv1wgWGICsvfrJHZV1s2HVXdsAvIRAOuI",
@@ -225,130 +240,112 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let calendar;
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('agenda-fecha');
+            if (dateInput) dateInput.value = today;
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const calendarEl = document.getElementById('calendar');
-            calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'timeGridWeek', // Vista semanal por defecto (permite ver horas y almanaque)
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                locale: 'es',
-                buttonText: {
-                    today: 'Hoy',
-                    month: 'Mes',
-                    week: 'Semana',
-                    day: 'Día'
-                },
-                editable: true,
-                selectable: true,
-                // Al hacer clic en un espacio del almanaque, autocompleta la fecha/hora
-                select: function(info) {
-                    limpiarFormulario();
-                    document.getElementById('agenda-fechahora').value = info.startStr.slice(0, 16);
-                },
-                // Al hacer clic en un turno existente, lo carga para editar o eliminar
-                eventClick: async function(info) {
-                    const id = info.event.id;
-                    document.getElementById('turno-id').value = id;
-                    document.getElementById('agenda-pareja').value = info.event.title;
-                    document.getElementById('agenda-estado').value = info.event.extendedProps.estado || 'Confirmado';
-                    
-                    // Formatear fecha para datetime-local
-                    const fechaIso = info.event.start.toISOString().slice(0, 16);
-                    document.getElementById('agenda-fechahora').value = fechaIso;
-
-                    document.getElementById('btn-eliminar').style.display = 'block';
-                    document.getElementById('btn-guardar').innerText = 'Actualizar Turno';
-                }
-            });
-
-            calendar.render();
-            cargarTurnosFirestore();
+            cargarPacientesSelect();
+            cargarHistorialAgenda();
         });
 
-        // Función para cargar eventos desde Firestore al calendario
-        async function cargarTurnosFirestore() {
+        // Carga robusta de parejas desde Firestore
+        async function cargarPacientesSelect() {
+            const selectPareja = document.getElementById('agenda-pareja');
+            if (!selectPareja) return;
+
             try {
-                const querySnapshot = await getDocs(collection(db, "agenda_turnos"));
-                const eventos = [];
+                selectPareja.innerHTML = '<option value="">Cargando parejas...</option>';
+                const querySnapshot = await getDocs(collection(db, "pacientes"));
+                selectPareja.innerHTML = '<option value="">Seleccione una pareja...</option>';
+                
+                let totalParejas = 0;
+
                 querySnapshot.forEach((docSnap) => {
                     const data = docSnap.data();
-                    eventos.push({
-                        id: docSnap.id,
-                        title: data.pareja,
-                        start: data.fechaHora,
-                        backgroundColor: data.estado === 'Cancelado' ? '#dc2626' : '#1e3a8a',
-                        borderColor: data.estado === 'Cancelado' ? '#dc2626' : '#1e3a8a',
-                        extendedProps: {
-                            estado: data.estado
-                        }
-                    });
+                    const nombrePareja = data.nombres || data.pareja || data.nombrePareja || data.pacientes;
+                    
+                    if (nombrePareja) {
+                        const option = document.createElement('option');
+                        option.value = nombrePareja;
+                        option.textContent = nombrePareja;
+                        selectPareja.appendChild(option);
+                        totalParejas++;
+                    }
                 });
-                // Limpiar eventos anteriores y cargar nuevos
-                calendar.removeAllEvents();
-                eventos.forEach(ev => calendar.addEvent(ev));
+
+                if (totalParejas === 0) {
+                    selectPareja.innerHTML = '<option value="">No hay parejas registradas en la base de datos</option>';
+                }
             } catch (e) {
-                console.error("Error al cargar turnos:", e);
+                console.error("Error al cargar pacientes en agenda:", e);
+                selectPareja.innerHTML = '<option value="">Error al conectar con la base de datos</option>';
             }
         }
 
-        // Guardar o Actualizar Turno
-        window.guardarTurno = async function() {
-            const id = document.getElementById('turno-id').value;
-            const pareja = document.getElementById('agenda-pareja').value;
-            const fechaHora = document.getElementById('agenda-fechahora').value;
-            const estado = document.getElementById('agenda-estado').value;
+        // Persistencia de turnos en Firestore
+        window.guardarTurnoFirestore = async function() {
+            const pareja = document.getElementById('agenda-pareja').value.trim();
+            const fecha = document.getElementById('agenda-fecha').value;
+            const hora = document.getElementById('agenda-hora').value;
+            const motivo = document.getElementById('agenda-motivo').value.trim();
 
-            if (!pareja || !fechaHora) {
-                alert("Por favor complete la pareja y la fecha/hora.");
+            if (!pareja) {
+                alert("Por favor seleccione una pareja.");
+                return;
+            }
+            if (!fecha || !hora) {
+                alert("Por favor indique la fecha y la hora del turno.");
                 return;
             }
 
             try {
-                if (id) {
-                    // Actualizar
-                    const docRef = doc(db, "agenda_turnos", id);
-                    await updateDoc(docRef, { pareja, fechaHora, estado });
-                    alert("Turno actualizado correctamente.");
-                } else {
-                    // Crear nuevo
-                    await addDoc(collection(db, "agenda_turnos"), { pareja, fechaHora, estado });
-                    alert("Turno agendado con éxito.");
-                }
-                limpiarFormulario();
-                cargarTurnosFirestore();
+                await addDoc(collection(db, "agenda_turnos"), {
+                    pareja,
+                    fecha,
+                    hora,
+                    motivo: motivo || "Consulta general vincular",
+                    fechaCreacion: new Date()
+                });
+
+                alert("Turno agendado exitosamente en la base de datos.");
+                document.getElementById('agenda-motivo').value = '';
+                cargarHistorialAgenda();
             } catch (e) {
                 console.error("Error al guardar turno:", e);
-                alert("Error al conectar con la base de datos.");
+                alert("Error al guardar en la base de datos.");
             }
         };
 
-        // Eliminar Turno
-        window.eliminarTurno = async function() {
-            const id = document.getElementById('turno-id').value;
-            if (!id) return;
+        async function cargarHistorialAgenda() {
+            const tbody = document.querySelector('#tabla-historial-agenda tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
 
-            if (confirm("¿Está seguro que desea eliminar este turno?")) {
-                try {
-                    await deleteDoc(doc(db, "agenda_turnos", id));
-                    alert("Turno eliminado.");
-                    limpiarFormulario();
-                    cargarTurnosFirestore();
-                } catch (e) {
-                    console.error("Error al eliminar:", e);
+            try {
+                const q = query(collection(db, "agenda_turnos"), orderBy("fecha", "asc"));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No hay turnos agendados aún.</td></tr>`;
+                    return;
                 }
-            }
-        };
 
-        function limpiarFormulario() {
-            document.getElementById('agenda-form').reset();
-            document.getElementById('turno-id').value = '';
-            document.getElementById('btn-eliminar').style.display = 'none';
-            document.getElementById('btn-guardar').innerText = 'Guardar / Agendar';
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><b>${data.fecha}</b> a las <b>${data.hora} hs</b></td>
+                            <td>${data.pareja}</td>
+                            <td>${data.motivo}</td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                console.error("Error al cargar historial de agenda:", e);
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:red;">Error al cargar historial.</td></tr>`;
+            }
         }
     </script>
 </body>
