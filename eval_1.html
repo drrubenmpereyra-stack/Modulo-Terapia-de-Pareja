@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evaluación Inmediata 1 - Clínica de la Convergencia</title>
+    <title>Evaluación Inmediata 1 (Eval 1) - Clínica de la Convergencia</title>
+    <!-- Chart.js para visualización en gráfico de barras / semáforo -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -250,8 +251,8 @@
 <body>
 
     <div class="container">
-        <h2>Evaluación Inmediata de Proceso (Eval 1)</h2>
-        <p class="subtitle">Clínica de la Convergencia — Rúbrica Operativa del Terapeuta</p>
+        <h2>Evaluación Inmediata 1 (Eval 1)</h2>
+        <p class="subtitle">Clínica de la Convergencia — Perspectiva Vincular de los Pacientes</p>
 
         <div class="form-grid">
             <div class="form-group">
@@ -261,58 +262,75 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="eval1-momento">Instancia de Evaluación</label>
+                <label for="eval1-momento">Momento del Proceso</label>
                 <select id="eval1-momento">
-                    <option value="Evaluación Temprana (Sesión 4-6)">Evaluación Temprana (Sesión 4-6)</option>
-                    <option value="Evaluación Intermedia (Sesión 10-12)">Evaluación Intermedia (Sesión 10-12)</option>
-                    <option value="Evaluación de Cierre Parcial">Evaluación de Cierre Parcial</option>
+                    <option value="Marcha Inicial">Marcha Inicial</option>
+                    <option value="Evaluación Temprana">Evaluación Temprana</option>
+                    <option value="Marcha Intermedia">Marcha Intermedia</option>
                 </select>
             </div>
         </div>
 
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:1rem; color:var(--secondary-color);">
+            Califique de 1 (Muy Desfavorable / Nulo) a 5 (Muy Favorable / Logrado) según la percepción de cada miembro:
+        </p>
+
         <table class="rubrica-table">
             <thead>
                 <tr>
-                    <th style="width: 50%;">Criterio Clínico Convergente</th>
-                    <th style="width: 50%;">Calificación del Terapeuta (1 a 5)</th>
+                    <th style="width: 40%;">Criterio de Análisis Vincular</th>
+                    <th style="width: 30%;">Integrante A (Puntaje 1-5)</th>
+                    <th style="width: 30%;">Integrante B (Puntaje 1-5)</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>
-                        <div class="criterio-title">1. Disminución de la Reactividad Defensiva</div>
-                        <div class="criterio-desc">Capacidad para suspender ataques simétricos y tolerar la escucha sin contraatacar de inmediato.</div>
+                        <div class="criterio-title">1. Nominación Afectiva y Conciencia Emocional</div>
+                        <div class="criterio-desc">Capacidad para identificar, poner en palabras y validar los afectos propios y del otro sin desbordes.</div>
                     </td>
-                    <td><input type="number" min="1" max="5" value="3" class="score-eval1" data-criterio="Reactividad Defensiva"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-a" data-criterio="Nominación Afectiva"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-b" data-criterio="Nominación Afectiva"></td>
                 </tr>
                 <tr>
                     <td>
-                        <div class="criterio-title">2. Aceptación de la Tercera Posición (Focalización)</div>
-                        <div class="criterio-desc">Reconocimiento del encuadre analítico y capacidad de mirar el conflicto vincular desde una perspectiva externa.</div>
+                        <div class="criterio-title">2. Regulación del Estrés y Tensión Vincular</div>
+                        <div class="criterio-desc">Habilidad para contener la reactividad defensiva, disminuir escaladas simétricas y recuperar la calma.</div>
                     </td>
-                    <td><input type="number" min="1" max="5" value="3" class="score-eval1" data-criterio="Tercera Posición"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-a" data-criterio="Regulación del Estrés"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-b" data-criterio="Regulación del Estrés"></td>
                 </tr>
                 <tr>
                     <td>
-                        <div class="criterio-title">3. Flexibilización de Guiones Cruzados</div>
-                        <div class="criterio-desc">Cuestionamiento activo de los roles complementarios rígidos (ej: hiperresponsable / desentendido).</div>
+                        <div class="criterio-title">3. Flexibilidad en los Guiones Vinculares</div>
+                        <div class="criterio-desc">Superación de roles rígidos o complementariedades patológicas estancadas; apertura a nuevas posiciones.</div>
                     </td>
-                    <td><input type="number" min="1" max="5" value="3" class="score-eval1" data-criterio="Guiones Cruzados"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-a" data-criterio="Flexibilidad Vincular"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-b" data-criterio="Flexibilidad Vincular"></td>
                 </tr>
                 <tr>
                     <td>
-                        <div class="criterio-title">4. Inicio de Nominación Afectiva Real</div>
-                        <div class="criterio-desc">Transición de la queja persecutoria abstracta a la expresión de vulnerabilidad y afectos primarios.</div>
+                        <div class="criterio-title">4. Reconsolidación de Memorias y Ressignificación</div>
+                        <div class="criterio-desc">Capacidad de revisar escenas críticas del pasado común transformando su sentido afectivo actual.</div>
                     </td>
-                    <td><input type="number" min="1" max="5" value="3" class="score-eval1" data-criterio="Nominación Afectiva"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-a" data-criterio="Reconsolidación de Memorias"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-b" data-criterio="Reconsolidación de Memorias"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="criterio-title">5. Construcción de Proyectos y Autonomía Vincular</div>
+                        <div class="criterio-desc">Grado de cooperación actual, disfrute compartido y respeto por la individuación de cada miembro.</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-a" data-criterio="Proyectos y Autonomía"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-b" data-criterio="Proyectos y Autonomía"></td>
                 </tr>
             </tbody>
         </table>
 
         <div class="form-grid" style="margin-bottom: 1.5rem;">
             <div class="form-group full-width">
-                <label for="eval1-observaciones">Observaciones Clínicas del Terapeuta</label>
-                <textarea id="eval1-observaciones" rows="3" placeholder="Registre notas sobre resistencias, avances o nudos estructurales observados..."></textarea>
+                <label for="eval1-observaciones">Observaciones Cualitativas y Síntesis de la Pareja</label>
+                <textarea id="eval1-observaciones" rows="3" placeholder="Describa los logros percibidos, nudos pendientes o reflexiones iniciales aportadas por la pareja..."></textarea>
             </div>
         </div>
 
@@ -325,9 +343,9 @@
 
         <div class="results-container">
             <div class="card-box">
-                <h3>Valuación Semafórica por Criterio</h3>
-                <div id="semaforo-eval1-output" class="semaforo-grid">
-                    <span style="color:var(--text-muted); font-style:italic;">Pulse "Graficar Semáforos"...</span>
+                <h3>Valuación Semafórica por Criterio (Promedio Pareja)</h3>
+                <div id="semaforo-output" class="semaforo-grid">
+                    <span style="color:var(--text-muted); font-style:italic;">Pulse "Graficar Semáforos" para procesar los datos.</span>
                 </div>
                 <div style="margin-top: 1.5rem;">
                     <canvas id="chartEval1" style="max-height: 220px;"></canvas>
@@ -335,22 +353,22 @@
             </div>
 
             <div class="card-box">
-                <h3>Informe Clínico Estructurado</h3>
-                <div id="informe-eval1-output" class="informe-box">El informe aparecerá aquí...</div>
+                <h3>Informe de Resultados y Criterios</h3>
+                <div id="informe-output" class="informe-box">El informe clínico estructurado aparecerá aquí al presionar "Generar Informe"...</div>
             </div>
         </div>
 
         <div class="card-box" style="margin-top: 2rem;">
-            <h3>Historial de Evaluaciones Inmediatas (Eval 1)</h3>
+            <h3>Historial de Evaluaciones Inmediatas (Eval 1 - Registradas en Firestore)</h3>
             <div style="overflow-x: auto;">
                 <table class="history-table" id="tabla-historial-eval1">
                     <thead>
                         <tr>
                             <th>Fecha</th>
                             <th>Pareja</th>
-                            <th>Instancia</th>
-                            <th>Puntaje</th>
-                            <th>Estado</th>
+                            <th>Momento</th>
+                            <th>Puntaje Promedio</th>
+                            <th>Estado General</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -376,21 +394,19 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        let chartInstanceEval1 = null;
-        let ultimosDatosEval1 = null;
+        let chartInstance = null;
+        let ultimosDatosCalculados = null;
 
         document.addEventListener('DOMContentLoaded', () => {
             cargarParejasSelector();
             cargarHistorialEval1();
         });
 
-        // Carga robusta conectada directamente a "parejas_pacientes"
         async function cargarParejasSelector() {
             const select = document.getElementById('eval1-pareja');
             if (!select) return;
 
             try {
-                select.innerHTML = '<option value="">Cargando parejas...</option>';
                 const querySnapshot = await getDocs(collection(db, "parejas_pacientes"));
                 select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
                 
@@ -399,10 +415,10 @@
                     const data = docSnap.data();
                     if (data.p1 && data.p2) {
                         const parejaNombre = `${data.p1.nombre} & ${data.p2.nombre}`;
-                        const opt = document.createElement('option');
-                        opt.value = parejaNombre;
-                        opt.textContent = parejaNombre;
-                        select.appendChild(opt);
+                        const option = document.createElement('option');
+                        option.value = parejaNombre;
+                        option.textContent = parejaNombre;
+                        select.appendChild(option);
                         total++;
                     }
                 });
@@ -411,71 +427,95 @@
                     select.innerHTML = '<option value="">No hay parejas registradas</option>';
                 }
             } catch (e) {
-                console.error("Error al cargar parejas en eval_1:", e);
-                select.innerHTML = '<option value="">Error al cargar base de datos</option>';
+                console.error("Error al cargar parejas:", e);
+                select.innerHTML = '<option value="">Error al cargar pacientes</option>';
             }
         }
 
         window.calcularPuntajeEval1 = function() {
-            const inputs = document.querySelectorAll('.score-eval1');
-            let suma = 0;
+            const inputsA = document.querySelectorAll('.score-a');
+            const inputsB = document.querySelectorAll('.score-b');
+            
+            let sumaTotal = 0;
             let detalles = [];
 
-            inputs.forEach(input => {
-                const criterio = input.getAttribute('data-criterio');
-                const val = parseFloat(input.value) || 0;
-                suma += val;
-                detalles.push({ criterio, val });
+            inputsA.forEach((inputA, index) => {
+                const inputB = inputsB[index];
+                const criterio = inputA.getAttribute('data-criterio');
+                const valA = parseFloat(inputA.value) || 0;
+                const valB = parseFloat(inputB.value) || 0;
+                const promedioCriterio = (valA + valB) / 2;
+                
+                sumaTotal += promedioCriterio;
+                detalles.push({ criterio, valA, valB, promedio: promedioCriterio });
             });
 
-            const promedio = (suma / inputs.length).toFixed(2);
-            ultimosDatosEval1 = { promedio, detalles };
-            alert(`Puntaje Promedio General: ${promedio} / 5.00`);
-            return ultimosDatosEval1;
+            const puntajeGlobal = (sumaTotal / inputsA.length).toFixed(2);
+            ultimosDatosCalculados = { puntajeGlobal, detalles };
+
+            alert(`Puntaje Promedio General de la Pareja: ${puntajeGlobal} / 5.00`);
+            return ultimosDatosCalculados;
         };
 
         window.graficarSemaforoEval1 = function() {
             const datos = window.calcularPuntajeEval1();
             if (!datos) return;
 
-            const contenedor = document.getElementById('semaforo-eval1-output');
-            contenedor.innerHTML = '';
+            const contenedorSemaforo = document.getElementById('semaforo-output');
+            contenedorSemaforo.innerHTML = '';
+
             let labels = [];
             let valores = [];
-            let colores = [];
+            let coloresFondo = [];
 
             datos.detalles.forEach(item => {
                 labels.push(item.criterio);
-                valores.push(item.val);
+                valores.push(item.promedio);
 
-                let clase = '';
-                let texto = '';
-                if (item.val >= 4.0) {
-                    clase = 'semaforo-verde'; texto = `Óptimo (${item.val})`; colores.push('#10b981');
-                } else if (item.val >= 2.5) {
-                    clase = 'semaforo-amarillo'; texto = `En Proceso (${item.val})`; colores.push('#f59e0b');
+                let claseSemaforo = '';
+                let textoEstado = '';
+
+                if (item.promedio >= 4.0) {
+                    claseSemaforo = 'semaforo-verde';
+                    textoEstado = `Óptimo (${item.promedio})`;
+                    coloresFondo.push('#10b981');
+                } else if (item.promedio >= 2.5) {
+                    claseSemaforo = 'semaforo-amarillo';
+                    textoEstado = `En Proceso / Frágil (${item.promedio})`;
+                    coloresFondo.push('#f59e0b');
                 } else {
-                    clase = 'semaforo-rojo'; texto = `Crítico (${item.val})`; colores.push('#ef4444');
+                    claseSemaforo = 'semaforo-rojo';
+                    textoEstado = `Crítico / Nudo (${item.promedio})`;
+                    coloresFondo.push('#ef4444');
                 }
 
                 const div = document.createElement('div');
-                div.className = `semaforo-item ${clase}`;
-                div.innerHTML = `<span>${item.criterio}</span><span>${texto}</span>`;
-                contenedor.appendChild(div);
+                div.className = `semaforo-item ${claseSemaforo}`;
+                div.innerHTML = `<span>${item.criterio}</span><span>${textoEstado}</span>`;
+                contenedorSemaforo.appendChild(div);
             });
 
             const ctx = document.getElementById('chartEval1').getContext('2d');
-            if (chartInstanceEval1) chartInstanceEval1.destroy();
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
 
-            chartInstanceEval1 = new Chart(ctx, {
+            chartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
-                    datasets: [{ data: valores, backgroundColor: colores, borderWidth: 1 }]
+                    datasets: [{
+                        label: 'Puntaje Promedio (Pareja)',
+                        data: valores,
+                        backgroundColor: coloresFondo,
+                        borderWidth: 1
+                    }]
                 },
                 options: {
                     responsive: true,
-                    scales: { y: { beginAtZero: true, max: 5 } },
+                    scales: {
+                        y: { beginAtZero: true, max: 5 }
+                    },
                     plugins: { legend: { display: false } }
                 }
             });
@@ -487,46 +527,55 @@
 
             const pareja = document.getElementById('eval1-pareja').value.trim() || "Sin especificar";
             const momento = document.getElementById('eval1-momento').value;
-            const obs = document.getElementById('eval1-observaciones').value.trim();
-            const fecha = new Date().toLocaleDateString();
+            const observaciones = document.getElementById('eval1-observaciones').value.trim();
+            const fechaActual = new Date().toLocaleDateString();
 
             let informe = `==================================================\n`;
             informe += `CLÍNICA DE LA CONVERGENCIA - INFORME EVAL 1\n`;
             informe += `==================================================\n`;
-            informe += `Fecha: ${fecha}\n`;
+            informe += `Fecha: ${fechaActual}\n`;
             informe += `Pareja: ${pareja}\n`;
             informe += `Instancia: ${momento}\n`;
-            informe += `Promedio Global: ${datos.promedio} / 5.00\n\n`;
-            informe += `DETALLE DE CRITERIOS:\n`;
+            informe += `Puntaje Global Promedio: ${datos.puntajeGlobal} / 5.00\n\n`;
+            informe += `DETALLE DE PERCEPCIÓN VINCULAR:\n`;
 
             datos.detalles.forEach(item => {
-                let estado = item.val >= 4.0 ? "LOGRADO" : (item.val >= 2.5 ? "EN PROCESO" : "CRÍTICO");
-                informe += `- ${item.criterio}: ${item.val} [${estado}]\n`;
+                let estadoTxt = item.promedio >= 4.0 ? "LOGRADO / SÓLIDO" : (item.promedio >= 2.5 ? "EN PROCESO / REGULAR" : "NUDO CRÍTICO");
+                informe += `- ${item.criterio}: Integrante A (${item.valA}) | Integrante B (${item.valB}) [Promedio: ${item.promedio} - ${estadoTxt}]\n`;
             });
 
-            informe += `\nOBSERVACIONES DEL TERAPEUTA:\n${obs || "Sin observaciones."}\n`;
+            informe += `\nOBSERVACIONES CLÍNICAS Y SINTESIS DE LOS PACIENTES:\n`;
+            informe += `${observaciones || "Sin observaciones adicionales registradas."}\n`;
             informe += `==================================================\n`;
 
-            document.getElementById('informe-eval1-output').textContent = informe;
+            document.getElementById('informe-output').textContent = informe;
             return informe;
         };
 
         window.guardarEval1Firestore = async function() {
             const pareja = document.getElementById('eval1-pareja').value.trim();
-            if (!pareja) { alert("Seleccione una pareja."); return; }
+            if (!pareja) {
+                alert("Por favor seleccione una pareja antes de guardar.");
+                return;
+            }
 
             const momento = document.getElementById('eval1-momento').value;
-            const informe = window.generarInformeEval1();
-            const promedio = ultimosDatosEval1 ? ultimosDatosEval1.promedio : "0.00";
+            const informeTexto = window.generarInformeEval1();
+            const puntajeGlobal = ultimosDatosCalculados ? ultimosDatosCalculados.puntajeGlobal : "0.00";
 
             try {
+                // Guarda en la colección "evaluacion_1"
                 await addDoc(collection(db, "evaluacion_1"), {
-                    pareja, momento, promedio, informe, fecha: new Date()
+                    pareja,
+                    momento,
+                    puntajeGlobal,
+                    informe: informeTexto,
+                    fecha: new Date()
                 });
-                alert("Evaluación 1 guardada con éxito.");
+                alert("Evaluación 1 guardada exitosamente en la base de datos.");
                 cargarHistorialEval1();
             } catch (e) {
-                console.error("Error al guardar eval 1:", e);
+                console.error("Error al guardar evaluación en Firestore:", e);
                 alert("Error al guardar en la base de datos.");
             }
         };
@@ -539,29 +588,30 @@
             try {
                 const q = query(collection(db, "evaluacion_1"), orderBy("fecha", "desc"));
                 const querySnapshot = await getDocs(q);
-
+                
                 if (querySnapshot.empty) {
-                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Sin registros aún.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No hay evaluaciones registradas aún.</td></tr>`;
                     return;
                 }
 
                 querySnapshot.forEach((docSnap) => {
                     const data = docSnap.data();
-                    const fechaStr = data.fecha && data.fecha.toDate ? data.fecha.toDate().toLocaleDateString() : "";
-                    let estado = parseFloat(data.promedio) >= 4.0 ? "Consolidado" : (parseFloat(data.promedio) >= 2.5 ? "En Marcha" : "Crítico");
+                    const fechaStr = data.fecha && data.fecha.toDate ? data.fecha.toDate().toLocaleDateString() : "Fecha rec.";
+                    let estadoBadge = parseFloat(data.puntajeGlobal) >= 4.0 ? "Óptimo / Consolidado" : (parseFloat(data.puntajeGlobal) >= 2.5 ? "En Marcha / Intermedio" : "Crítico");
 
                     tbody.innerHTML += `
                         <tr>
                             <td>${fechaStr}</td>
-                            <td><b>${data.pareja}</b></td>
+                            <td>${data.pareja}</td>
                             <td>${data.momento}</td>
-                            <td>${data.promedio} / 5</td>
-                            <td>${estado}</td>
+                            <td><b>${data.puntajeGlobal} / 5</b></td>
+                            <td>${estadoBadge}</td>
                         </tr>
                     `;
                 });
             } catch (e) {
-                console.error("Error al cargar historial eval 1:", e);
+                console.error("Error cargando historial de evaluaciones:", e);
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">Error al cargar historial.</td></tr>`;
             }
         }
     </script>
