@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evaluación Final y Marcha del Proceso (Eval 2) - Clínica de la Convergencia</title>
-    <!-- Chart.js para visualización en gráfico de barras / semáforo -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -102,7 +101,6 @@
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
 
-        /* --- RUBRICA TABLE --- */
         .rubrica-table {
             width: 100%;
             border-collapse: collapse;
@@ -137,7 +135,6 @@
             margin-top: 3px;
         }
 
-        /* --- BOTONES DE ACCIÓN --- */
         .actions-bar {
             display: flex;
             gap: 1rem;
@@ -168,7 +165,6 @@
             background: #b45309;
         }
 
-        /* --- SECCIÓN DE RESULTADOS Y SEMÁFOROS --- */
         .results-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -218,7 +214,6 @@
         .semaforo-amarillo { background-color: #fef3c7; color: #92400e; border-left: 5px solid var(--warning-color); }
         .semaforo-rojo { background-color: #fee2e2; color: #991b1b; border-left: 5px solid var(--danger-color); }
 
-        /* --- INFORME CLÍNICO --- */
         .informe-box {
             background: #f8fafc;
             border: 1px dashed var(--border-color);
@@ -233,7 +228,6 @@
             overflow-y: auto;
         }
 
-        /* --- HISTORIAL --- */
         .history-table {
             width: 100%;
             border-collapse: collapse;
@@ -259,7 +253,6 @@
         <h2>Evaluación de Cierre y Marcha del Proceso Terapéutico (Eval 2)</h2>
         <p class="subtitle">Clínica de la Convergencia — Perspectiva Vincular de los Pacientes</p>
 
-        <!-- Cabecera de Datos con Selección Dinámica de Parejas -->
         <div class="form-grid">
             <div class="form-group">
                 <label for="eval2-pareja">Seleccionar Pareja / Pacientes</label>
@@ -277,7 +270,6 @@
             </div>
         </div>
 
-        <!-- RÚBRICA DE EVALUACIÓN (Doble óptica: Integrante A e Integrante B) -->
         <p style="font-size:0.85rem; font-weight:600; margin-bottom:1rem; color:var(--secondary-color);">
             Califique de 1 (Muy Desfavorable / Nulo) a 5 (Muy Favorable / Logrado) según la percepción de cada miembro:
         </p>
@@ -334,15 +326,13 @@
             </tbody>
         </table>
 
-        <!-- Observaciones Subjetivas Conjuntas -->
         <div class="form-grid" style="margin-bottom: 1.5rem;">
             <div class="form-group full-width">
                 <label for="eval2-observaciones">Observaciones Cualitativas y Síntesis de la Pareja</label>
-                <textarea id="eval2-observaciones" rows="3" placeholder="Describa los logros percibidos, nudos pendientes o reflexiones finales aportadas por la pareja..."></textarea>
+                <textarea id="eval2-observaciones" rows="3" placeholder="Describa los logros percibidos, nudos pendientes o reflexiones finales..."></textarea>
             </div>
         </div>
 
-        <!-- Botonera de Acciones -->
         <div class="actions-bar">
             <button class="btn" onclick="calcularPuntajeEval2()">1. Calcular Puntaje</button>
             <button class="btn btn-accent" onclick="graficarSemaforoEval2()">2. Graficar Semáforos</button>
@@ -350,12 +340,11 @@
             <button class="btn btn-accent" onclick="guardarEval2Firestore()">4. Guardar en Base de Datos</button>
         </div>
 
-        <!-- Resultados, Semáforos y Gráfico -->
         <div class="results-container">
             <div class="card-box">
                 <h3>Valuación Semafórica por Criterio (Promedio Pareja)</h3>
                 <div id="semaforo-output" class="semaforo-grid">
-                    <span style="color:var(--text-muted); font-style:italic;">Pulse "Graficar Semáforos" para procesar los datos.</span>
+                    <span style="color:var(--text-muted); font-style:italic;">Pulse "Graficar Semáforos"...</span>
                 </div>
                 <div style="margin-top: 1.5rem;">
                     <canvas id="chartEval2" style="max-height: 220px;"></canvas>
@@ -364,11 +353,10 @@
 
             <div class="card-box">
                 <h3>Informe de Resultados y Criterios</h3>
-                <div id="informe-output" class="informe-box">El informe clínico estructurado aparecerá aquí al presionar "Generar Informe"...</div>
+                <div id="informe-output" class="informe-box">El informe aparecerá aquí...</div>
             </div>
         </div>
 
-        <!-- Historial de Informes Guardados -->
         <div class="card-box" style="margin-top: 2rem;">
             <h3>Historial de Evaluaciones Finales (Registradas en Firestore)</h3>
             <div style="overflow-x: auto;">
@@ -390,7 +378,6 @@
         </div>
     </div>
 
-    <!-- Firebase SDK y Lógica del Módulo -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -409,39 +396,35 @@
         let chartInstance = null;
         let ultimosDatosCalculados = null;
 
-        // Cargar automáticamente las parejas registradas desde la colección "pacientes"
-        async function cargarPacientesSelect() {
-            const selectPareja = document.getElementById('eval2-pareja');
-            if (!selectPareja) return;
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarParejasSelector();
+            cargarHistorialEval2();
+        });
 
+        async function cargarParejasSelector() {
+            const select = document.getElementById('eval2-pareja');
             try {
-                const querySnapshot = await getDocs(collection(db, "pacientes"));
-                selectPareja.innerHTML = '<option value="">Seleccione una pareja...</option>';
-                
-                if (querySnapshot.empty) {
-                    selectPareja.innerHTML = '<option value="">No hay parejas registradas</option>';
-                    return;
-                }
-
+                const querySnapshot = await getDocs(collection(db, "parejas_pacientes"));
+                select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
                 querySnapshot.forEach((docSnap) => {
                     const data = docSnap.data();
-                    if (data.nombres) {
-                        const option = document.createElement('option');
-                        option.value = data.nombres;
-                        option.textContent = data.nombres;
-                        selectPareja.appendChild(option);
+                    if (data.p1 && data.p2) {
+                        const parejaNombre = `${data.p1.nombre} & ${data.p2.nombre}`;
+                        const opt = document.createElement('option');
+                        opt.value = parejaNombre;
+                        opt.textContent = parejaNombre;
+                        select.appendChild(opt);
                     }
                 });
             } catch (e) {
-                console.error("Error al cargar pacientes para el select:", e);
-                selectPareja.innerHTML = '<option value="">Error al cargar pacientes</option>';
+                console.error("Error al cargar parejas en eval_2:", e);
+                select.innerHTML = '<option value="">Error al cargar parejas</option>';
             }
         }
 
         window.calcularPuntajeEval2 = function() {
             const inputsA = document.querySelectorAll('.score-a');
             const inputsB = document.querySelectorAll('.score-b');
-            
             let sumaTotal = 0;
             let detalles = [];
 
@@ -451,15 +434,13 @@
                 const valA = parseFloat(inputA.value) || 0;
                 const valB = parseFloat(inputB.value) || 0;
                 const promedioCriterio = (valA + valB) / 2;
-                
                 sumaTotal += promedioCriterio;
                 detalles.push({ criterio, valA, valB, promedio: promedioCriterio });
             });
 
             const puntajeGlobal = (sumaTotal / inputsA.length).toFixed(2);
             ultimosDatosCalculados = { puntajeGlobal, detalles };
-
-            alert(`Puntaje Promedio General de la Pareja: ${puntajeGlobal} / 5.00`);
+            alert(`Puntaje Promedio General: ${puntajeGlobal} / 5.00`);
             return ultimosDatosCalculados;
         };
 
@@ -469,7 +450,6 @@
 
             const contenedorSemaforo = document.getElementById('semaforo-output');
             contenedorSemaforo.innerHTML = '';
-
             let labels = [];
             let valores = [];
             let coloresFondo = [];
@@ -480,19 +460,12 @@
 
                 let claseSemaforo = '';
                 let textoEstado = '';
-
                 if (item.promedio >= 4.0) {
-                    claseSemaforo = 'semaforo-verde';
-                    textoEstado = `Óptimo (${item.promedio})`;
-                    coloresFondo.push('#10b981');
+                    claseSemaforo = 'semaforo-verde'; texto = `Óptimo (${item.promedio})`; coloresFondo.push('#10b981');
                 } else if (item.promedio >= 2.5) {
-                    claseSemaforo = 'semaforo-amarillo';
-                    textoEstado = `En Proceso / Frágil (${item.promedio})`;
-                    coloresFondo.push('#f59e0b');
+                    claseSemaforo = 'semaforo-amarillo'; texto = `En Proceso (${item.promedio})`; coloresFondo.push('#f59e0b');
                 } else {
-                    claseSemaforo = 'semaforo-rojo';
-                    textoEstado = `Crítico / Nudo (${item.promedio})`;
-                    coloresFondo.push('#ef4444');
+                    claseSemaforo = 'semaforo-rojo'; texto = `Crítico (${item.promedio})`; coloresFondo.push('#ef4444');
                 }
 
                 const div = document.createElement('div');
@@ -501,28 +474,18 @@
                 contenedorSemaforo.appendChild(div);
             });
 
-            // Renderizado con Chart.js
             const ctx = document.getElementById('chartEval2').getContext('2d');
-            if (chartInstance) {
-                chartInstance.destroy();
-            }
+            if (chartInstance) chartInstance.destroy();
 
             chartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: 'Puntaje Promedio (Pareja)',
-                        data: valores,
-                        backgroundColor: coloresFondo,
-                        borderWidth: 1
-                    }]
+                    datasets: [{ data: valores, backgroundColor: coloresFondo, borderWidth: 1 }]
                 },
                 options: {
                     responsive: true,
-                    scales: {
-                        y: { beginAtZero: true, max: 5 }
-                    },
+                    scales: { y: { beginAtZero: true, max: 5 } },
                     plugins: { legend: { display: false } }
                 }
             });
@@ -538,7 +501,7 @@
             const fechaActual = new Date().toLocaleDateString();
 
             let informe = `==================================================\n`;
-            informe += `CLÍNICA DE LA CONVERGENCIA - INFORME EVALUACIÓN FINAL\n`;
+            informe += `CLÍNICA DE LA CONVERGENCIA - INFORME EVAL 2\n`;
             informe += `==================================================\n`;
             informe += `Fecha: ${fechaActual}\n`;
             informe += `Pareja: ${pareja}\n`;
@@ -547,12 +510,11 @@
             informe += `DETALLE DE PERCEPCIÓN VINCULAR:\n`;
 
             datos.detalles.forEach(item => {
-                let estadoTxt = item.promedio >= 4.0 ? "LOGRADO / SÓLIDO" : (item.promedio >= 2.5 ? "EN PROCESO / REGULAR" : "NUDO CRÍTICO");
-                informe += `- ${item.criterio}: Integrante A (${item.valA}) | Integrante B (${item.valB}) [Promedio: ${item.promedio} - ${estadoTxt}]\n`;
+                let estadoTxt = item.promedio >= 4.0 ? "LOGRADO" : (item.promedio >= 2.5 ? "EN PROCESO" : "CRÍTICO");
+                informe += `- ${item.criterio}: A(${item.valA}) | B(${item.valB}) [Prom: ${item.promedio} - ${estadoTxt}]\n`;
             });
 
-            informe += `\nOBSERVACIONES CLÍNICAS Y SINTESIS DE LOS PACIENTES:\n`;
-            informe += `${observaciones || "Sin observaciones adicionales registradas."}\n`;
+            informe += `\nOBSERVACIONES:\n${observaciones || "Sin observaciones."}\n`;
             informe += `==================================================\n`;
 
             document.getElementById('informe-output').textContent = informe;
@@ -561,10 +523,7 @@
 
         window.guardarEval2Firestore = async function() {
             const pareja = document.getElementById('eval2-pareja').value.trim();
-            if (!pareja) {
-                alert("Por favor seleccione una pareja antes de guardar.");
-                return;
-            }
+            if (!pareja) { alert("Seleccione una pareja."); return; }
 
             const momento = document.getElementById('eval2-momento').value;
             const informeTexto = window.generarInformeEval2();
@@ -572,16 +531,12 @@
 
             try {
                 await addDoc(collection(db, "evaluacion_2"), {
-                    pareja,
-                    momento,
-                    puntajeGlobal,
-                    informe: informeTexto,
-                    fecha: new Date()
+                    pareja, momento, puntajeGlobal, informe: informeTexto, fecha: new Date()
                 });
-                alert("Evaluación final guardada exitosamente en la base de datos.");
+                alert("Evaluación 2 guardada con éxito.");
                 cargarHistorialEval2();
             } catch (e) {
-                console.error("Error al guardar evaluación en Firestore:", e);
+                console.error("Error al guardar eval 2:", e);
                 alert("Error al guardar en la base de datos.");
             }
         };
@@ -594,38 +549,31 @@
             try {
                 const q = query(collection(db, "evaluacion_2"), orderBy("fecha", "desc"));
                 const querySnapshot = await getDocs(q);
-                
+
                 if (querySnapshot.empty) {
-                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No hay evaluaciones registradas aún.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Sin registros aún.</td></tr>`;
                     return;
                 }
 
                 querySnapshot.forEach((docSnap) => {
                     const data = docSnap.data();
-                    const fechaStr = data.fecha && data.fecha.toDate ? data.fecha.toDate().toLocaleDateString() : "Fecha rec.";
-                    let estadoBadge = parseFloat(data.puntajeGlobal) >= 4.0 ? "Óptimo / Consolidado" : (parseFloat(data.puntajeGlobal) >= 2.5 ? "En Marcha / Intermedio" : "Crítico");
+                    const fechaStr = data.fecha && data.fecha.toDate ? data.fecha.toDate().toLocaleDateString() : "";
+                    let estadoBadge = parseFloat(data.puntajeGlobal) >= 4.0 ? "Consolidado" : (parseFloat(data.puntajeGlobal) >= 2.5 ? "En Marcha" : "Crítico");
 
                     tbody.innerHTML += `
                         <tr>
                             <td>${fechaStr}</td>
-                            <td>${data.pareja}</td>
+                            <td><b>${data.pareja}</b></td>
                             <td>${data.momento}</td>
-                            <td><b>${data.puntajeGlobal} / 5</b></td>
+                            <td>${data.puntajeGlobal} / 5</td>
                             <td>${estadoBadge}</td>
                         </tr>
                     `;
                 });
             } catch (e) {
-                console.error("Error cargando historial de evaluaciones:", e);
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">Error al cargar historial.</td></tr>`;
+                console.error("Error al cargar historial eval 2:", e);
             }
         }
-
-        // Cargar select de pacientes e historial al iniciar el módulo
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarPacientesSelect();
-            cargarHistorialEval2();
-        });
     </script>
 </body>
 </html>
