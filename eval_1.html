@@ -403,22 +403,51 @@
 
         async function cargarParejasSelector() {
             const select = document.getElementById('eval2-pareja');
+            if (!select) return;
+
             try {
-                const querySnapshot = await getDocs(collection(db, "parejas_pacientes"));
-                select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
-                querySnapshot.forEach((docSnap) => {
-                    const data = docSnap.data();
-                    if (data.p1 && data.p2) {
-                        const parejaNombre = `${data.p1.nombre} & ${data.p2.nombre}`;
-                        const opt = document.createElement('option');
-                        opt.value = parejaNombre;
-                        opt.textContent = parejaNombre;
-                        select.appendChild(opt);
-                    }
-                });
+                select.innerHTML = '<option value="">Cargando parejas...</option>';
+                let totalParejas = 0;
+                let opcionesHTML = '<option value="">Seleccione una pareja registrada...</option>';
+
+                try {
+                    const snap1 = await getDocs(collection(db, "parejas_pacientes"));
+                    snap1.forEach((docSnap) => {
+                        const data = docSnap.data();
+                        let nombre = "";
+                        if (data.p1 && data.p2) {
+                            nombre = `${data.p1.nombre} & ${data.p2.nombre}`;
+                        } else if (data.nombres) {
+                            nombre = data.nombres;
+                        } else if (data.pareja) {
+                            nombre = data.pareja;
+                        }
+                        if (nombre) {
+                            opcionesHTML += `<option value="${nombre}">${nombre}</option>`;
+                            totalParejas++;
+                        }
+                    });
+                } catch(err) { console.warn("Colección parejas_pacientes vacía"); }
+
+                try {
+                    const snap2 = await getDocs(collection(db, "pacientes"));
+                    snap2.forEach((docSnap) => {
+                        const data = docSnap.data();
+                        let nombre = data.nombres || data.pareja || data.nombrePareja || data.pacientes;
+                        if (nombre && !opcionesHTML.includes(`value="${nombre}"`)) {
+                            opcionesHTML += `<option value="${nombre}">${nombre}</option>`;
+                            totalParejas++;
+                        }
+                    });
+                } catch(err) { console.warn("Colección pacientes vacía"); }
+
+                select.innerHTML = opcionesHTML;
+                if (totalParejas === 0) {
+                    select.innerHTML = '<option value="">No hay parejas registradas en la base de datos</option>';
+                }
             } catch (e) {
-                console.error("Error al cargar parejas en eval_2:", e);
-                select.innerHTML = '<option value="">Error al cargar parejas</option>';
+                console.error("Error al cargar selector de parejas:", e);
+                select.innerHTML = '<option value="">Error al conectar con la base de datos</option>';
             }
         }
 
