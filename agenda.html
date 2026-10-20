@@ -176,7 +176,6 @@
         <h2>Agenda de Citas y Turnos Vinculares</h2>
         <p class="subtitle">Clínica de la Convergencia — Programación y Gestión de Encuentros</p>
 
-        <!-- Formulario de Turnos -->
         <div class="form-grid">
             <div class="form-group">
                 <label for="agenda-pareja">Seleccionar Pareja / Pacientes</label>
@@ -194,16 +193,14 @@
             </div>
             <div class="form-group full-width">
                 <label for="agenda-motivo">Motivo o Notas del Encuentro</label>
-                <input type="text" id="agenda-motivo" placeholder="Ej: Entrevista de seguimiento, revisión de tareas, sesión focal...">
+                <input type="text" id="agenda-motivo" placeholder="Ej: Entrevista de seguimiento, revisión de tareas...">
             </div>
         </div>
 
-        <!-- Botonera -->
         <div class="actions-bar">
             <button class="btn btn-accent" onclick="guardarTurnoFirestore()">Agendar Turno en Base de Datos</button>
         </div>
 
-        <!-- Historial de Turnos -->
         <div class="card-box" style="margin-top: 2rem;">
             <h3>Agenda de Turnos Registrados</h3>
             <div style="overflow-x: auto;">
@@ -223,7 +220,6 @@
         </div>
     </div>
 
-    <!-- Firebase SDK y Lógica -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -245,59 +241,40 @@
             const dateInput = document.getElementById('agenda-fecha');
             if (dateInput) dateInput.value = today;
 
-            cargarPacientesSelect();
+            cargarParejasSelector();
             cargarHistorialAgenda();
         });
 
-        // Carga robusta de parejas desde Firestore
-        async function cargarPacientesSelect() {
-            const selectPareja = document.getElementById('agenda-pareja');
-            if (!selectPareja) return;
-
+        // Conexión idéntica al módulo de pagos usando "parejas_pacientes"
+        async function cargarParejasSelector() {
+            const select = document.getElementById('agenda-pareja');
             try {
-                selectPareja.innerHTML = '<option value="">Cargando parejas...</option>';
-                const querySnapshot = await getDocs(collection(db, "pacientes"));
-                selectPareja.innerHTML = '<option value="">Seleccione una pareja...</option>';
-                
-                let totalParejas = 0;
-
+                const querySnapshot = await getDocs(collection(db, "parejas_pacientes"));
+                select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
                 querySnapshot.forEach((docSnap) => {
                     const data = docSnap.data();
-                    const nombrePareja = data.nombres || data.pareja || data.nombrePareja || data.pacientes;
-                    
-                    if (nombrePareja) {
-                        const option = document.createElement('option');
-                        option.value = nombrePareja;
-                        option.textContent = nombrePareja;
-                        selectPareja.appendChild(option);
-                        totalParejas++;
+                    if (data.p1 && data.p2) {
+                        const parejaNombre = `${data.p1.nombre} & ${data.p2.nombre}`;
+                        const opt = document.createElement('option');
+                        opt.value = parejaNombre;
+                        opt.textContent = parejaNombre;
+                        select.appendChild(opt);
                     }
                 });
-
-                if (totalParejas === 0) {
-                    selectPareja.innerHTML = '<option value="">No hay parejas registradas en la base de datos</option>';
-                }
             } catch (e) {
-                console.error("Error al cargar pacientes en agenda:", e);
-                selectPareja.innerHTML = '<option value="">Error al conectar con la base de datos</option>';
+                console.error("Error al cargar parejas en agenda:", e);
+                select.innerHTML = '<option value="">Error al cargar parejas</option>';
             }
         }
 
-        // Persistencia de turnos en Firestore
         window.guardarTurnoFirestore = async function() {
             const pareja = document.getElementById('agenda-pareja').value.trim();
             const fecha = document.getElementById('agenda-fecha').value;
             const hora = document.getElementById('agenda-hora').value;
             const motivo = document.getElementById('agenda-motivo').value.trim();
 
-            if (!pareja) {
-                alert("Por favor seleccione una pareja.");
-                return;
-            }
-            if (!fecha || !hora) {
-                alert("Por favor indique la fecha y la hora del turno.");
-                return;
-            }
+            if (!pareja) { alert("Por favor seleccione una pareja."); return; }
+            if (!fecha || !hora) { alert("Por favor indique la fecha y hora del turno."); return; }
 
             try {
                 await addDoc(collection(db, "agenda_turnos"), {
@@ -308,7 +285,7 @@
                     fechaCreacion: new Date()
                 });
 
-                alert("Turno agendado exitosamente en la base de datos.");
+                alert("Turno agendado exitosamente.");
                 document.getElementById('agenda-motivo').value = '';
                 cargarHistorialAgenda();
             } catch (e) {
@@ -333,7 +310,6 @@
 
                 querySnapshot.forEach((docSnap) => {
                     const data = docSnap.data();
-                    
                     tbody.innerHTML += `
                         <tr>
                             <td><b>${data.fecha}</b> a las <b>${data.hora} hs</b></td>
@@ -344,7 +320,6 @@
                 });
             } catch (e) {
                 console.error("Error al cargar historial de agenda:", e);
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:red;">Error al cargar historial.</td></tr>`;
             }
         }
     </script>
