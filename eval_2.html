@@ -273,4 +273,297 @@
         <table class="rubrica-table">
             <thead>
                 <tr>
-                    <th style="width: 50%;">Criterio Clínico
+                    <th style="width: 50%;">Criterio Clínico Convergente</th>
+                    <th style="width: 50%;">Calificación del Terapeuta (1 a 5)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="criterio-title">1. Disminución de la Reactividad Defensiva</div>
+                        <div class="criterio-desc">Capacidad para suspender ataques simétricos y tolerar la escucha sin contraatacar de inmediato.</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-eval1" data-criterio="Reactividad Defensiva"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="criterio-title">2. Aceptación de la Tercera Posición (Focalización)</div>
+                        <div class="criterio-desc">Reconocimiento del encuadre analítico y capacidad de mirar el conflicto vincular desde una perspectiva externa.</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-eval1" data-criterio="Tercera Posición"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="criterio-title">3. Flexibilización de Guiones Cruzados</div>
+                        <div class="criterio-desc">Cuestionamiento activo de los roles complementarios rígidos (ej: hiperresponsable / desentendido).</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-eval1" data-criterio="Guiones Cruzados"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="criterio-title">4. Inicio de Nominación Afectiva Real</div>
+                        <div class="criterio-desc">Transición de la queja persecutoria abstracta a la expresión de vulnerabilidad y afectos primarios.</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-eval1" data-criterio="Nominación Afectiva"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="form-grid" style="margin-bottom: 1.5rem;">
+            <div class="form-group full-width">
+                <label for="eval1-observaciones">Observaciones Clínicas del Terapeuta</label>
+                <textarea id="eval1-observaciones" rows="3" placeholder="Registre notas sobre resistencias, avances o nudos estructurales observados..."></textarea>
+            </div>
+        </div>
+
+        <div class="actions-bar">
+            <button class="btn" onclick="calcularPuntajeEval1()">1. Calcular Puntaje</button>
+            <button class="btn btn-accent" onclick="graficarSemaforoEval1()">2. Graficar Semáforos</button>
+            <button class="btn" onclick="generarInformeEval1()">3. Generar Informe</button>
+            <button class="btn btn-accent" onclick="guardarEval1Firestore()">4. Guardar en Base de Datos</button>
+        </div>
+
+        <div class="results-container">
+            <div class="card-box">
+                <h3>Valuación Semafórica por Criterio</h3>
+                <div id="semaforo-eval1-output" class="semaforo-grid">
+                    <span style="color:var(--text-muted); font-style:italic;">Pulse "Graficar Semáforos"...</span>
+                </div>
+                <div style="margin-top: 1.5rem;">
+                    <canvas id="chartEval1" style="max-height: 220px;"></canvas>
+                </div>
+            </div>
+
+            <div class="card-box">
+                <h3>Informe Clínico Estructurado</h3>
+                <div id="informe-eval1-output" class="informe-box">El informe aparecerá aquí...</div>
+            </div>
+        </div>
+
+        <div class="card-box" style="margin-top: 2rem;">
+            <h3>Historial de Evaluaciones Inmediatas (Eval 1)</h3>
+            <div style="overflow-x: auto;">
+                <table class="history-table" id="tabla-historial-eval1">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Pareja</th>
+                            <th>Instancia</th>
+                            <th>Puntaje</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Cargando historial...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDv1wgWGICsvfrJHZV1s2HVXdsAvIRAOuI",
+            authDomain: "terapia-de-pareja-3bb81.firebaseapp.com",
+            projectId: "terapia-de-pareja-3bb81",
+            storageBucket: "terapia-de-pareja-3bb81.firebasestorage.app",
+            messagingSenderId: "173599055420",
+            appId: "1:173599055420:web:5b36414cc3b4c7a90b6d39"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        let chartInstanceEval1 = null;
+        let ultimosDatosEval1 = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarParejasSelector();
+            cargarHistorialEval1();
+        });
+
+        // Carga robusta conectada directamente a "parejas_pacientes"
+        async function cargarParejasSelector() {
+            const select = document.getElementById('eval1-pareja');
+            if (!select) return;
+
+            try {
+                select.innerHTML = '<option value="">Cargando parejas...</option>';
+                const querySnapshot = await getDocs(collection(db, "parejas_pacientes"));
+                select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
+                
+                let total = 0;
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if (data.p1 && data.p2) {
+                        const parejaNombre = `${data.p1.nombre} & ${data.p2.nombre}`;
+                        const opt = document.createElement('option');
+                        opt.value = parejaNombre;
+                        opt.textContent = parejaNombre;
+                        select.appendChild(opt);
+                        total++;
+                    }
+                });
+
+                if (total === 0) {
+                    select.innerHTML = '<option value="">No hay parejas registradas</option>';
+                }
+            } catch (e) {
+                console.error("Error al cargar parejas en eval_1:", e);
+                select.innerHTML = '<option value="">Error al cargar base de datos</option>';
+            }
+        }
+
+        window.calcularPuntajeEval1 = function() {
+            const inputs = document.querySelectorAll('.score-eval1');
+            let suma = 0;
+            let detalles = [];
+
+            inputs.forEach(input => {
+                const criterio = input.getAttribute('data-criterio');
+                const val = parseFloat(input.value) || 0;
+                suma += val;
+                detalles.push({ criterio, val });
+            });
+
+            const promedio = (suma / inputs.length).toFixed(2);
+            ultimosDatosEval1 = { promedio, detalles };
+            alert(`Puntaje Promedio General: ${promedio} / 5.00`);
+            return ultimosDatosEval1;
+        };
+
+        window.graficarSemaforoEval1 = function() {
+            const datos = window.calcularPuntajeEval1();
+            if (!datos) return;
+
+            const contenedor = document.getElementById('semaforo-eval1-output');
+            contenedor.innerHTML = '';
+            let labels = [];
+            let valores = [];
+            let colores = [];
+
+            datos.detalles.forEach(item => {
+                labels.push(item.criterio);
+                valores.push(item.val);
+
+                let clase = '';
+                let texto = '';
+                if (item.val >= 4.0) {
+                    clase = 'semaforo-verde'; texto = `Óptimo (${item.val})`; colores.push('#10b981');
+                } else if (item.val >= 2.5) {
+                    clase = 'semaforo-amarillo'; texto = `En Proceso (${item.val})`; colores.push('#f59e0b');
+                } else {
+                    clase = 'semaforo-rojo'; texto = `Crítico (${item.val})`; colores.push('#ef4444');
+                }
+
+                const div = document.createElement('div');
+                div.className = `semaforo-item ${clase}`;
+                div.innerHTML = `<span>${item.criterio}</span><span>${texto}</span>`;
+                contenedor.appendChild(div);
+            });
+
+            const ctx = document.getElementById('chartEval1').getContext('2d');
+            if (chartInstanceEval1) chartInstanceEval1.destroy();
+
+            chartInstanceEval1 = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{ data: valores, backgroundColor: colores, borderWidth: 1 }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true, max: 5 } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        };
+
+        window.generarInformeEval1 = function() {
+            const datos = window.calcularPuntajeEval1();
+            if (!datos) return;
+
+            const pareja = document.getElementById('eval1-pareja').value.trim() || "Sin especificar";
+            const momento = document.getElementById('eval1-momento').value;
+            const obs = document.getElementById('eval1-observaciones').value.trim();
+            const fecha = new Date().toLocaleDateString();
+
+            let informe = `==================================================\n`;
+            informe += `CLÍNICA DE LA CONVERGENCIA - INFORME EVAL 1\n`;
+            informe += `==================================================\n`;
+            informe += `Fecha: ${fecha}\n`;
+            informe += `Pareja: ${pareja}\n`;
+            informe += `Instancia: ${momento}\n`;
+            informe += `Promedio Global: ${datos.promedio} / 5.00\n\n`;
+            informe += `DETALLE DE CRITERIOS:\n`;
+
+            datos.detalles.forEach(item => {
+                let estado = item.val >= 4.0 ? "LOGRADO" : (item.val >= 2.5 ? "EN PROCESO" : "CRÍTICO");
+                informe += `- ${item.criterio}: ${item.val} [${estado}]\n`;
+            });
+
+            informe += `\nOBSERVACIONES DEL TERAPEUTA:\n${obs || "Sin observaciones."}\n`;
+            informe += `==================================================\n`;
+
+            document.getElementById('informe-eval1-output').textContent = informe;
+            return informe;
+        };
+
+        window.guardarEval1Firestore = async function() {
+            const pareja = document.getElementById('eval1-pareja').value.trim();
+            if (!pareja) { alert("Seleccione una pareja."); return; }
+
+            const momento = document.getElementById('eval1-momento').value;
+            const informe = window.generarInformeEval1();
+            const promedio = ultimosDatosEval1 ? ultimosDatosEval1.promedio : "0.00";
+
+            try {
+                await addDoc(collection(db, "evaluacion_1"), {
+                    pareja, momento, promedio, informe, fecha: new Date()
+                });
+                alert("Evaluación 1 guardada con éxito.");
+                cargarHistorialEval1();
+            } catch (e) {
+                console.error("Error al guardar eval 1:", e);
+                alert("Error al guardar en la base de datos.");
+            }
+        };
+
+        async function cargarHistorialEval1() {
+            const tbody = document.querySelector('#tabla-historial-eval1 tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            try {
+                const q = query(collection(db, "evaluacion_1"), orderBy("fecha", "desc"));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Sin registros aún.</td></tr>`;
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const fechaStr = data.fecha && data.fecha.toDate ? data.fecha.toDate().toLocaleDateString() : "";
+                    let estado = parseFloat(data.promedio) >= 4.0 ? "Consolidado" : (parseFloat(data.promedio) >= 2.5 ? "En Marcha" : "Crítico");
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${fechaStr}</td>
+                            <td><b>${data.pareja}</b></td>
+                            <td>${data.momento}</td>
+                            <td>${data.promedio} / 5</td>
+                            <td>${estado}</td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                console.error("Error al cargar historial eval 1:", e);
+            }
+        }
+    </script>
+</body>
+</html>
